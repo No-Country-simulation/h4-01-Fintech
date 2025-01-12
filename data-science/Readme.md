@@ -84,6 +84,12 @@ Si instalas nuevas dependencias, recuerda actualizar el archivo `requirements.tx
 pip freeze > requirements.txt
 ```
 
+- Para inciiar
+
+```bash
+python manage.py runserver
+```
+
 ---
 
 ## Configuración con Docker
