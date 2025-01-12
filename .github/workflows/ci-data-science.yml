@@ -4,23 +4,21 @@ on:
       - "develop"
 
 jobs:
-  CI-Data_Science-Deploy-Render:
+  CI-Django-Deploy-Render:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: List files in the repository
-        run: ls -alh
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3"
 
       - name: Install dependencies
+        working-directory: ./data-science
         run: |
-          cd backend/gateway
-          npm install
-
-      - name: Test
-        run: |
-          cd backend/gateway
-          npm run test
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Deploy
         if: github.ref == 'refs/heads/main'
