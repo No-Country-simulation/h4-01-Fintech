@@ -3,7 +3,12 @@ name: Validate and Test Backend
 on:
   push:
     branches:
-      - "feature/data"
+      - "main"
+      - "develop"
+  pull_request:
+    branches:
+      - "main"
+      - "develop"
 
 jobs:
   Docker-Test-Develop:
