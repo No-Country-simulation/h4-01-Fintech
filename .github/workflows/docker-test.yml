@@ -6,7 +6,7 @@ on:
       - "feature/data"
 
 jobs:
-  validate:
+  Docker-Test-Develop:
     runs-on: ubuntu-latest
 
     steps:
