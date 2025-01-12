@@ -6,15 +6,25 @@ services:
     ports:
       - "3001:3001"
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${NODE_ENV}
       PORT_GATEWAY: ${PORT_GATEWAY}
       POSTGRES_URL: ${POSTGRES_URL}
       JWT_SECRET: ${JWT_SECRET}
     volumes:
       - ./backend/gateway:/usr/src/app
-    networks:
-      - app-network
 
-networks:
-  app-network:
-    driver: bridge
+  data-science:
+    build:
+      context: ./data-science
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_ENV: ${DJANGO_ENV}
+      DB_URL: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      BACKEND_URL: http://gateway:3001
+      DJANGO_IGNORE_BACKEND_ERRORS: "True"
+    volumes:
+      - ./data-science:/usr/src/app
+
