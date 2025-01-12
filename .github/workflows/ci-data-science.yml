@@ -1,0 +1,30 @@
+on:
+  pull_request:
+  push:
+    branches: [feature/data]
+
+jobs:
+  CI-Data_Science-Deploy-Render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: List files in the repository
+        run: ls -alh
+
+      - name: Install dependencies
+        run: |
+          cd backend/gateway
+          npm install
+
+      - name: Test
+        run: |
+          cd backend/gateway
+          npm run test
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_DATA_SCIENCE }}
+        run: |
+          curl "$deploy_url"
