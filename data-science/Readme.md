@@ -19,10 +19,6 @@ Windows:
 
 ´´´
 
-### comando usados , solo se usan una sola vez
+### Actualizar lista de requirements
 
-$ python -m pip install Django
-
-chmod a+x build.sh
-
-python -m gunicorn fintech.asgi:application -k uvicorn.workers.UvicornWorker
+pip freeze > requirements.txt
