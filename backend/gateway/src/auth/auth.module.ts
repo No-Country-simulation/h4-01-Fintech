@@ -6,12 +6,13 @@ import { UserService } from '../users/user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../entitys/user.entity';
 import { AccountEntity } from 'src/entitys/account.entity';
+import { ConfigEnvs } from 'src/config/envs';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, AccountEntity]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'my_secret_key',
+      secret: ConfigEnvs.JWT_SECRET as string,
       signOptions: { expiresIn: '1h' },
     }),
   ],
