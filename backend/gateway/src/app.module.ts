@@ -8,11 +8,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
+import { ConfigEnvs } from './config/envs'
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'my_secret_key',
+      secret: ConfigEnvs.JWT_SECRET as string,
       signOptions: { expiresIn: '1h' },
     }),
     TypeOrmModule.forRoot(typeOrmConfig),
