@@ -28,8 +28,5 @@ jobs:
       - name: Start services
         run: docker-compose -f docker-compose.dev.yml up -d
 
-      - name: Wait for services to start
-        run: sleep 30
-
       - name: Stop services
         run: docker-compose -f docker-compose.dev.yml down

@@ -1,1 +1,5 @@
 .env
+data/app/__pycache__/
+data/app/routers/__pycache__/
+data/app/models/__pycache__/
+data/app/core/__pycache__/

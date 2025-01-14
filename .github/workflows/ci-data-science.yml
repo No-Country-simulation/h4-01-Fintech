@@ -1,0 +1,32 @@
+on:
+  push:
+    branches:
+      - "develop"
+
+jobs:
+  CI-Backend-Deploy-Render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: List files in the repository
+        run: ls -alh
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3'
+
+      - name: Install dependencies
+        run: |
+          cd backend  # Ajusta el directorio si es necesario
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL_DATA }}
+        run: |
+          curl "$deploy_url"
