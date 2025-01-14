@@ -3,15 +3,21 @@ import { AccountEntity } from './account.entity';
 
 @Entity('users')
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  user_id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ type: 'varchar', nullable: true })
+  name!: string | null;
 
-  @Column({ nullable: true }) // permitir nulo 
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  email!: string | null;
+
+  @Column({ nullable: true }) // permitir nulo
   passwordhash?: string;
 
-  @OneToMany(() => AccountEntity, (account) => account.user, { cascade: true })
-  accounts: AccountEntity[];
+  @Column({ type: 'varchar', nullable: true })
+  image!: string | null;
+
+  @OneToMany(() => AccountEntity, (account) => account.userId)
+  accounts!: AccountEntity[];
 }

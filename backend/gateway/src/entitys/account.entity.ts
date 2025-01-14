@@ -1,29 +1,67 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ValueTransformer } from 'typeorm';
 import { UserEntity } from './user.entity';
+
+const transformer: Record<'date' | 'bigint', ValueTransformer> = {
+  date: {
+    from: (date: string | null) => date && new Date(parseInt(date, 10)),
+    to: (date?: Date) => date?.valueOf().toString(),
+  },
+  bigint: {
+    from: (bigInt: string | null) => bigInt && parseInt(bigInt, 10),
+    to: (bigInt?: number) => bigInt?.toString(),
+  },
+};
 
 @Entity('accounts')
 export class AccountEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.accounts)
-  user: UserEntity;
-
-  @Column()
-  provider: string; // Google, Apple
+  @Column({ type: 'uuid' })
+  userId!: string;
 
   @Column()
-  providerAccountId: string;
+  type!: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column()
+  provider!: string;
 
-  @Column({ nullable: true })
-  accessToken?: string;
+  @Column()
+  providerAccountId!: string;
 
-  @Column({ nullable: true })
-  refreshToken?: string;
+  @Column({ type: 'varchar', nullable: true })
+  refresh_token!: string | null;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  createdAt: Date;
+  @Column({ type: 'varchar', nullable: true })
+  access_token!: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'bigint',
+    transformer: transformer.bigint,
+  })
+  expires_at!: number | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  token_type!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  scope!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  id_token!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  session_state!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  oauth_token_secret!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  oauth_token!: string | null;
+
+  @ManyToOne(() => UserEntity, (user) => user.accounts, {
+    createForeignKeyConstraints: true,
+  })
+  user!: UserEntity;
 }

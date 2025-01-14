@@ -7,12 +7,12 @@ import { AccountEntity } from '../entitys/account.entity'
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
-  generateJwtToken(user: UserEntity, account?: AccountEntity): string {
+  generateJwtToken(user: UserEntity): string {
     const payload = {
-      sub: user.user_id,
+      sub: user.id,
       email: user.email,
-      provider: account?.provider ?? 'credentials'
     };
+
     return this.jwtService.sign(payload);
   }
 }

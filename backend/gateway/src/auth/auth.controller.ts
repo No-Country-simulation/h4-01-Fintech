@@ -11,24 +11,54 @@ export class AuthController {
 
   @Post('social-login')
   async socialLogin(@Body() body) {
-    const { provider, providerAccountId, email } = body;
-    console.log('este email pasa por el controlador', email)
+    const {
+      type,
+      provider,
+      providerAccountId,
+      refresh_token,
+      access_token,
+      expires_at,
+      token_type,
+      email,
+      image,
+      name,
+    } = body;
+
+    console.log('Datos recibidos desde el frontend:', body);
+
+    // Busca al usuario por email
     let user = await this.userService.findByEmail(email);
 
+    // Si no existe el usuario, créalo
     if (!user) {
-      user = await this.userService.createSocialUser({
-        email,
+      user = await this.userService.createUser({ email, name, image });
+    }
+
+    // Busca si ya existe una cuenta asociada al proveedor
+    const account = await this.userService.findAccountByProvider(
+      provider,
+      providerAccountId,
+    );
+
+    // Si no existe la cuenta, créala
+    if (!account) {
+      await this.userService.createAccount({
+        userId: user.id,
+        type,
         provider,
         providerAccountId,
+        refresh_token,
+        access_token,
+        expires_at,
+        token_type,
       });
     }
 
-    const account = await this.userService.findAccountByProvider(
-      email,
-      provider,
-    );
-    const token = this.authService.generateJwtToken(user, account);
-    console.log('este es el token', token)
+    // Genera el token JWT para la sesión
+    const token = this.authService.generateJwtToken(user);
+
+    console.log('Token generado:', token);
+
     return { token };
   }
 }

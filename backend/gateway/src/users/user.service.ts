@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entitys/user.entity';
-import { AccountEntity } from 'src/entitys/account.entity';
+import { AccountEntity } from '../entitys/account.entity';
 
 @Injectable()
 export class UserService {
@@ -10,41 +10,68 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(AccountEntity)
-    private accountRepository: Repository<AccountEntity>,
+    private readonly accountRepository: Repository<AccountEntity>,
   ) {}
 
+  // Buscar usuario por email
   async findByEmail(email: string): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async createSocialUser({
+  // Crear usuario
+  async createUser({
     email,
-    provider,
-    providerAccountId,
+    name,
+    image,
   }: {
     email: string;
-    provider: string;
-    providerAccountId: string;
-  }) {
-    const user = this.userRepository.create({ email });
-    await this.userRepository.save(user);
-
-    const account = this.accountRepository.create({
-      user,
-      provider,
-      providerAccountId,
-    });
-    await this.accountRepository.save(account);
-
-    return user;
+    name: string | null;
+    image: string | null;
+  }): Promise<UserEntity> {
+    const user = this.userRepository.create({ email, name, image });
+    return this.userRepository.save(user);
   }
 
+  // Buscar cuenta por proveedor y providerAccountId
   async findAccountByProvider(
-    email: string,
     provider: string,
+    providerAccountId: string,
   ): Promise<AccountEntity | undefined> {
     return this.accountRepository.findOne({
-      where: { email, provider },
+      where: { provider, providerAccountId },
     });
+  }
+
+  // Crear cuenta
+  async createAccount({
+    userId,
+    type,
+    provider,
+    providerAccountId,
+    refresh_token,
+    access_token,
+    expires_at,
+    token_type,
+  }: {
+    userId: string;
+    type: string;
+    provider: string;
+    providerAccountId: string;
+    refresh_token: string | null;
+    access_token: string | null;
+    expires_at: number | null;
+    token_type: string | null;
+  }): Promise<AccountEntity> {
+    const account = this.accountRepository.create({
+      userId,
+      type,
+      provider,
+      providerAccountId,
+      refresh_token,
+      access_token,
+      expires_at,
+      token_type,
+    });
+    return this.accountRepository.save(account);
   }
 }
