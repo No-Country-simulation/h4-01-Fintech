@@ -5,6 +5,9 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { typeOrmConfig } from './config/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -13,9 +16,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       signOptions: { expiresIn: '1h' },
     }),
     TypeOrmModule.forRoot(typeOrmConfig),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AuthService],
+  exports: [AuthService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

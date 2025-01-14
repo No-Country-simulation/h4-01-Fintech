@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Navbar } from "./components/organisms/Navbar";
 
 export default function Home() {
   return (
@@ -95,6 +96,7 @@ export default function Home() {
           />
           Go to nextjs.org →
         </a>
+        <Navbar />
       </footer>
     </div>
   );
