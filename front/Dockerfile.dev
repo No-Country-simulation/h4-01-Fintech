@@ -1,0 +1,25 @@
+FROM node:23.4-alpine3.21 AS base
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
+RUN \
+    if [ -f yarn.lock ]; then yarn install --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm install; \
+    elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm install; \
+    else echo "Lockfile not found." && exit 1; \
+    fi
+
+COPY . .
+
+ENV NODE_ENV=development
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+
+EXPOSE 3000
+
+# Comando para desarrollo (habilita hot-reloading)
+CMD ["npm", "run", "dev"]
