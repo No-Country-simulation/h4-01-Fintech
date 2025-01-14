@@ -19,6 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       try {
+        if (!account) {
+          console.error("Error: El proveedor no devolvió una cuenta válida");
+          return false;
+        }
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/auth/social-login`,
           {
@@ -43,25 +47,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.error("Error al iniciar sesión con el backend");
           return false;
         }
-
+        const data = await response.json();
+        if(!data.token){
+          console.error("El backend no devolvio un oktne valido")
+          return false;
+        }
+        //
+        const tokenBackend = data.token;
+        console.log('esto es el token',tokenBackend)
         return true;
+        //
       } catch (error) {
         console.error("Error en la comunicación con el backend:", error);
         return false;
       }
     },
-    async jwt({ token, account, user }) {
+    async jwt({ token, account }) {
       if (account) {
         token.provider = account.provider;
         token.providerAccountId = account.providerAccountId;
         token.access_token = account.access_token;
         token.expires_at = account.expires_at;
-      }
 
-      if (user) {
-        token.email = user.email;
-        token.name = user.name;
-        token.image = user.image;
+        // Pasar el token del backend al JWT si existe
+        if (account.backendToken) {
+          token.backendToken = account.backendToken;
+        }
       }
 
       return token;
@@ -76,6 +87,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.email = token.email as string;
       session.user.name = token.name as string | undefined;
       session.user.image = token.image as string | undefined;
+      session.token = token.backendToken || null;
+ 
 
       return session;
     },
