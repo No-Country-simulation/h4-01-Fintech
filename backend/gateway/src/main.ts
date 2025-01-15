@@ -4,12 +4,20 @@ import { ConfigEnvs } from './config/envs';
 import * as cookieParser from 'cookie-parser';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { JwtService } from '@nestjs/jwt';
-import { Logger, LogLevel } from '@nestjs/common';
+import { Logger, LogLevel, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
   app.useLogger(logLevels);
+  app.setGlobalPrefix('api', {
+    exclude: [{path: '/', method: RequestMethod.GET}]
+  });
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true
+  }));
   app.enableCors({
     origin: '*',
     credentials: true,
@@ -19,6 +27,14 @@ async function bootstrap() {
   const jwtService = app.get(JwtService);
   const authMiddleware = new AuthMiddleware(jwtService);
   app.use(authMiddleware.use.bind(authMiddleware));
+  const config = new DocumentBuilder()
+    .setTitle('IUPI API Documentation')
+    .setDescription('IUPI, Ahorra e inversiones')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
   const port = ConfigEnvs.PORT
   await app.listen(port,()=> {
     Logger.log(`Application is running on: http://localhost:${port}`);
