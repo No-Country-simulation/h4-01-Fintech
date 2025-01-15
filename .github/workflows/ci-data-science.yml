@@ -4,7 +4,7 @@ on:
       - "develop"
 
 jobs:
-  CI-Backend-Deploy-Render:
+  CI-Data-Deploy-Render:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend  # Ajusta el directorio si es necesario
+          cd data  # Ajusta el directorio si es necesario
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
