@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import Apple from "next-auth/providers/apple";
 import Credentials from "next-auth/providers/credentials";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -12,10 +11,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         },
       },
     }),
-    Apple({
-      clientId: process.env.APPLE_CLIENT_ID,
-      clientSecret: process.env.APPLE_CLIENT_SECRET,
-    }),
     Credentials({
       name: "Credentials",
       credentials: {
@@ -25,7 +20,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`,
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/login`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -64,7 +59,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return true;
         }
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/auth/social-login`,
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/social-login`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

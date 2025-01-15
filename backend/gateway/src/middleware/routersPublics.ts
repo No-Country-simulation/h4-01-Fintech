@@ -1,4 +1,4 @@
 export const publicRoutes: string[] = [
   '/',
-  '/auth/social-login'
+  '/api/auth/social-login'
 ];
