@@ -49,7 +49,6 @@ export class UserService {
     provider,
     providerAccountId,
     refresh_token,
-    access_token,
     expires_at,
     token_type,
   }: {
@@ -58,7 +57,6 @@ export class UserService {
     provider: string;
     providerAccountId: string;
     refresh_token: string | null;
-    access_token: string | null;
     expires_at: number | null;
     token_type: string | null;
   }): Promise<AccountEntity> {
@@ -68,7 +66,6 @@ export class UserService {
       provider,
       providerAccountId,
       refresh_token,
-      access_token,
       expires_at,
       token_type,
     });

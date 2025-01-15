@@ -27,6 +27,10 @@ export  function UserCard() {
                 )}
             </div>
             <div className={styles.userInfo}>
+                <p>Id : {session.user.id}</p>
+                <p>Access_token : {session.user.access_token}</p>
+                <p>Provider : {session.user.provider}</p>
+                <p>Token : {session.user.token}</p>
                 <h3>Nombre: {session.user.name}</h3>
                 <p>Email : {session.user.email}</p>
             </div>

@@ -3,20 +3,21 @@ import { type DefaultSession } from "next-auth";
 
 declare module "next-auth" {
   interface User {
+    token?:string
     provider?: string;
     providerAccountId?: string;
+    access_token: string;
   }
 
   interface Session {
-    token,
     user: {
+      id?: string;
+      token?: string;
       name?: string ;
       email?: string ;
       image?: string ;
       provider?: string ;
       access_token?: string;
-      expires_at?: string;
-
     } & DefaultSession["user"];
   }
 

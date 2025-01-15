@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
+import Credentials from "next-auth/providers/credentials";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -15,13 +16,52 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.APPLE_CLIENT_ID,
       clientSecret: process.env.APPLE_CLIENT_SECRET,
     }),
+    Credentials({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "correo@ejemplo.com" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_APP_URL}/auth/login`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: credentials?.email,
+                password: credentials?.password,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            console.error("Error en la autenticación de credenciales");
+            return null;
+          }
+
+          const user = await response.json();
+
+          if (!user || !user.id) {
+            console.error("Usuario no válido devuelto por el backend");
+            return null;
+          }
+
+          return { ...user, token: user.token };
+        } catch (error) {
+          console.error("Error en la autenticación de credenciales:", error);
+          return null;
+        }
+      },
+    }),
   ],
   callbacks: {
     async signIn({ user, account }) {
       try {
-        if (!account) {
+        if (account?.provider === "credentials" && user) {
           console.error("Error: El proveedor no devolvió una cuenta válida");
-          return false;
+          return true;
         }
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_APP_URL}/auth/social-login`,
@@ -32,10 +72,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               type: account?.type,
               provider: account?.provider,
               providerAccountId: account?.providerAccountId,
-              refresh_token: account?.refresh_token,
-              access_token: account?.access_token,
-              expires_at: account?.expires_at,
-              token_type: account?.token_type,
               email: user.email,
               image: user.image,
               name: user.name,
@@ -47,49 +83,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.error("Error al iniciar sesión con el backend");
           return false;
         }
-        const data = await response.json();
-        if(!data.token){
-          console.error("El backend no devolvio un oktne valido")
-          return false;
+
+        const userData = await response.json();
+        if (userData.id && userData.token) {
+          // Almacenar el id del usuario que devuelve el backend
+          user.id = userData.id;
+          user.token = userData.token; // Si tienes un token JWT del backend
         }
-        //
-        const tokenBackend = data.token;
-        console.log('esto es el token',tokenBackend)
-        return true;
+        console.log('datos desde el backend', userData)
+        return true
         //
       } catch (error) {
         console.error("Error en la comunicación con el backend:", error);
         return false;
       }
     },
-    async jwt({ token, account }) {
+    async jwt({ token, account, user }) {
       if (account) {
+        token.access_token = account.access_token || user?.access_token;
         token.provider = account.provider;
         token.providerAccountId = account.providerAccountId;
-        token.access_token = account.access_token;
-        token.expires_at = account.expires_at;
-
-        // Pasar el token del backend al JWT si existe
-        if (account.backendToken) {
-          token.backendToken = account.backendToken;
-        }
+        token.image = user?.image;
+        token.name = user?.name;
+        token.email = user?.email;
+        token.id = user?.id;
+        token.token = user?.token;
       }
-
       return token;
     },
-    async session({ session, token }) {
-      session.user.provider = token.provider as string | undefined;
-      session.user.providerAccountId = token.providerAccountId as
-        | string
-        | undefined;
-      session.user.access_token = token.access_token as string | undefined;
-      session.user.expires_at = token.expires_at as string | undefined;
+    async session({ session, token}) {
+      session.user.access_token = token.access_token as string;
       session.user.email = token.email as string;
       session.user.name = token.name as string | undefined;
       session.user.image = token.image as string | undefined;
-      session.token = token.backendToken || null;
- 
-
+      session.user.id = token.id as string ;
+      session.user.provider = token.provider as string | undefined;
+      session.user.token = token.token as string;
+      console.log('sessiondel usuario',session)
       return session;
     },
   },
@@ -99,6 +129,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   // descomenta las lineas de abajo cuando se cree una ruta login
   // pages: {
-  //   signIn: "/login",
+  //   signIn: "/auth",
   // },
 });

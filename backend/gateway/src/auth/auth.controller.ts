@@ -24,8 +24,6 @@ export class AuthController {
       name,
     } = body;
 
-    console.log('Datos recibidos desde el frontend:', body);
-
     // Busca al usuario por email
     let user = await this.userService.findByEmail(email);
 
@@ -48,7 +46,6 @@ export class AuthController {
         provider,
         providerAccountId,
         refresh_token,
-        access_token,
         expires_at,
         token_type,
       });
@@ -57,8 +54,10 @@ export class AuthController {
     // Genera el token JWT para la sesión
     const token = this.authService.generateJwtToken(user);
 
-    console.log('Token generado:', token);
+    console.log('Respuesta enviada al frontend:', { token });
 
-    return { token };
+    return { 
+      id: user.id,
+      token: token };
   }
 }
