@@ -1,5 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { AccountEntity } from './account.entity';
+import { QuestionEntity } from './question.entity';
+import { TransactionEntity } from './transactions.entity';
+import { NotificationEntity } from './notifications.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -20,4 +23,18 @@ export class UserEntity {
 
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
+
+  @OneToOne(() => QuestionEntity, (question) => question.user, {
+    cascade: true,
+  })
+  @JoinColumn({ name: 'questionId' })
+  question?: QuestionEntity;
+
+  @OneToMany(() => TransactionEntity, (transaction) => transaction.user)
+  transaction?: TransactionEntity[];
+
+  @OneToMany(() => NotificationEntity, (notification) => notification.user, {
+    cascade: true,
+  })
+  notifications!: NotificationEntity[];
 }
