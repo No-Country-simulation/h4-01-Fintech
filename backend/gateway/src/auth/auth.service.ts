@@ -5,6 +5,7 @@ import { UserService } from 'src/users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
 import { ConfigService } from '@nestjs/config';
 import { ConfigEnvs} from '../config/envs'
+import { RegisterUserDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -56,5 +57,14 @@ export class AuthService {
     }
 
     return this.jwtService.sign(payload, { secret });
+  }
+
+  async registerUser(dto: RegisterUserDto) {
+    
+    const user = await this.userService.createUser(dto);
+    return {
+      message: 'Usuario creado con éxito',
+      data: user,
+    };
   }
 }

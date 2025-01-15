@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entitys/user.entity';
 import { AccountEntity } from '../entitys/account.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -22,14 +23,32 @@ export class UserService {
   async createUser({
     email,
     name,
-    image,
+    dni,
+    password,
   }: {
     email: string;
-    name: string | null;
-    image: string | null;
+    name: string;
+    dni: string;
+    password: string;
   }): Promise<UserEntity> {
-    const user = this.userRepository.create({ email, name, image });
-    return this.userRepository.save(user);
+
+    try {
+      const userExists = await this.userRepository.findOneBy({
+        email: email,
+      });
+  
+      if (userExists) throw new ConflictException(`User with email ${email} already exists`);
+  
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(
+        password,
+        salt,
+      );
+      const user = this.userRepository.save({ email, name, dni, hashedPassword });
+      return user;
+    } catch (error) {
+      throw new BadRequestException(error.message) 
+    }
   }
 
   // Buscar cuenta por proveedor y providerAccountId
