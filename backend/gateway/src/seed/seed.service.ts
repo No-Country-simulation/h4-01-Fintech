@@ -5,6 +5,7 @@ import { UserEntity } from 'src/entitys/user.entity';
 import { AccountEntity } from 'src/entitys/account.entity';
 import { QuestionEntity } from 'src/entitys/question.entity';
 import { TransactionEntity } from 'src/entitys/transactions.entity';
+import { TypeTrans} from 'src/entitys/enum/typeTransaction';
 import { PortfolioEntity } from 'src/entitys/portfolio.entity';
 import { AssetEntity } from 'src/entitys/asset.entity';
 import * as bcrypt from 'bcryptjs';
@@ -89,5 +90,17 @@ export class SeedService {
     question.p_q7 = faker.number.int({ min: 1, max: 10 });
 
     await this.questionRepository.save(question);
+
+    const transaction = new TransactionEntity();
+    transaction.user = user;
+    transaction.asset = await this.assetRepository.findOneBy({});
+    transaction.quantity = parseFloat(faker.finance.amount());
+    transaction.price = parseFloat(faker.finance.amount());
+    transaction.transaction_type = faker.helpers.arrayElement(
+      Object.values(TypeTrans),
+    );
+    transaction.location = faker.location.city();
+
+    await this.transactionRepository.save(transaction);
   }
 }
