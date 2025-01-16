@@ -1,0 +1,35 @@
+# Ignorar node_modules (se instalarán de nuevo en la imagen)
+node_modules/
+
+# Ignorar dependencias opcionales que podrían instalarse localmente
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+.pnpm-debug.log
+
+# Archivos de configuración de TypeScript que no son necesarios en producción
+*.tsbuildinfo
+
+# Archivos temporales del sistema operativo o del editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+*.log
+
+# Archivos de cobertura de pruebas
+coverage/
+
+# Archivos de salida de compilación que no son necesarios
+dist/
+build/
+
+# Ignorar cache de test runners y herramientas de desarrollo
+.nyc_output/
+jest-cache/
+jest-test-results.json
+
+# Carpeta de resultados de documentación generada automáticamente (opcional)
+docs/

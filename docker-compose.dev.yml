@@ -1,0 +1,45 @@
+services:
+  gateway:
+    build: 
+      context: ./backend/gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT_GATEWAY: ${PORT_GATEWAY}
+      POSTGRES_URL: ${POSTGRES_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    volumes:
+      - ./backend/gateway:/usr/src/app
+
+  data:
+    build:
+      context: ./data
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    environment:
+      FASTAPI_ENV: ${FASTAPI_ENV}
+      DB_URL: ${DB_URL}
+      SECRET_KEY: ${SECRET_KEY}
+      BACKEND_URL: http://gateway:3001
+    volumes:
+      - ./data:/usr/src/app
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET}
+    volumes:
+      - ./front:/app
+      - /app/node_modules
