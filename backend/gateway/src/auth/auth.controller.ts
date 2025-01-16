@@ -2,7 +2,7 @@ import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
-import { RegisterUserDto } from './dto/register.dto';
+import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -58,9 +58,10 @@ export class AuthController {
 
     console.log('Respuesta enviada al frontend:', { token });
 
-    return { 
+    return {
       id: user.id,
-      token: token };
+      token: token,
+    };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -71,7 +72,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
-  async register(@Body() dto: RegisterUserDto) {
+  async register(@Body() dto: RegisterUserWithEmailAndPasswordDto) {
     return this.authService.registerUser(dto);
   }
 }

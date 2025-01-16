@@ -12,6 +12,9 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true, unique: true })
   email!: string | null;
 
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  dni!: string | null;
+
   @Column({ nullable: true }) // permitir nulo
   passwordhash?: string;
 

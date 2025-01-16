@@ -23,6 +23,20 @@ export class UserService {
   async createUser({
     email,
     name,
+    image,
+  }: {
+    email: string;
+    name: string | null;
+    image: string | null;
+  }): Promise<UserEntity> {
+    const user = this.userRepository.create({ email, name, image });
+    return this.userRepository.save(user);
+  }
+
+  // Crear usuario con correo y contraseña
+  async createUserWithEmailAndPassword({
+    email,
+    name,
     dni,
     password,
   }: {
@@ -44,7 +58,8 @@ export class UserService {
         password,
         salt,
       );
-      const user = this.userRepository.save({ email, name, dni, hashedPassword });
+      const user = this.userRepository.save({ email, name, dni, passwordhash: hashedPassword });
+      delete (await user).passwordhash
       return user;
     } catch (error) {
       throw new BadRequestException(error.message) 
