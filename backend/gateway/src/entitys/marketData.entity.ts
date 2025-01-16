@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { AssetEntity } from './asset.entity';
 
 @Entity('marketData')
-export class MarketData {
+export class MarketDataEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

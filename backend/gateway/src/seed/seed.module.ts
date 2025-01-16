@@ -7,6 +7,7 @@ import { PortfolioEntity } from '../entitys/portfolio.entity';
 import { TransactionEntity } from '../entitys/transactions.entity';
 import { AssetEntity } from '../entitys/asset.entity';
 import { QuestionEntity } from '../entitys/question.entity'
+import { MarketDataEntity } from '../entitys/marketData.entity'
 
 @Module({
   imports: [
@@ -15,8 +16,9 @@ import { QuestionEntity } from '../entitys/question.entity'
       AccountEntity,
       QuestionEntity,
       PortfolioEntity,
-      TransactionEntity,
       AssetEntity,
+      TransactionEntity,
+      MarketDataEntity,
     ]),
   ],
   providers: [SeedService],

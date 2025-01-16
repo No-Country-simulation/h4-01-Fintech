@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { PortfolioEntity } from './portfolio.entity';
-import { MarketData } from './marketData.entity';
+import { MarketDataEntity } from './marketData.entity';
 
 @Entity('asset')
 export class AssetEntity {
@@ -28,6 +28,6 @@ export class AssetEntity {
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio)
   portfolios: PortfolioEntity[];
 
-  @OneToMany(() => MarketData, (marketData) => marketData.asset)
-  marketData: MarketData[];
+  @OneToMany(() => MarketDataEntity, (marketData) => marketData.asset)
+  marketData: MarketDataEntity[];
 }
