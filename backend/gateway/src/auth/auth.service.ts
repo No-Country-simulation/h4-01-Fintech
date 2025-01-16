@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from '../entitys/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { UserService } from 'src/users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
 import { ConfigService } from '@nestjs/config';
-import { ConfigEnvs} from '../config/envs'
+import { ConfigEnvs} from '../config/envs';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -16,14 +17,15 @@ export class AuthService {
 
   async login(dto: LoginWithCredentialsDto) {
     const user = await this.userService.findByEmail(dto.email);
-    if (!user) throw new UnauthorizedException('Invalid credenitals');
+    if (!user) throw new UnauthorizedException('Credenciales no válidas');
+    const isValidPassword = await bcrypt.compare(dto.password, user.passwordhash);
+    if (!isValidPassword) throw new UnauthorizedException('Credenciales no válidas');
     const payload = {
       email: user.email,
       sub: user.id,
     };
     const secret =
       this.configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
-    console.log('JWT_SECRET en uso:', secret); // <-- Depuración
     if (!secret) {
       throw new Error('JWT_SECRET no definido');
     }
