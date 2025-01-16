@@ -1,14 +1,14 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigEnvs } from './envs';
 import { join } from 'path';
-import { AccountEntity } from '../entitys/account.entity';
-import { UserEntity } from '../entitys/user.entity';
-import { AssetEntity } from '../entitys/asset.entity';
-import { MarketData } from '../entitys/marketData.entity';
-import { NotificationEntity } from '../entitys/notifications.entity';
-import { PortfolioEntity } from '../entitys/portfolio.entity';
-import { QuestionEntity } from '../entitys/question.entity';
-import {TransactionEntity} from '../entitys/transactions.entity';
+import { AccountEntity } from '../entities/account.entity';
+import { UserEntity } from '../entities/user.entity';
+import { AssetEntity } from '../entities/asset.entity';
+import { MarketData } from '../entities/marketData.entity';
+import { NotificationEntity } from '../entities/notifications.entity';
+import { PortfolioEntity } from '../entities/portfolio.entity';
+import { QuestionEntity } from '../entities/question.entity';
+import {TransactionEntity} from '../entities/transactions.entity';
 
 const isProduction = true;
 
