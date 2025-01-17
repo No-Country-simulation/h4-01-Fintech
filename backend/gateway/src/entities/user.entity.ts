@@ -1,10 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Check } from 'typeorm';
 import { AccountEntity } from './account.entity';
 import { AnswerEntity } from './answer.entity';
 import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 
 @Entity('users')
+@Check(`risk_percentage BETWEEN 1 AND 10`)
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -29,6 +30,9 @@ export class UserEntity {
 
   @Column({ type: 'boolean', default: false})
   is_active: boolean;
+
+  @Column({ type: 'int'})
+  risk_precentage: number;
 
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
