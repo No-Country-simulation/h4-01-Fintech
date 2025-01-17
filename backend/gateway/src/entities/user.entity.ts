@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { AccountEntity } from './account.entity';
-import { QuestionEntity } from './question.entity';
+import { AnswerEntity } from './answer.entity';
 import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 
@@ -15,20 +15,26 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true, unique: true })
   email!: string | null;
 
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  dni!: string | null;
+
   @Column({ nullable: true }) // permitir nulo
   passwordhash?: string;
 
   @Column({ type: 'varchar', nullable: true })
   image!: string | null;
 
+  @Column({type: 'varchar', nullable: true})
+  token_expires_at: Date;
+
+  @Column({ type: 'boolean', default: false})
+  is_active: boolean;
+
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
 
-  @OneToOne(() => QuestionEntity, (question) => question.user, {
-    cascade: true,
-  })
-  @JoinColumn({ name: 'questionId' })
-  question?: QuestionEntity;
+  @OneToMany(() => AnswerEntity, (answer) => answer.user)
+  answers: AnswerEntity[];
 
   @OneToMany(() => TransactionEntity, (transaction) => transaction.user)
   transaction?: TransactionEntity[];
