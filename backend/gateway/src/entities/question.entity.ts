@@ -9,6 +9,9 @@ export class QuestionEntity {
     @Column({ type: 'varchar', nullable: false })
       question: string;
 
+    @Column({ type: 'varchar', unique: true, nullable: true})
+    order: number;
+
     @OneToMany(() => AnswerEntity, (answer) => answer.question)
     answers: AnswerEntity[];
 }
