@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../entitys/user.entity';
@@ -58,7 +58,9 @@ export class UserService {
         password,
         salt,
       );
-      const user = this.userRepository.save({ email, name, dni, passwordhash: hashedPassword });
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutos
+
+      const user = this.userRepository.save({ email, name, dni, passwordhash: hashedPassword, token_expires_at: expiresAt });
       delete (await user).passwordhash
       return user;
     } catch (error) {
@@ -104,5 +106,19 @@ export class UserService {
       token_type,
     });
     return this.accountRepository.save(account);
+  }
+
+  // Activar un usuario
+  async activateUser(
+    email: string,
+  ){
+    const user = await this.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    user.is_active = true;
+    user.token_expires_at =null;
+    const result = this.userRepository.save(user)
+    return result
   }
 }

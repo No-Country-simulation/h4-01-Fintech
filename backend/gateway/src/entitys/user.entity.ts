@@ -21,6 +21,12 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true })
   image!: string | null;
 
+  @Column({type: 'varchar', nullable: true})
+  token_expires_at: Date;
+
+  @Column({ type: 'boolean', default: false})
+  is_active: boolean;
+
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
 }

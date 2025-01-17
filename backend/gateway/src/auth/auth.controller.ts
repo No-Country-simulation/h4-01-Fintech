@@ -1,4 +1,5 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
@@ -74,5 +75,15 @@ export class AuthController {
   @Post('register')
   async register(@Body() dto: RegisterUserWithEmailAndPasswordDto) {
     return this.authService.registerUser(dto);
+  }
+
+  @Get('validate/:token')
+  async validateEmail(@Param('token') token: string, @Res() res: Response) {
+    const result = await this.authService.validateEmail(token);
+    if (result.success) {
+      return result;
+    } else {
+      return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
+    }
   }
 }

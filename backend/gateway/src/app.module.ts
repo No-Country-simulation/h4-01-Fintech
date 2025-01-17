@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigEnvs } from './config/envs'
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -37,9 +39,10 @@ import { ConfigEnvs } from './config/envs'
     TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
     UsersModule,
+    EmailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AppService, AuthService, EmailService],
   exports: [AuthService],
 })
 export class AppModule implements NestModule {

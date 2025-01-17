@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../entitys/user.entity';
 import { UserService } from 'src/users/user.service';
@@ -6,12 +6,14 @@ import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
 import { ConfigService } from '@nestjs/config';
 import { ConfigEnvs } from '../config/envs';
 import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-password.dto';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
+    private emailService: EmailService,
     private configService: ConfigService,
   ) {}
 
@@ -61,9 +63,47 @@ export class AuthService {
 
   async registerUser(dto: RegisterUserWithEmailAndPasswordDto) {
     const user = await this.userService.createUserWithEmailAndPassword(dto);
+    await this.sendEmailValidationLink(dto.email);
     return {
       message: 'Usuario creado con éxito',
       data: user,
     };
+  }
+
+  private async sendEmailValidationLink(email: string) {
+    const secret =
+      this.configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
+    if (!secret) {
+      throw new Error('JWT_SECRET no definido');
+    }
+    const token = this.jwtService.sign(email, { secret});
+    const isSent: boolean = await this.emailService.sendVerificationEmail(email, token);
+    if (!isSent) {
+      throw new InternalServerErrorException('Error sending email');
+    }
+
+    return true;
+  }
+
+  async validateEmail(token: string) {
+    let payload;
+    try {
+      payload = this.jwtService.verify(token, {secret: ConfigEnvs.JWT_SECRET});
+    } catch (e) {
+      console.log(e);
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    const email  = payload;
+    if (!email) {
+      throw new InternalServerErrorException('Email not in token');
+    }
+
+    const user = await this.userService.findByEmail(email);
+    if (!user || user.token_expires_at < new Date()) {
+      throw new BadRequestException('User not found or token expired');
+    }
+    await this.userService.activateUser(email)
+    return { success: true, message: 'Email successfully validated', email };
   }
 }
