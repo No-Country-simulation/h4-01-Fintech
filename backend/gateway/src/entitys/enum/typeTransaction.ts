@@ -10,3 +10,10 @@ export enum TypeTrans {
   REINVESTMENT = 'REINVESTMENT', // Reinversión de dividendos
   FEE = 'FEE', // Comisión o tarifa
 }
+
+
+// importnaten actualizar este enum 
+// fondeo de la cuenta
+// retiro de la plata 
+// inversion
+// retiro de inversion

@@ -62,6 +62,8 @@ export class SeedService {
   }
 
   // 📊 Crear algunos activos de prueba
+  // que son , son : (Pendiente) , Su valor varia, por una api externa. actualizacion diaria 
+  // pendiente que activos agregar.
   private async createAssets() {
     const assets = [
       {
@@ -101,6 +103,8 @@ export class SeedService {
     console.log('📈 Activos creados exitosamente.');
   }
 
+  // (En espera, se puede agregar un campo mas ver excalidraw)
+
   private async createMarketData() {
     const assets = await this.assetRepository.find();
 
@@ -114,6 +118,7 @@ export class SeedService {
     console.log('📊 Datos de MarketData creados exitosamente.');
   }
 
+  //  (Pendiente, )
   private async createPortfolioForUser(user: UserEntity) {
     const assets = await this.assetRepository.find();
 
@@ -200,7 +205,7 @@ export class SeedService {
 
     const transaction = new TransactionEntity();
     transaction.user = user;
-    transaction.asset = await this.assetRepository.findOneBy({});
+    transaction.asset = await this.assetRepository.findOneBy({}); // 100,0 , 10.000 
     transaction.quantity = parseFloat(faker.finance.amount());
     transaction.price = parseFloat(faker.finance.amount());
     transaction.transaction_type = faker.helpers.arrayElement(
@@ -211,3 +216,5 @@ export class SeedService {
     await this.transactionRepository.save(transaction);
   }
 }
+
+// recomendaciones, paquetes de tres histrumentos en el portafolios del cliente por separado.

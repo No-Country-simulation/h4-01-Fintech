@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { AssetEntity } from './asset.entity';
 
 @Entity('portfolio')
@@ -9,7 +9,7 @@ export class PortfolioEntity {
   @Column('uuid')
   userId: string;
 
-  @ManyToOne(() => AssetEntity, (asset) => asset.portfolios)
+  @ManyToMany(() => AssetEntity, (asset) => asset.portfolios)
   asset: AssetEntity;
 
   @Column('decimal', { precision: 10, scale: 2 })

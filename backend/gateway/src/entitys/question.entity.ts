@@ -49,3 +49,6 @@ export class QuestionEntity {
   @JoinColumn({ name: 'userId' })
   user!: UserEntity;
 }
+
+
+// actualizar con la rama que tiene heba creada NOTA
