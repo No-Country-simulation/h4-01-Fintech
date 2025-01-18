@@ -10,6 +10,10 @@ services:
       PORT_GATEWAY: ${PORT_GATEWAY}
       POSTGRES_URL: ${POSTGRES_URL}
       JWT_SECRET: ${JWT_SECRET}
+      MAILER_SERVICE: ${MAILER_SERVICE}
+      MAILER_EMAIL: ${MAILER_EMAIL}
+      MAILER_SECRET_KEY: ${MAILER_SECRET_KEY}
+      BACKEND_URL: ${BACKEND_URL}
     volumes:
       - ./backend/gateway:/usr/src/app
 

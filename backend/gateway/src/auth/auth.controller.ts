@@ -1,7 +1,10 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
+import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-password.dto';
+import { ResendVerificationDto } from './dto/resend-verification.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -57,14 +60,41 @@ export class AuthController {
 
     console.log('Respuesta enviada al frontend:', { token });
 
-    return { 
+    return {
       id: user.id,
-      token: token };
+      token: token,
+    };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() dto: LoginWithCredentialsDto) {
     return this.authService.login(dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async register(@Body() dto: RegisterUserWithEmailAndPasswordDto) {
+    return this.authService.registerUser(dto);
+  }
+
+  @Get('validate/:token')
+  async validateEmail(@Param('token') token: string, @Res() res: Response) {
+    try {
+        const result = await this.authService.validateEmail(token);
+        if (result.success) {
+            return res.json(result);
+        } else {
+            return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
+        }
+    } catch (error) {
+        console.error('Error en validación:', error);
+        return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
+    }
+  }
+
+  @Post('resend-verification')
+  async resendVerification(@Body() dto: ResendVerificationDto) {
+      return await this.authService.resendVerificationEmail(dto.email);
   }
 }
