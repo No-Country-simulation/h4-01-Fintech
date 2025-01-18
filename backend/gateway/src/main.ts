@@ -43,7 +43,7 @@ async function bootstrap() {
   // Ejecutar la semilla solo en desarrollo
   if (ConfigEnvs.NODE_ENV === 'development') {
     const seedService = app.get(SeedService);
-    await seedService.runSeed(); // Ejecutar la semilla antes de iniciar el servidor
+    await seedService.execute() // Ejecutar la semilla antes de iniciar el servidor
     Logger.log('Semilla ejecutada correctamente.');
   }
   

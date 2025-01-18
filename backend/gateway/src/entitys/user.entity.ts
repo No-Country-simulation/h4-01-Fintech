@@ -3,6 +3,7 @@ import { AccountEntity } from './account.entity';
 import { QuestionEntity } from './question.entity';
 import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
+import { BalanceEntity } from './balance.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -37,4 +38,7 @@ export class UserEntity {
     cascade: true,
   })
   notifications!: NotificationEntity[];
+
+  @OneToOne(() => BalanceEntity, (balance) => balance.user)
+  balance: BalanceEntity;
 }

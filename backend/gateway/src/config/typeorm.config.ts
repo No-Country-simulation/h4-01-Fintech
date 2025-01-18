@@ -9,6 +9,7 @@ import { NotificationEntity } from '../entitys/notifications.entity';
 import { PortfolioEntity } from '../entitys/portfolio.entity';
 import { QuestionEntity } from '../entitys/question.entity';
 import {TransactionEntity} from '../entitys/transactions.entity';
+import { BalanceEntity } from 'src/entitys/balance.entity';
 
 const isProduction = true;
 
@@ -28,6 +29,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     MarketDataEntity,
     PortfolioEntity,
     NotificationEntity,
+    BalanceEntity,
   ],
   migrations: [join(__dirname, '/../migrations/*.{ts,js}')],
   logging: isProduction, // Solo mostrar logs en desarrollo
