@@ -7,8 +7,9 @@ import { AssetEntity } from '../entities/asset.entity';
 import { MarketData } from '../entities/marketData.entity';
 import { NotificationEntity } from '../entities/notifications.entity';
 import { PortfolioEntity } from '../entities/portfolio.entity';
-import { QuestionEntity } from '../entities/question.entity';
+import { AnswerEntity } from '../entities/answer.entity';
 import {TransactionEntity} from '../entities/transactions.entity';
+import { QuestionEntity } from 'src/entities/question.entity';
 
 const isProduction = true;
 
@@ -20,8 +21,9 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   },
   synchronize: isProduction, // Solo habilitar en desarrollo
   entities: [
-    AccountEntity, 
+    AccountEntity,
     UserEntity,
+    AnswerEntity,
     QuestionEntity,
     AssetEntity,
     TransactionEntity,
