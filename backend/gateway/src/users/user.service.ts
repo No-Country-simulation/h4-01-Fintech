@@ -1,13 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { UserEntity } from '../entitys/user.entity';
-import { AccountEntity } from '../entitys/account.entity';
-import * as bcrypt from 'bcrypt';
-import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { AccountEntity } from '../entities/account.entity';
-
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {

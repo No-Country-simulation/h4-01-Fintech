@@ -25,15 +25,18 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true })
   image!: string | null;
 
-  @Column({type: 'varchar', nullable: true})
+  @Column({ type: 'varchar', nullable: true })
   token_expires_at: Date;
 
-  @Column({ type: 'boolean', default: false})
+  @Column({ type: 'boolean', default: false })
   is_active: boolean;
 
-  @Column({ type: 'int'})
-  risk_precentage: number;
+  @Column({ type: 'boolean', default: false })
+  is_validated_email: boolean;
 
+  @Column({ type: 'int', nullable: true })
+  risk_percentage: number;
+  
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
 
@@ -46,5 +49,5 @@ export class UserEntity {
   @OneToMany(() => NotificationEntity, (notification) => notification.user, {
     cascade: true,
   })
-  notifications!: NotificationEntity[];
+  notifications!: NotificationEntity[]
 }

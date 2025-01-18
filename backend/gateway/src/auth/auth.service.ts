@@ -5,6 +5,9 @@ import { UserService } from 'src/users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
 import { ConfigService } from '@nestjs/config';
 import { ConfigEnvs} from '../config/envs'
+import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-password.dto';
+import { EmailService } from 'src/email/email.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
