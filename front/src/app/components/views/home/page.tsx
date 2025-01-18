@@ -12,6 +12,7 @@ export default function Landing() {
 
 <Navbar></Navbar>
 </div>
+        
 
 
 
