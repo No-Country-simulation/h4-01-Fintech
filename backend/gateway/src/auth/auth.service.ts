@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../entitys/user.entity';
 import { UserService } from 'src/users/user.service';
@@ -79,7 +79,7 @@ export class AuthService {
     const token = this.jwtService.sign(email, { secret});
     const isSent: boolean = await this.emailService.sendVerificationEmail(email, token);
     if (!isSent) {
-      throw new InternalServerErrorException('Error sending email');
+      throw new InternalServerErrorException('Error enviando el email');
     }
 
     return true;
@@ -88,22 +88,50 @@ export class AuthService {
   async validateEmail(token: string) {
     let payload;
     try {
-      payload = this.jwtService.verify(token, {secret: ConfigEnvs.JWT_SECRET});
+        payload = this.jwtService.verify(token, {secret: ConfigEnvs.JWT_SECRET});
     } catch (e) {
-      console.log(e);
-      throw new UnauthorizedException('Invalid token');
+        throw new UnauthorizedException('Token inválido', e);
     }
 
-    const email  = payload;
+    const email = payload;
     if (!email) {
-      throw new InternalServerErrorException('Email not in token');
+        throw new InternalServerErrorException('Token incorrecto');
     }
-
     const user = await this.userService.findByEmail(email);
     if (!user || user.token_expires_at < new Date()) {
-      throw new BadRequestException('User not found or token expired');
+        throw new BadRequestException('Usuario no encontrado o token expirado');
     }
-    await this.userService.activateUser(email)
-    return { success: true, message: 'Email successfully validated', email };
+    await this.userService.activateUser(email);
+    const response = { success: true, message: 'Cuenta activada correctamente', email };
+    return response;
   }
+
+  async resendVerificationEmail(email: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+    }
+
+    if (user.is_validated_email) {
+        throw new BadRequestException('El email ya está validado');
+    }
+    const token = this.jwtService.sign(email, {
+        secret: ConfigEnvs.JWT_SECRET
+    });
+    user.token_expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
+    await this.userService.activateUser(email); 
+    try {
+      await this.emailService.sendVerificationEmail(
+        user.email,
+        token
+      );
+      return {
+        success: true,
+        message: 'Email de verificación reenviado exitosamente'
+      };
+    } catch (error) {
+      console.error('Error al enviar email:', error);
+      throw new InternalServerErrorException('Error al enviar el email de verificación');
+    }
+}
 }

@@ -20,7 +20,6 @@ export class RegisterUserWithEmailAndPasswordDto {
     @IsString()
     name: string;
 
-
     @ApiProperty({
     example: '78457778',
     description: 'DNI',
@@ -30,11 +29,14 @@ export class RegisterUserWithEmailAndPasswordDto {
     @IsString()
     @MinLength(8)
     @MaxLength(11)
+    @Matches(/^(?!0{2,})[0-9]+$/, {
+        message: 'DNI must be a valid number',
+    })
     dni: string;
 
     @ApiProperty({
     example: 'John_88Doe',
-    description: 'Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter and 1 number',
+    description: 'Password must have a Uppercase, lowercase letter, a number and one special character',
     nullable: false,
     minLength: 8,
     maxLength: 30
@@ -42,8 +44,8 @@ export class RegisterUserWithEmailAndPasswordDto {
     @IsNotEmpty()
     @MinLength(8)
     @MaxLength(30)
-    @Matches(/(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'The password must have a Uppercase, lowercase letter and a number'
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_])[^\s]+$/, {
+    message: 'The password must have a Uppercase, lowercase letter, a number and one special character'
     })
     password: string;
 }

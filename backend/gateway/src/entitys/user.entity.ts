@@ -27,6 +27,9 @@ export class UserEntity {
   @Column({ type: 'boolean', default: false})
   is_active: boolean;
 
+  @Column({ type: 'boolean', default: false})
+  is_validated_email: boolean;
+
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
 }

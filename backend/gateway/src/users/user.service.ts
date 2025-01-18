@@ -1,6 +1,6 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from '../entitys/user.entity';
 import { AccountEntity } from '../entitys/account.entity';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +12,7 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
+    private readonly dataSource: DataSource,
   ) {}
 
   // Buscar usuario por email
@@ -46,25 +47,70 @@ export class UserService {
     password: string;
   }): Promise<UserEntity> {
 
-    try {
-      const userExists = await this.userRepository.findOneBy({
-        email: email,
-      });
-  
-      if (userExists) throw new ConflictException(`User with email ${email} already exists`);
-  
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(
-        password,
-        salt,
-      );
-      const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutos
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-      const user = this.userRepository.save({ email, name, dni, passwordhash: hashedPassword, token_expires_at: expiresAt });
-      delete (await user).passwordhash
-      return user;
+    try {
+      const [userByEmail, userByDni] = await Promise.all([
+        this.userRepository.findOneBy({ email }),
+        this.userRepository.findOneBy({ dni })
+      ]);
+
+      if (userByEmail) {
+        throw new ConflictException(`El email ${email} ya está registrado`);
+      }
+
+      if (userByDni) {
+        throw new ConflictException(`El DNI ${dni} ya está registrado`);
+      }
+
+      const cleanEmail = email.toLowerCase().trim();
+      const cleanName = name.trim();
+      const cleanDni = dni.trim();
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+      const newUser = await queryRunner.manager.save(UserEntity, {
+        email: cleanEmail,
+        name: cleanName,
+        dni: cleanDni,
+        passwordhash: hashedPassword,
+        token_expires_at: expiresAt,
+        created_at: new Date(),
+        updated_at: new Date()
+      });
+
+      await queryRunner.manager.save(AccountEntity, {
+        userId: newUser.id,
+        type: 'credentials',
+        provider: 'credentials',
+        providerAccountId: newUser.id
+      });
+
+      await queryRunner.commitTransaction();
+
+      const userResponse = { ...newUser };
+      delete userResponse.passwordhash;
+      
+      return userResponse;
+
     } catch (error) {
-      throw new BadRequestException(error.message) 
+      await queryRunner.rollbackTransaction();
+
+      if (error instanceof ConflictException || error instanceof BadRequestException) {
+        throw error;
+      }
+      console.error('Error creating user:', error);
+      
+      throw new InternalServerErrorException(
+        'Error al crear el usuario. Por favor, inténtelo de nuevo.'
+      );
+
+    } finally {
+      await queryRunner.release();
     }
   }
 
@@ -111,14 +157,20 @@ export class UserService {
   // Activar un usuario
   async activateUser(
     email: string,
-  ){
+  ): Promise<UserEntity | string>{
     const user = await this.findByEmail(email);
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+        throw new NotFoundException('Usuario no encontrado');
     }
     user.is_active = true;
-    user.token_expires_at =null;
-    const result = this.userRepository.save(user)
-    return result
+    user.is_validated_email = true;
+    user.token_expires_at = null;
+    const result = await this.userRepository.save(user);
+    
+    return result;
   }
+
+  async updateUser(user: UserEntity): Promise<UserEntity> {
+    return this.userRepository.save(user);
+}
 }
