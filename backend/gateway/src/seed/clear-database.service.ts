@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from 'src/entitys/user.entity';
-import { AccountEntity } from 'src/entitys/account.entity';
-import { QuestionEntity } from 'src/entitys/question.entity';
-import { TransactionEntity } from 'src/entitys/transactions.entity';
-import { PortfolioEntity } from 'src/entitys/portfolio.entity';
-import { AssetEntity } from 'src/entitys/asset.entity';
-import { MarketDataEntity } from 'src/entitys/marketData.entity';
-import { BalanceEntity } from 'src/entitys/balance.entity';
+import { UserEntity } from 'src/entities/user.entity';
+import { AccountEntity } from 'src/entities/account.entity';
+import { QuestionEntity } from 'src/entities/question.entity';
+import { TransactionEntity } from 'src/entities/transactions.entity';
+import { PortfolioEntity } from 'src/entities/portfolio.entity';
+import { AssetEntity } from 'src/entities/asset.entity';
+import { MarketDataEntity } from 'src/entities/marketData.entity';
+import { BalanceEntity } from 'src/entities/balance.entity';
 
 @Injectable()
 export class ClearDatabaseService {

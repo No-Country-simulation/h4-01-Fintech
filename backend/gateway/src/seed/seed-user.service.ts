@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from '../entitys/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountEntity } from '../entitys/account.entity';
-import { BalanceEntity } from '../entitys/balance.entity';
-import { PortfolioEntity } from '../entitys/portfolio.entity';
+import { AccountEntity } from '../entities/account.entity';
+import { BalanceEntity } from '../entities/balance.entity';
+import { PortfolioEntity } from '../entities/portfolio.entity';
 import { faker } from '@faker-js/faker';
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';

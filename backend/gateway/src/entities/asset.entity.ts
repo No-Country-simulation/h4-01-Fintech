@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
 import { PortfolioEntity } from './portfolio.entity';
 import { MarketDataEntity } from './marketData.entity';
 
 @Entity('asset')
 export class AssetEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn()
   id: string;
 
   @Column({ length: 10 })

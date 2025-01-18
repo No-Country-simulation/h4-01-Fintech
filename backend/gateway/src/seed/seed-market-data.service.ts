@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
-import * as csv from 'csv-parser'; // Usamos 'csv-parser' directamente
-import { MarketDataEntity } from '../entitys/marketData.entity';
-import { AssetEntity } from '../entitys/asset.entity';
+import * as csv from 'csv-parser';
+import { MarketDataEntity } from '../entities/marketData.entity';
+import { AssetEntity } from '../entities/asset.entity';
 import { ConfigEnvs } from 'src/config/envs';
 import * as path from 'path';
 
@@ -12,7 +12,6 @@ interface MarketDataCsvRow {
   asset_id: string;
   fecha: string;
   cierre: string;
-  market_data_id: string;
 }
 
 @Injectable()
@@ -34,48 +33,83 @@ export class SeedMarketDataService {
     console.log('Archivo:', filePath);
 
     try {
-      // Creamos un flujo de lectura para el archivo CSV
       const fileStream = fs.createReadStream(filePath);
-
-      // Array para almacenar los resultados
       const results: MarketDataCsvRow[] = [];
 
-      // Usamos 'csv-parser' para leer y parsear el archivo CSV
       fileStream
         .pipe(csv())
         .on('data', (row) => {
-          results.push(row); // Almacenamos cada fila en el array
+          results.push(row);
         })
         .on('end', async () => {
-          await this.insertMarketData(results);
+          console.log(`Archivo procesado. Total de filas: ${results.length}`);
+          const batchSize = 100; // Tamaño del lote
+          const delayBetweenBatches = 2000; // Retraso entre lotes
+          await this.insertMarketDataInBatches(
+            results,
+            batchSize,
+            delayBetweenBatches,
+          );
         });
     } catch (error) {
       console.error('Error al leer el archivo CSV:', error);
     }
   }
 
-  private async insertMarketData(data: MarketDataCsvRow[]) {
-    for (const row of data) {
-      // const asset = await this.assetRepository.findOne({
-      //   where: { id: row.asset_id },
-      // });
+  private async insertMarketDataInBatches(
+    data: MarketDataCsvRow[],
+    batchSize: number,
+    delay: number,
+  ) {
+    for (let i = 0; i < data.length; i += batchSize) {
+      const batch = data.slice(i, i + batchSize);
+      console.log(
+        `Procesando lote ${i / batchSize + 1} de ${Math.ceil(data.length / batchSize)}...`,
+      );
 
-      //if (asset) {
-        const marketData = new MarketDataEntity();
-        // marketData.asset = asset;
-        marketData.price = parseFloat(row.cierre);
-        marketData.timestamp = this.parseDate(row.fecha);
+      for (const row of batch) {
+        let asset = await this.assetRepository.findOne({
+          where: { id: row.asset_id },
+        });
 
-        await this.marketDataRepository.save(marketData);
-      } else {
-        console.log(`Activo no encontrado para asset_id: ${row.asset_id}`);
+        if (!asset) {
+          // Crear un nuevo activo si no existe
+          asset = new AssetEntity();
+          asset.id = row.asset_id;
+          asset.name = `Asset ${row.asset_id}`; // Puedes ajustar esto según sea necesario
+          await this.assetRepository.save(asset);
+          console.log(`Activo creado: ${asset.id}`);
+        }
+
+        // Verificar si ya existe el dato de mercado
+        const existingMarketData = await this.marketDataRepository.findOne({
+          where: { asset: asset, timestamp: this.parseDate(row.fecha) },
+        });
+
+        if (!existingMarketData) {
+          // Crear y guardar el nuevo dato de mercado
+          const marketData = new MarketDataEntity();
+          marketData.asset = asset;
+          marketData.price = parseFloat(row.cierre);
+          marketData.timestamp = this.parseDate(row.fecha);
+          await this.marketDataRepository.save(marketData);
+          console.log(`Dato de mercado guardado para asset_id: ${asset.id}`);
+        } else {
+          console.log(
+            `Dato de mercado ya existe para asset_id: ${asset.id}, fecha: ${row.fecha}`,
+          );
+        }
+      }
+
+      if (i + batchSize < data.length) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
-    console.log('Datos de mercado inyectados exitosamente.');
+    console.log('Inyección de datos completada.');
   }
 
-  private parseDate(dateStr: string): Date {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  private parseDate(dateStr: string): Date {
     const [day, month, year] = dateStr.split('-');
     return new Date(`${20}${year}-${month}-${day}`);
   }
