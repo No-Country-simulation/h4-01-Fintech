@@ -4,6 +4,10 @@ import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from '../entitys/user.entity';
 import { AccountEntity } from '../entitys/account.entity';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../entities/user.entity';
+import { AccountEntity } from '../entities/account.entity';
+
 
 @Injectable()
 export class UserService {

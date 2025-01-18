@@ -1,8 +1,15 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigEnvs } from './envs';
 import { join } from 'path';
-import {AccountEntity} from '../entitys/account.entity';
-import {UserEntity} from '../entitys/user.entity';
+import { AccountEntity } from '../entities/account.entity';
+import { UserEntity } from '../entities/user.entity';
+import { AssetEntity } from '../entities/asset.entity';
+import { MarketData } from '../entities/marketData.entity';
+import { NotificationEntity } from '../entities/notifications.entity';
+import { PortfolioEntity } from '../entities/portfolio.entity';
+import { AnswerEntity } from '../entities/answer.entity';
+import {TransactionEntity} from '../entities/transactions.entity';
+import { QuestionEntity } from 'src/entities/question.entity';
 
 const isProduction = true;
 
@@ -15,7 +22,15 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   synchronize: isProduction, // Solo habilitar en desarrollo
   entities: [
     AccountEntity,
-    UserEntity
+    UserEntity,
+    AnswerEntity,
+    QuestionEntity,
+    AssetEntity,
+    TransactionEntity,
+    MarketData,
+    PortfolioEntity,
+    NotificationEntity
+
   ],
   migrations: [join(__dirname, '/../migrations/*.{ts,js}')],
   logging: isProduction, // Solo mostrar logs en desarrollo
