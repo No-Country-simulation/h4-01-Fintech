@@ -32,17 +32,37 @@ export class ClearDatabaseService {
   ) {}
 
   async clearDatabase() {
-    console.log('🧹 Limpiando la base de datos...');
+    try {
+      console.log('🧹 Limpiando la base de datos...');
 
-    await this.transactionRepository.delete({});
-    await this.portfolioRepository.delete({});
-    await this.questionRepository.delete({});
-    await this.accountRepository.delete({});
-    await this.userRepository.delete({});
-    await this.marketDataRepository.delete({});
-    await this.assetRepository.delete({});
-    await this.balanceRepository.delete({});
+      // Borrar las tablas en un orden adecuado (de las más dependientes a las menos dependientes)
+      await this.transactionRepository.delete({});
+      console.log('✅ Transacciones borradas.');
 
-    console.log('✅ Todas las tablas han sido limpiadas correctamente.');
+      await this.portfolioRepository.delete({});
+      console.log('✅ Portfolios borrados.');
+
+      await this.questionRepository.delete({});
+      console.log('✅ Preguntas borradas.');
+
+      await this.accountRepository.delete({});
+      console.log('✅ Cuentas borradas.');
+
+      await this.userRepository.delete({});
+      console.log('✅ Usuarios borrados.');
+
+      await this.marketDataRepository.delete({});
+      console.log('✅ Datos de mercado borrados.');
+
+      await this.assetRepository.delete({});
+      console.log('✅ Activos borrados.');
+
+      await this.balanceRepository.delete({});
+      console.log('✅ Balances borrados.');
+
+      console.log('✅ Todas las tablas han sido limpiadas correctamente.');
+    } catch (error) {
+      console.error('Error al limpiar la base de datos:', error);
+    }
   }
 }

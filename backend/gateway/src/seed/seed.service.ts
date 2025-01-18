@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SeedUserService } from './seed-user.service';
 // import { SeedAssetService } from './seed-assets.service';
-import { SeedMarketDataService } from './seed-market-data.service';
+// import { SeedMarketDataService } from './seed-market-data.service';
 // import { SeedPortfolioService } from './seed-portfolio.service';
 // import { SeedTransactionService } from './seed-transaction.service';
 import { ClearDatabaseService } from './clear-database.service';
@@ -11,7 +11,7 @@ export class SeedService {
   constructor(
     private readonly clearDatabaseService: ClearDatabaseService,
     private readonly seedUsersService: SeedUserService,
-    private readonly seedMarketDataService: SeedMarketDataService,
+    // private readonly seedMarketDataService: SeedMarketDataService,
     // private readonly seedAccountsService: SeedAccountsService,
     // private readonly seedTransactionsService: SeedTransactionsService,
     // private readonly seedAssetsService: SeedAssetsService,
@@ -24,8 +24,8 @@ export class SeedService {
       console.log('🧹 Limpiando base de datos...');
       await this.clearDatabaseService.clearDatabase();
 
-      console.log('Generando: market-data , insertando archivo')
-      await this.seedMarketDataService.seedData();
+      // console.log('Generando: market-data , insertando archivo')
+      // await this.seedMarketDataService.seedData();
 
       console.log('👤 Generando usuarios...');
       await this.seedUsersService.createCompleteUser();

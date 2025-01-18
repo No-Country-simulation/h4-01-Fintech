@@ -10,9 +10,9 @@ import { PortfolioEntity } from '../entities/portfolio.entity';
 import { TransactionEntity } from '../entities/transactions.entity';
 import { BalanceEntity} from '../entities/balance.entity';
 import { AnswerEntity } from '../entities/answer.entity';
-import { QuestionEntity } from '../entities/question.entity'
+import { QuestionEntity } from '../entities/question.entity';
 
-const isProduction = true;
+const isProduction = ConfigEnvs.NODE_ENV === 'production';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -20,7 +20,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   ssl: {
     rejectUnauthorized: false, // Permite conexiones sin verificar el certificado
   },
-  synchronize: isProduction, // Solo habilitar en desarrollo
+  synchronize: !isProduction, // Solo habilitar en desarrollo
   entities: [
     AccountEntity,
     UserEntity,

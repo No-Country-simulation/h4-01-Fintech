@@ -12,7 +12,7 @@ import { MarketDataApiService } from '../services/market-data-api.service'
 import { SeedUserService } from './seed-user.service';
 import { BalanceEntity } from 'src/entities/balance.entity';
 import { ClearDatabaseService } from './clear-database.service';
-import { SeedMarketDataService } from './seed-market-data.service';
+// import { SeedMarketDataService } from './seed-market-data.service';
 import { AnswerEntity } from '../entities/answer.entity';
 
 @Module({
@@ -34,7 +34,7 @@ import { AnswerEntity } from '../entities/answer.entity';
     MarketDataApiService,
     SeedUserService,
     ClearDatabaseService,
-    SeedMarketDataService,
+    // SeedMarketDataService,
   ],
 })
 export class SeedModule {}
