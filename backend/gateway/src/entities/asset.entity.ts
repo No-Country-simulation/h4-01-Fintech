@@ -7,22 +7,22 @@ export class AssetEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column({ length: 10 })
+  @Column()
   symbol: string;
 
-  @Column({ length: 100 })
+  @Column()
   name: string;
 
-  @Column({ length: 20 })
+  @Column({ nullable: true })
   asset_type: string;
 
-  @Column('decimal', { precision: 15, scale: 2 })
+  @Column('decimal', { precision: 15, scale: 2, nullable: true })
   market_price: number;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ nullable: true })
   sector?: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ nullable: true })
   info?: string;
 
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio)
