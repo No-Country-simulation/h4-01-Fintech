@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Check } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Check, OneToOne } from 'typeorm';
 import { AccountEntity } from './account.entity';
 import { AnswerEntity } from './answer.entity';
 import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
+import { BalanceEntity } from './balance.entity';
 
 @Entity('users')
 @Check(`risk_percentage BETWEEN 1 AND 10`)
@@ -36,7 +37,7 @@ export class UserEntity {
 
   @Column({ type: 'int', nullable: true })
   risk_percentage: number;
-  
+
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
 
@@ -49,5 +50,8 @@ export class UserEntity {
   @OneToMany(() => NotificationEntity, (notification) => notification.user, {
     cascade: true,
   })
-  notifications!: NotificationEntity[]
+  notifications!: NotificationEntity[];
+
+  @OneToOne(() => BalanceEntity, (balance) => balance.user)
+  balance: BalanceEntity;
 }

@@ -22,7 +22,9 @@ export class AnswerEntity {
   @Column({ type: 'int' })
   answer: number;
 
-  @ManyToOne(() => QuestionEntity, (question) => question.answers, { onDelete: 'CASCADE' })
+  @ManyToOne(() => QuestionEntity, (question) => question.answers, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'questionId' })
   question!: QuestionEntity;
 

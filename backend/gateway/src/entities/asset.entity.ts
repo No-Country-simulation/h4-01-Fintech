@@ -1,33 +1,42 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { PortfolioEntity } from './portfolio.entity';
-import { MarketData } from './marketData.entity';
+import { MarketDataEntity } from './marketData.entity';
 
 @Entity('asset')
 export class AssetEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn('uuid') // ID único generado automáticamente
   id: string;
 
-  @Column({ length: 10 })
+  @Column({ type: 'varchar', length: 255, unique: true })
   symbol: string;
 
-  @Column({ length: 100 })
+  @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ length: 20 })
-  asset_type: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  asset_type?: string;
 
-  @Column('decimal', { precision: 15, scale: 2 })
-  market_price: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  market_price?: number;
 
-  @Column({ length: 20, nullable: true })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   sector?: string;
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'char', nullable: true })
   info?: string;
 
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio)
-  portfolios: PortfolioEntity[];
+  portfolios?: PortfolioEntity[];
 
-  @OneToMany(() => MarketData, (marketData) => marketData.asset)
-  marketData: MarketData[];
+  @Column()
+  RiskProfile?: number
+
+  @OneToMany(() => MarketDataEntity, (marketData) => marketData.asset)
+  marketData?: MarketDataEntity[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

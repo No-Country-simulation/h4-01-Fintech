@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigEnvs } from './config/envs'
+import { SeedModule } from './seed/seed.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 
@@ -39,6 +40,7 @@ import { EmailModule } from './email/email.module';
     TypeOrmModule.forRoot(typeOrmConfig),
     AuthModule,
     UsersModule,
+    SeedModule,
     EmailModule,
   ],
   controllers: [AppController],

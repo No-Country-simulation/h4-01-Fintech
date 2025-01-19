@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
 import { AssetEntity } from './asset.entity';
 
-@Entity()
+@Entity('portfolio')
 export class PortfolioEntity {
   @PrimaryGeneratedColumn()
   portfolio_id: number;
@@ -9,18 +9,18 @@ export class PortfolioEntity {
   @Column('uuid')
   userId: string;
 
-  @ManyToOne(() => AssetEntity, (asset) => asset.portfolios)
+  @ManyToMany(() => AssetEntity, (asset) => asset.portfolios)
   asset: AssetEntity;
 
-  @Column('decimal', { precision: 10, scale: 4 })
+  @Column('decimal', { precision: 10, scale: 2 })
   quantity: number;
 
-  @Column('decimal', { precision: 15, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2 })
   avg_buy_price: number;
 
   @Column({ type: 'uuid', nullable: true })
   objective_id?: number;
 
-  @Column({ nullable: true })
-  current_price?: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  current_price: number;
 }
