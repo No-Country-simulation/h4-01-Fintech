@@ -11,6 +11,8 @@ import { AuthService } from './auth/auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigEnvs } from './config/envs'
 import { SeedModule } from './seed/seed.module';
+import { EmailService } from './email/email.service';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -39,9 +41,10 @@ import { SeedModule } from './seed/seed.module';
     AuthModule,
     UsersModule,
     SeedModule,
+    EmailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthService],
+  providers: [AppService, AuthService, EmailService],
   exports: [AuthService],
 })
 export class AppModule implements NestModule {
