@@ -2,50 +2,55 @@ import { IsEmail, IsNotEmpty, MinLength, MaxLength, IsString, Matches } from 'cl
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RegisterUserWithEmailAndPasswordDto {
-    @ApiProperty({
+  @ApiProperty({
     example: 'john_doe@test.com',
-    description: 'Email',
-    nullable: false
-    })
-    @IsNotEmpty()
-    @IsEmail()
-    email: string;
-    
-    @ApiProperty({
-    example: 'Marcus Edwards',
-    description: 'Full Name',
-    nullable: false
-    })
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+    description: 'Correo electrónico',
+    nullable: false,
+  })
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
 
-    @ApiProperty({
+  @ApiProperty({
+    example: 'Marcus Edwards',
+    description: 'Nombre completo',
+    nullable: false,
+  })
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @ApiProperty({
     example: '78457778',
     description: 'DNI',
-    nullable: false
-    })
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(8)
-    @MaxLength(11)
-    @Matches(/^(?!0{2,})[0-9]+$/, {
-        message: 'DNI must be a valid number',
-    })
-    dni: string;
+    nullable: false,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
+  @MaxLength(11)
+  @Matches(/^(?!0{2,})[0-9]+$/, {
+    message: 'El DNI debe ser un número válido',
+  })
+  dni: string;
 
-    @ApiProperty({
+  @ApiProperty({
     example: 'John_88Doe',
-    description: 'Password must have a Uppercase, lowercase letter, a number and one special character',
+    description:
+      'La contraseña debe incluir una letra mayúscula, una minúscula, un número y un carácter especial',
     nullable: false,
     minLength: 8,
-    maxLength: 30
-    })
-    @IsNotEmpty()
-    @MinLength(8)
-    @MaxLength(30)
-    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_])[^\s]+$/, {
-    message: 'The password must have a Uppercase, lowercase letter, a number and one special character'
-    })
-    password: string;
+    maxLength: 30,
+  })
+  @IsNotEmpty()
+  @MinLength(8)
+  @MaxLength(30)
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_])[^\s]+$/,
+    {
+      message:
+        'La contraseña debe incluir una letra mayúscula, una minúscula, un número y un carácter especial',
+    },
+  )
+  password: string;
 }

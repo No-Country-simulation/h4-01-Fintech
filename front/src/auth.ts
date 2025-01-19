@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import {ENV} from './constants/Envs'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: true,
   providers: [
     Google({
       authorization: {
@@ -14,22 +16,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "correo@ejemplo.com" },
+        email: {
+          label: "Email",
+          type: "text",
+          placeholder: "correo@ejemplo.com",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/login`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: credentials?.email,
-                password: credentials?.password,
-              }),
-            }
-          );
+          const response = await fetch(`${ENV.API_URL}/api/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials?.email,
+              password: credentials?.password,
+            }),
+          });
 
           if (!response.ok) {
             console.error("Error en la autenticación de credenciales");
@@ -58,21 +61,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.error("Error: El proveedor no devolvió una cuenta válida");
           return true;
         }
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/social-login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              type: account?.type,
-              provider: account?.provider,
-              providerAccountId: account?.providerAccountId,
-              email: user.email,
-              image: user.image,
-              name: user.name,
-            }),
-          }
-        );
+        console.log("url", `${ENV.API_URL}/api/auth/social-login`);
+        const response = await fetch(`${ENV.API_URL}/api/auth/social-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: account?.type,
+            provider: account?.provider,
+            providerAccountId: account?.providerAccountId,
+            email: user.email,
+            image: user.image,
+            name: user.name,
+          }),
+        });
 
         if (!response.ok) {
           console.error("Error al iniciar sesión con el backend");
@@ -85,8 +86,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.id = userData.id;
           user.token = userData.token; // Si tienes un token JWT del backend
         }
-        console.log('datos desde el backend', userData)
-        return true
+        console.log("datos desde el backend", userData);
+        return true;
         //
       } catch (error) {
         console.error("Error en la comunicación con el backend:", error);
@@ -106,16 +107,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token}) {
+    async session({ session, token }) {
       session.user.access_token = token.access_token as string;
       session.user.email = token.email as string;
       session.user.name = token.name as string | undefined;
       session.user.image = token.image as string | undefined;
-      session.user.id = token.id as string ;
+      session.user.id = token.id as string;
       session.user.provider = token.provider as string | undefined;
       session.user.token = token.token as string;
-      console.log('sessiondel usuario',session)
+      console.log("sessiondel usuario", session);
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url === baseUrl) {
+        return baseUrl; 
+      }
+      return baseUrl; 
     },
   },
   secret: process.env.NEXTAUTH_SECRET!,
@@ -123,7 +130,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
   },
   // descomenta las lineas de abajo cuando se cree una ruta login
-  // pages: {
-  //   signIn: "/auth",
-  // },
+  pages: {
+    signIn: "/auth/login",
+    error: "/error",
+  },
 });

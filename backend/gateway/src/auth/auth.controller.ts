@@ -19,10 +19,10 @@ export class AuthController {
       type,
       provider,
       providerAccountId,
-      refresh_token,
+      //refresh_token,
       //access_token,
-      expires_at,
-      token_type,
+      //expires_at,
+      //token_type,
       email,
       image,
       name,
@@ -49,9 +49,10 @@ export class AuthController {
         type,
         provider,
         providerAccountId,
-        refresh_token,
-        expires_at,
-        token_type,
+        //refresh_token,
+        //expires_at,
+        //token_type,
+        
       });
     }
 

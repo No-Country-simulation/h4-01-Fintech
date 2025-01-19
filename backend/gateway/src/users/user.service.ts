@@ -54,7 +54,7 @@ export class UserService {
     try {
       const [userByEmail, userByDni] = await Promise.all([
         this.userRepository.findOneBy({ email }),
-        this.userRepository.findOneBy({ dni })
+        this.userRepository.findOneBy({ dni }),
       ]);
 
       if (userByEmail) {
@@ -80,37 +80,42 @@ export class UserService {
         passwordhash: hashedPassword,
         token_expires_at: expiresAt,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       });
 
       await queryRunner.manager.save(AccountEntity, {
         userId: newUser.id,
         type: 'credentials',
         provider: 'credentials',
-        providerAccountId: newUser.id
+        providerAccountId: newUser.id,
       });
 
       await queryRunner.commitTransaction();
 
       const userResponse = { ...newUser };
       delete userResponse.passwordhash;
-      
-      return userResponse;
 
+      return userResponse;
     } catch (error) {
       await queryRunner.rollbackTransaction();
 
-      if (error instanceof ConflictException || error instanceof BadRequestException) {
+      if (
+        error instanceof ConflictException ||
+        error instanceof BadRequestException
+      ) {
         throw error;
       }
-      console.error('Error creating user:', error);
-      
-      throw new InternalServerErrorException(
-        'Error al crear el usuario. Por favor, inténtelo de nuevo.'
-      );
 
-    } finally {
-      await queryRunner.release();
+      if (error instanceof Error && error.message.includes('bcrypt')) {
+        throw new InternalServerErrorException(
+          'Error al encriptar la contraseña. Intente nuevamente.',
+        );
+      }
+
+      console.error('Error creating user:', error);
+      throw new InternalServerErrorException(
+        'Error al crear el usuario. Por favor, inténtelo de nuevo.',
+      );
     }
   }
 
@@ -130,26 +135,26 @@ export class UserService {
     type,
     provider,
     providerAccountId,
-    refresh_token,
-    expires_at,
-    token_type,
+    //refresh_token,
+    //expires_at,
+    //token_type,
   }: {
     userId: string;
     type: string;
     provider: string;
     providerAccountId: string;
-    refresh_token: string | null;
-    expires_at: number | null;
-    token_type: string | null;
+    //refresh_token: string | null;
+    //expires_at: number | null;
+    //token_type: string | null;
   }): Promise<AccountEntity> {
     const account = this.accountRepository.create({
       userId,
       type,
       provider,
       providerAccountId,
-      refresh_token,
-      expires_at,
-      token_type,
+      //refresh_token,
+      //expires_at,
+      //token_type,
     });
     return this.accountRepository.save(account);
   }

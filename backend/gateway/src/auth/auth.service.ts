@@ -21,8 +21,12 @@ export class AuthService {
   async login(dto: LoginWithCredentialsDto) {
     const user = await this.userService.findByEmail(dto.email);
     if (!user) throw new UnauthorizedException('Credenciales no válidas');
-    const isValidPassword = await bcrypt.compare(dto.password, user.passwordhash);
-    if (!isValidPassword) throw new UnauthorizedException('Credenciales no válidas');
+    const isValidPassword = await bcrypt.compare(
+      dto.password,
+      user.passwordhash,
+    );
+    if (!isValidPassword)
+      throw new UnauthorizedException('Credenciales no válidas');
     const payload = {
       email: user.email,
       sub: user.id,
@@ -67,6 +71,7 @@ export class AuthService {
     const user = await this.userService.createUserWithEmailAndPassword(dto);
     await this.sendEmailValidationLink(dto.email);
     return {
+      status: true,
       message: 'Usuario creado con éxito',
       data: user,
     };
@@ -78,8 +83,11 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_SECRET no definido');
     }
-    const token = this.jwtService.sign(email, { secret});
-    const isSent: boolean = await this.emailService.sendVerificationEmail(email, token);
+    const token = this.jwtService.sign(email, { secret });
+    const isSent: boolean = await this.emailService.sendVerificationEmail(
+      email,
+      token,
+    );
     if (!isSent) {
       throw new InternalServerErrorException('Error enviando el email');
     }
@@ -89,51 +97,90 @@ export class AuthService {
 
   async validateEmail(token: string) {
     let payload;
-    try {
-        payload = this.jwtService.verify(token, {secret: ConfigEnvs.JWT_SECRET});
-    } catch (e) {
-        throw new UnauthorizedException('Token inválido', e);
+
+    // Validación inicial del token
+    if (!token || typeof token !== 'string') {
+      console.error('Token ausente o malformado');
+      throw new UnauthorizedException('Token ausente o inválido');
     }
 
-    const email = payload;
-    if (!email) {
-        throw new InternalServerErrorException('Token incorrecto');
+    try {
+      // Verificación del token
+      payload = this.jwtService.verify(token, {
+        secret: ConfigEnvs.JWT_SECRET,
+      });
+    } catch (error) {
+      // Manejo de errores específicos del JWT
+      if (error.name === 'TokenExpiredError') {
+        console.error('Error: Token expirado', error.message);
+        throw new UnauthorizedException('Token expirado');
+      }
+
+      if (error.name === 'JsonWebTokenError') {
+        console.error('Error: Token malformado', error.message);
+        throw new UnauthorizedException('Token inválido');
+      }
+
+      // Otros errores inesperados
+      console.error('Error inesperado al verificar el token:', error.message);
+      throw new InternalServerErrorException('Error al validar el token');
     }
+
+    // Validación de contenido del payload
+    const email = payload?.email;
+    if (!email) {
+      console.error('El token no contiene un email válido:', payload);
+      throw new BadRequestException('Token incorrecto o malformado');
+    }
+
+    // Validar usuario en la base de datos
     const user = await this.userService.findByEmail(email);
     if (!user || user.token_expires_at < new Date()) {
-        throw new BadRequestException('Usuario no encontrado o token expirado');
+      console.error('Usuario no encontrado o token expirado:', { email });
+      throw new BadRequestException('Usuario no encontrado o token expirado');
     }
-    await this.userService.activateUser(email);
-    const response = { success: true, message: 'Cuenta activada correctamente', email };
-    return response;
+
+    // Activar usuario
+    try {
+      await this.userService.activateUser(email);
+    } catch (error) {
+      console.error('Error al activar el usuario:', error.message);
+      throw new InternalServerErrorException('No se pudo activar la cuenta');
+    }
+
+    // Respuesta exitosa
+    return {
+      success: true,
+      message: 'Cuenta activada correctamente',
+      email,
+    };
   }
 
   async resendVerificationEmail(email: string) {
     const user = await this.userService.findByEmail(email);
     if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
 
     if (user.is_validated_email) {
-        throw new BadRequestException('El email ya está validado');
+      throw new BadRequestException('El email ya está validado');
     }
     const token = this.jwtService.sign(email, {
-        secret: ConfigEnvs.JWT_SECRET
+      secret: ConfigEnvs.JWT_SECRET,
     });
     user.token_expires_at = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
-    await this.userService.activateUser(email); 
+    await this.userService.activateUser(email);
     try {
-      await this.emailService.sendVerificationEmail(
-        user.email,
-        token
-      );
+      await this.emailService.sendVerificationEmail(user.email, token);
       return {
         success: true,
-        message: 'Email de verificación reenviado exitosamente'
+        message: 'Email de verificación reenviado exitosamente',
       };
     } catch (error) {
       console.error('Error al enviar email:', error);
-      throw new InternalServerErrorException('Error al enviar el email de verificación');
+      throw new InternalServerErrorException(
+        'Error al enviar el email de verificación',
+      );
     }
-}
+  }
 }

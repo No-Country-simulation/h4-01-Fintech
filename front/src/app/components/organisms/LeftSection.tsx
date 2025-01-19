@@ -1,4 +1,4 @@
-export default function LeftSection() {
+export function LeftSection() {
   return (
     <div className="hidden lg:flex lg:w-2/5 bg-[#0052CC] text-white p-12 flex-col justify-center">
     
