@@ -4,7 +4,7 @@ import styles from '@/app/ui/cards.module.css'
 import { useSession } from "next-auth/react"
 import { SignOut } from "@/app/components/atoms/signout"
 
-export  function UserCard() {
+export  function userCard() {
     const { data: session } = useSession()
 
     if (!session?.user) {

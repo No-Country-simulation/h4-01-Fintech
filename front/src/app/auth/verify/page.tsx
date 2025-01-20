@@ -1,13 +1,13 @@
-import { EmailVerificationSkeleton } from '@/app/components/skeletons/EmailVerificationSkeleton';
-import ClientVerify from '@/app/auth/verify/ClientVerify';
+import { EmailVerificationSkeleton } from '@/app/components/skeletons/emailVerificationSkeleton';
+import VerifyEmail from '@/app/auth/verify/clientVerify';
 import { Suspense } from 'react';
 
-export default function Verify() {
+export default function page() {
     return (
         <>
             <section className="flex items-center justify-center min-h-screen">
                 <Suspense fallback={<EmailVerificationSkeleton />}>
-                    <ClientVerify />
+                    <VerifyEmail />
                 </Suspense>
             </section>
         </>

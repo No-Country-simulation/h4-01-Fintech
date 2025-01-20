@@ -1,7 +1,7 @@
-import RegistrationForm from '@/components/views/register/register'
+import RegistrationForm from '@/app/components/views/register/register'
 import React from 'react'
 
-export default function register() {
+export default function page() {
   return (
       <RegistrationForm/>
   )

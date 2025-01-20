@@ -1,5 +1,5 @@
 'use client'
-import {LeftSection} from "../../../app/components/organisms/LeftSection"
+import {LeftSection} from "../../organisms/leftSection"
 import Link from 'next/link'
 import {Button} from '@/components/ui/button';
 import { useRouter } from "next/navigation";

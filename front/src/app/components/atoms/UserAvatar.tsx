@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
-export default function UserAvatar() {
+export default function AvatarUser() {
     const { data: session } = useSession()
 
     if (!session?.user?.image) return null

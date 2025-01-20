@@ -3,6 +3,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import SignIn from '../../atoms/signin';
 import { registrationSchema } from "@/validations/schemas";
 import { z } from "zod";
 import { registerService } from '@/services/authService';
@@ -11,9 +12,8 @@ import { registerService } from '@/services/authService';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {LeftSection} from '@/app/components/organisms/leftSection';
+import {leftSection} from '@/app/components/organisms/leftSection';
 import { useToast } from "@/hooks/use-toast";
-import SignIn from "@/app/components/atoms/signin";
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
 
@@ -77,7 +77,7 @@ export default function RegistrationForm() {
   return (
     <div className="min-h-screen flex">
       {/* Left Section */}
-      <LeftSection />
+      <leftSection/>
 
       {/* Right Section */}
       <div className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col">

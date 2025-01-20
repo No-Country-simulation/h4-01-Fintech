@@ -1,4 +1,4 @@
-import { ENV } from "@/constants/Envs";
+import { env } from "@/constants/envs";
 
 // No tocar el nombre de las propiedades
 interface PropsBody {
@@ -8,10 +8,10 @@ interface PropsBody {
   password: string;
 }
 
-export const RegisterService = {
+export const registerService = {
   async post(data: PropsBody) {
     try {
-      const response = await fetch(`${ENV.API_URL}/api/auth/register`, {
+      const response = await fetch(`${env.API_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,10 +1,10 @@
-import { ENV } from "@/constants/Envs";
+import { env } from "@/constants/envs";
 
 export const VerifyEmailService = {
   async get(token: string) {
     try {
       const response = await fetch(
-        `${ENV.API_URL}/api/auth/validate/${token}`,
+        `${env.API_URL}/api/auth/validate/${token}`,
         {
           method: "GET",
           headers: {

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-const VerifyEmailPage = () => {
+const verifyEmailPage = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="w-full max-w-md p-8 sm:p-12 bg-white rounded-lg shadow-md">
@@ -26,4 +26,4 @@ const VerifyEmailPage = () => {
     );
 };
 
-export default VerifyEmailPage;
+export default verifyEmailPage;

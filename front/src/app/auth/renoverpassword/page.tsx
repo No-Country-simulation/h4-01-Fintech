@@ -1,8 +1,8 @@
-import RecoverPassword from '@/components/views/recoverpassword/page'
+import RecoverPassword from '@/app/components/views/recoverpassword/page'
 import React from 'react'
 
 
-export default function RecoverPasswordPage() {
+export default function pega() {
   return (
     <div>
           <RecoverPassword/>

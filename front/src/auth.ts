@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import {ENV} from './constants/Envs'
+import {env} from './constants/envs'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
-          const response = await fetch(`${ENV.API_URL}/api/auth/login`, {
+          const response = await fetch(`${env.API_URL}/api/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -61,8 +61,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.error("Error: El proveedor no devolvió una cuenta válida");
           return true;
         }
-        console.log("url", `${ENV.API_URL}/api/auth/social-login`);
-        const response = await fetch(`${ENV.API_URL}/api/auth/social-login`, {
+        console.log("url", `${env.API_URL}/api/auth/social-login`);
+        const response = await fetch(`${env.API_URL}/api/auth/social-login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

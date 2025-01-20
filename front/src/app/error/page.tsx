@@ -1,3 +1,3 @@
-export default function AuthErrorPage() {
+export default function pague() {
   return <>Oops</>
 }
