@@ -30,6 +30,7 @@ export class AuthService {
     const payload = {
       email: user.email,
       sub: user.id,
+      role: user.role,
     };
     const secret =
       this.configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
@@ -48,6 +49,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role
       },
     };
   }
