@@ -13,6 +13,7 @@ import { ConfigEnvs } from './config/envs'
 import { SeedModule } from './seed/seed.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
+import { RbacModule } from './rbac/rbac.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { EmailModule } from './email/email.module';
     UsersModule,
     SeedModule,
     EmailModule,
+    RbacModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, EmailService],

@@ -4,6 +4,7 @@ import { AnswerEntity } from './answer.entity';
 import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 import { BalanceEntity } from './balance.entity';
+import { Role } from 'src/rbac/roles';
 
 @Entity('users')
 @Check(`risk_percentage BETWEEN 1 AND 10`)
@@ -37,6 +38,9 @@ export class UserEntity {
 
   @Column({ type: 'int', nullable: true })
   risk_percentage: number;
+
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 
   @OneToMany(() => AccountEntity, (account) => account.userId)
   accounts!: AccountEntity[];
