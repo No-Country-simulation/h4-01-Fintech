@@ -1,4 +1,4 @@
-import { EmailVerificationSkeleton } from '@/components/skeletons/EmailVerificationSkeleton';
+import { EmailVerificationSkeleton } from '@/app/components/skeletons/EmailVerificationSkeleton';
 import ClientVerify from './ClientVerify';
 import { Suspense } from 'react';
 

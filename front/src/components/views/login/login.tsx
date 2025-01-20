@@ -1,7 +1,7 @@
-import { LeftSection } from "@/components/organisms/LeftSection";
+import { LeftSection } from "@/app/components/organisms/LeftSection";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import SignIn from '../../atoms/signin';
+import SignIn from '../../../app/components/atoms/signin';
 
 export default function Login() {
   return (

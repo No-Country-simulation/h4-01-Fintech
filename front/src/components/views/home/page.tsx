@@ -1,4 +1,4 @@
-import Navbar from "../../organisms/Navbar";
+import Navbar from "../../../app/components/organisms/Navbar";
 
 export default function Landing() {
 

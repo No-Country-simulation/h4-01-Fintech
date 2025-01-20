@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { VerifyEmailService } from '@/services/validatorEmail';
-import { EmailVerificationSkeleton } from '@/components/skeletons/EmailVerificationSkeleton';
+import { EmailVerificationSkeleton } from '@/app/components/skeletons/EmailVerificationSkeleton';
 
 
 export default function ClientVerify() {
