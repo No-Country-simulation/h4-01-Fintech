@@ -2,7 +2,7 @@
 export default function Home() {
   return (
     <div>
-      <p>Home</p>
+      <p className="text-lg">Home</p>
     </div>
   );
 }
