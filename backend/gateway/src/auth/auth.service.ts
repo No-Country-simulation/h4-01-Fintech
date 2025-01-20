@@ -43,6 +43,7 @@ export class AuthService {
     });
 
     return {
+      status: true,
       message: 'Incio de sesión exitoso',
       access_token: token,
       data: {
@@ -58,6 +59,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
+      role: user.role
     };
 
     const secret =

@@ -19,7 +19,7 @@ export class QuestionsService {
         });
         await this.questionRepository.save(newQuestion);
         return {
-            success: true,
+            status: true,
             message: 'La pregunta ha sido añadida con éxito'
         }
     }
