@@ -14,10 +14,4 @@ export default function UserAvatar() {
             <AvatarFallback>{session.user.name} || &apos;Iupi&apos;</AvatarFallback>
         </Avatar>
     )
-
-    // return (
-    //     <div>
-    //         <Image src={session.user.image} alt="User Avatar" width={80} height={80}/>
-    //     </div>
-    // )
 }
