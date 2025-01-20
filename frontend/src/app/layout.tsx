@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import '@/app/ui/global.css';
-import { inter , lusitana} from '@/app/ui/fonts';
+import { inter , lusitana} from './ui/fonts';
 
 
 export const metadata: Metadata = {
