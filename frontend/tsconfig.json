@@ -1,86 +1,70 @@
+/* eslint-disable jsonc/sort-keys */
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
-    "target": "es5",
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+
+    "target": "es2017",
+    "outDir": "out",
+    "sourceMap": true,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "checkJs": true,
-    "removeComments": true,
-    "alwaysStrict": true,
-    "preserveConstEnums": true,
-    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "verbatimModuleSyntax": true,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+
     "jsx": "preserve",
+    "noEmit": true,
+    "isolatedModules": true,
     "incremental": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": false,
-    "declaration": false,
-    "allowImportingTsExtensions": true,
+
+    // Load types
+    "types": ["vitest/globals"],
+
+    // Path aliases
     "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/public/*": ["./public/*"]
+    },
+
+    // Editor support
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@coreTypes/*": [
-        "./src/core/types/*"
-      ],
-      "@styles/*": [
-        "./src/core/styles/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ],
-      "@features/*": [
-        "./src/features/*"
-      ],
-      "@core/*": [
-        "./src/core/*"
-      ],
-      "test-utils": [
-        "./__test__/test-utils.jsx"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-      "@root/*": [
-        "*"
-      ]
-    }
+    ]
   },
-  "include": [
-    "next-env.d.ts",
-    "types.d.ts",
-    "global.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next.config.mjs"
-  ],
   "exclude": [
     "./out/**/*",
     "./node_modules/**/*",
     "**/*.spec.ts",
-    "**/*.test.ts",
-    "**/*.test.tsx",
     "**/*.e2e.ts"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".storybook/*.ts",
+    ".next/types/**/*.ts",
+    "**/*.mts"
   ]
 }
