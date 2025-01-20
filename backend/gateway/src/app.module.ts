@@ -14,6 +14,7 @@ import { SeedModule } from './seed/seed.module';
 import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { RbacModule } from './rbac/rbac.module';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { RbacModule } from './rbac/rbac.module';
     SeedModule,
     EmailModule,
     RbacModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, EmailService],
