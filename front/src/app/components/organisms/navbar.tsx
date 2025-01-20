@@ -1,11 +1,10 @@
 'use client'
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import AvatarUser from "../atoms/useravatar";
+import AvatarUser from '@/app/components/atoms/useravatar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-
 
 export default function Navbar() {
   const { data: session } = useSession()
