@@ -1,4 +1,4 @@
-import RecoverPassword from '@/components/views/recoverpassword/page'
+import RecoverPassword from '@/components/views/recoverpassword/revocer'
 import React from 'react'
 
 
