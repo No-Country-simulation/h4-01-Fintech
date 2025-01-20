@@ -59,17 +59,10 @@ export default [
       "no-undef": "error",
       "no-console": "error",
       "no-debugger": "error",
-      "import/no-unresolved": "error",
-
-      // Reglas de TypeScript
-      "@typescript-eslint/no-unused-vars": ["error"],
-      "@typescript-eslint/no-explicit-any": "error",
-
-      // Reglas de React
-      "react/react-in-jsx-scope": "off", // Next.js ya incluye React automáticamente
-      "react/prop-types": "off",
 
       // Reglas de importación
+      "import/no-unresolved": "error", // Detecta imports inválidos
+      "import/no-relative-parent-imports": "error", // Prohíbe rutas relativas como "../"
       "import/order": [
         "warn",
         {
@@ -80,8 +73,15 @@ export default [
           "newlines-between": "always",
         },
       ],
-      "import/no-unresolved": "error",
       "import/newline-after-import": "warn",
+
+      // Reglas de TypeScript
+      "@typescript-eslint/no-unused-vars": ["error"],
+      "@typescript-eslint/no-explicit-any": "error",
+
+      // Reglas de React
+      "react/react-in-jsx-scope": "off", // Next.js ya incluye React automáticamente
+      "react/prop-types": "off",
     },
   },
   nextConfig, // Configuración específica para Next.js
