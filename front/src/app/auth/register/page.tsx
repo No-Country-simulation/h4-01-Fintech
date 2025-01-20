@@ -1,5 +1,6 @@
 
-import RegistrationForm from '@/components/views/views/register/register'
+
+import RegistrationForm from '@/components/views/register/register'
 import React from 'react'
 
 export default function Page() {
