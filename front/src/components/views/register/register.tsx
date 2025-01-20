@@ -12,7 +12,7 @@ import { RegisterService } from '@/services/authService';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {LeftSection} from '@/app/app-components/organisms/LeftSection';
+import {LeftSection} from '@/components/organisms/LeftSection';
 import { useToast } from "@/hooks/use-toast";
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
