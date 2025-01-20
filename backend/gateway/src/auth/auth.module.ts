@@ -8,10 +8,12 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmailService } from 'src/email/email.service';
+import { RbacModule } from 'src/rbac/rbac.module';
 
 @Module({
   imports: [
     UsersModule,
+    RbacModule,
     ConfigModule,
     TypeOrmModule.forFeature([UserEntity, AccountEntity]),
   ],
