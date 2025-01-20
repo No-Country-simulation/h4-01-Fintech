@@ -1,8 +1,8 @@
 'use client'
-import {LeftSection} from "../../organisms/leftSection"
 import Link from 'next/link'
 import {Button} from '@/components/ui/button';
 import { useRouter } from "next/navigation";
+import { LeftSection } from '@/components/organisms/leftSection';
 
 export default function RecoverPassword() {
   const router = useRouter()

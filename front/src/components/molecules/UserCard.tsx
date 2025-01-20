@@ -1,8 +1,8 @@
 'use client'
-import Image from "next/image"
-import styles from '@/app/ui/cards.module.css'
-import { useSession } from "next-auth/react"
-import { SignOut } from "@/app/components/atoms/signout"
+import Image from "next/image";
+import styles from '@/app/ui/cards.module.css';
+import { useSession } from "next-auth/react";
+import { SignOut } from "../atoms/signout";
 
 export  function userCard() {
     const { data: session } = useSession()

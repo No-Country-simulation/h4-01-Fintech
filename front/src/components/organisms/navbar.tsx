@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import AvatarUser from "../atoms/useravatar";
 
+
 export default function Navbar() {
   const { data: session } = useSession()
   
