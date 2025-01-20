@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
-import UserAvatar from "../atoms/UserAvatar";
+import UserAvatar from "../atoms/useravatar";
 
 export default function Navbar() {
   const { data: session } = useSession()
