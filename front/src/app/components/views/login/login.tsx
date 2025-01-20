@@ -1,4 +1,4 @@
-import { leftSection } from "@/app/components/organisms/leftSection";
+import { LeftSection } from "@/app/components/organisms/leftSection";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import SignIn from '../../atoms/signin';
@@ -7,7 +7,7 @@ export default function login() {
   return (
     <div className="min-h-screen flex">
       {/* Left Section */}
-      <leftSection />
+      <LeftSection />
       {/* Right Section */}
       <div className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col">
         <div className="flex justify-end mb-8">

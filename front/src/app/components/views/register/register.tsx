@@ -12,7 +12,7 @@ import { registerService } from '@/services/authService';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {leftSection} from '@/app/components/organisms/leftSection';
+import {LeftSection} from '@/app/components/organisms/leftSection';
 import { useToast } from "@/hooks/use-toast";
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
@@ -77,7 +77,7 @@ export default function RegistrationForm() {
   return (
     <div className="min-h-screen flex">
       {/* Left Section */}
-      <leftSection/>
+      <LeftSection/>
 
       {/* Right Section */}
       <div className="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col">
