@@ -3,7 +3,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import SignIn from '../../atoms/signin';
 import { registrationSchema } from "@/validations/schemas";
 import { z } from "zod";
 import { registerService } from '@/services/authService';
@@ -12,8 +11,9 @@ import { registerService } from '@/services/authService';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {LeftSection} from '@/app/components/organisms/leftSection';
 import { useToast } from "@/hooks/use-toast";
+import { LeftSection } from "@/components/organisms/leftSection";
+import SignIn from "@/components/atoms/signin";
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
 
