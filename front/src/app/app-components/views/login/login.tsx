@@ -1,4 +1,4 @@
-import { LeftSection } from "@/app/components/organisms/LeftSection";
+import { LeftSection } from "@/app/app-components/organisms/LeftSection";
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import SignIn from '../../atoms/signin';

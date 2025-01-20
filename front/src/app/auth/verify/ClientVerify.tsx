@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { EmailVerificationSkeleton } from '../../components/skeletons/EmailVerificationSkeleton';
+import { EmailVerificationSkeleton } from '../../app-components/skeletons/EmailVerificationSkeleton';
 import { VerifyEmailService } from '../../../services/validatorEmail';
 
 export default function ClientVerify() {

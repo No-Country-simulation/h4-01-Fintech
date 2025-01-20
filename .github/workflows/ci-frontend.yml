@@ -2,7 +2,7 @@
 on:
   push:
     branches:
-      - "main"
+      - "develop"
 
 jobs:
   CI-FrontEnd-Deploy-Render:
