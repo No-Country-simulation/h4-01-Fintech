@@ -28,6 +28,12 @@
       ],
       "@root/*": [
         "*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ],
+      "@/auth": [
+        "src/auth"
       ]
     }
   },
