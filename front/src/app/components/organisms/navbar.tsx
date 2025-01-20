@@ -1,17 +1,11 @@
 'use client'
 import Link from "next/link";
-import { Menu } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  // SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
-import UserAvatar from "../atoms/useravatar";
+import AvatarUser from "../atoms/useravatar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -203,7 +197,7 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-3">
-            <UserAvatar/>
+            <AvatarUser/>
             <button onClick={() => signOut()}>Salir</button>
           </div>
         </div>
@@ -258,7 +252,7 @@ export default function Navbar() {
                 </ul>
 
                 <div className="flex flex-col gap-4">
-                    <UserAvatar/>
+                    <AvatarUser />
                   <button onClick={() => signOut()}>Salir</button>
                 </div>
               </nav>
