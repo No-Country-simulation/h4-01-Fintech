@@ -1,4 +1,4 @@
-'use client';
+'use cli ent'; 
 
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -7,7 +7,7 @@ import { EmailVerificationSkeleton } from '@/components/skeletons/emailVerificat
 
 
 
-export default function VerifyEmail() {
+export function VerifyEmail() {
     const [verifyStatus, setVerifyStatus] = useState<string | null>(null);
     const searchParams = useSearchParams();
     const router = useRouter();

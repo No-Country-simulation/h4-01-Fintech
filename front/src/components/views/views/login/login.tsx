@@ -5,7 +5,7 @@ import { LeftSection } from '@/components/organisms/leftSection';
 import SignIn from '@/components/atoms/signin';
 
 
-export default function login() {
+export default function Login() {
   return (
     <div className="min-h-screen flex">
       {/* Left Section */}
