@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import {env} from './constants/envs'
+import { env } from "@/constants/envs";
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
