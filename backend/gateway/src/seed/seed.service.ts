@@ -21,14 +21,14 @@ export class SeedService {
   async execute() {
     console.log('🚀 Iniciando el proceso de seed de datos...');
     try {
-      console.log('🧹 Limpiando base de datos...');
-      await this.clearDatabaseService.clearDatabase();
+      // console.log('🧹 Limpiando base de datos...');
+      // await this.clearDatabaseService.clearDatabase();
 
       // console.log('Generando: market-data , insertando archivo')
       // await this.seedMarketDataService.seedData();
 
-      console.log('👤 Generando usuarios...');
-      await this.seedUsersService.createCompleteUser();
+      // console.log('👤 Generando usuarios...');
+      // await this.seedUsersService.createCompleteUser();
 
       // console.log('💳 Generando cuentas...');
       // await this.seedAccountsService.generateAccounts();
