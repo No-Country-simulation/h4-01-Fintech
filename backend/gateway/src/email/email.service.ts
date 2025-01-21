@@ -9,6 +9,7 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: ConfigEnvs.MAILER_SERVICE,
       host: ConfigEnvs.MAILER_HOST,
+      port: 587,
       secure: false,
       auth: {
         user: ConfigEnvs.MAILER_EMAIL,
