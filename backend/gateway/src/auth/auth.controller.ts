@@ -5,6 +5,9 @@ import { UserService } from '../users/user.service';
 import { LoginWithCredentialsDto } from './dto/login-credentials.dto';
 import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-password.dto';
 import { ResendVerificationDto } from './dto/resend-verification.dto';
+import {
+  Logger
+} from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
@@ -52,7 +55,6 @@ export class AuthController {
         //refresh_token,
         //expires_at,
         //token_type,
-        
       });
     }
 
@@ -60,17 +62,27 @@ export class AuthController {
     const token = this.authService.generateJwtToken(user);
 
     console.log('Respuesta enviada al frontend:', { token });
-
-    return {
-      id: user.id,
-      token: token,
+    const resp = {
+      status: true,
+      message: 'Incio de sesión exitoso',
+      token,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     };
+    Logger.log('respuesta enviada',resp);
+    return resp;
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Body() dto: LoginWithCredentialsDto) {
-    return this.authService.login(dto);
+    const response = await this.authService.login(dto); // Espera a que se resuelva la promesa
+    console.log(response); // Ahora imprime la respuesta real
+    return response; // Devuelve la respuesta de la API
   }
 
   @HttpCode(HttpStatus.OK)
@@ -82,20 +94,24 @@ export class AuthController {
   @Get('validate/:token')
   async validateEmail(@Param('token') token: string, @Res() res: Response) {
     try {
-        const result = await this.authService.validateEmail(token);
-        if (result.success) {
-            return res.json(result);
-        } else {
-            return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
-        }
+      const result = await this.authService.validateEmail(token);
+      if (result.success) {
+        return res.json(result);
+      } else {
+        return res.redirect(
+          `${process.env.FRONTEND_URL}/email-validation-failed`,
+        );
+      }
     } catch (error) {
-        console.error('Error en validación:', error);
-        return res.redirect(`${process.env.FRONTEND_URL}/email-validation-failed`);
+      console.error('Error en validación:', error);
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/email-validation-failed`,
+      );
     }
   }
 
   @Post('resend-verification')
   async resendVerification(@Body() dto: ResendVerificationDto) {
-      return await this.authService.resendVerificationEmail(dto.email);
+    return await this.authService.resendVerificationEmail(dto.email);
   }
 }

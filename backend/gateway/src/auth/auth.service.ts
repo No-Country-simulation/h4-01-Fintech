@@ -9,6 +9,7 @@ import { RegisterUserWithEmailAndPasswordDto } from './dto/register-user-passwor
 import { EmailService } from 'src/email/email.service';
 import * as bcrypt from 'bcrypt';
 
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,7 +34,7 @@ export class AuthService {
       role: user.role,
     };
     const secret =
-      this.configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
+      ConfigEnvs.JWT_SECRET || this.configService.get<string>('JWT_SECRET') ;
     if (!secret) {
       throw new Error('JWT_SECRET no definido');
     }
@@ -41,11 +42,12 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload, {
       secret: secret,
     });
+    // const token = this.authService.generateJwtToken(user);
 
     return {
       status: true,
       message: 'Incio de sesión exitoso',
-      access_token: token,
+      token: token,
       data: {
         id: user.id,
         name: user.name,
@@ -63,7 +65,7 @@ export class AuthService {
     };
 
     const secret =
-      this.configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
+      ConfigEnvs.JWT_SECRET || this.configService.get<string>('JWT_SECRET');
     if (!secret) {
       throw new Error('JWT_SECRET no definido');
     }
