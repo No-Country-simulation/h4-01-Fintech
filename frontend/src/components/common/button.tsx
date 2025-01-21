@@ -1,16 +1,17 @@
-import { ButtonHTMLAttributes, FC } from 'react';
+import * as React from "react";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    className?: string;
-}
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { }
 
-export const Button: FC<ButtonProps> = ({ children, className, ...props }) => {
-    return (
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ children, className, ...props }, ref) => (
         <button
+            ref={ref}
             {...props}
-            className={`px-4 py-2 rounded-md ${className}`}
+            className={`p-3 rounded text-white font-semibold ${className}`}
         >
             {children}
         </button>
-    );
-};
+    )
+);
+
+Button.displayName = "Button";
