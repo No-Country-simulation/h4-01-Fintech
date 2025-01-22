@@ -28,8 +28,9 @@ export class AssetEntity {
   @OneToMany(() => PortfolioEntity, (portfolio) => portfolio)
   portfolios?: PortfolioEntity[];
 
-  @Column()
-  RiskProfile?: number
+  @Column({ nullable: true })
+  RiskProfile?: number;
+
 
   @OneToMany(() => MarketDataEntity, (marketData) => marketData.asset)
   marketData?: MarketDataEntity[];

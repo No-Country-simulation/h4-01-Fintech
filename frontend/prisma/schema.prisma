@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model accounts {
+  provider           String  @db.VarChar
+  providerAccountId  String  @db.VarChar
+  userId             String  @db.Uuid
+  type               String  @db.VarChar
+  refresh_token      String? @db.VarChar
+  access_token       String? @db.VarChar
+  expires_at         BigInt?
+  token_type         String? @db.VarChar
+  scope              String? @db.VarChar
+  id_token           String? @db.VarChar
+  session_state      String? @db.VarChar
+  oauth_token_secret String? @db.VarChar
+  oauth_token        String? @db.VarChar
+  id                 String  @id(map: "PK_5a7a02c20412299d198e097a8fe") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  users              users   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3aa23c0a6d107393e8b40e3e2a6")
+}
+
+model answers {
+  id         String    @id(map: "PK_9c32cec6c71e06da0254f2226c6") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  questionId String    @db.Uuid
+  userId     String    @db.Uuid
+  answer     Int
+  users      users     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_1bd66b7e0599333e61d2e3e1678")
+  questions  questions @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_c38697a57844f52584abdb878d7")
+}
+
+model asset {
+  id               String             @id(map: "PK_1209d107fe21482beaea51b745e") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  market_price     Decimal            @default(0) @db.Decimal(10, 2)
+  RiskProfile      Int?
+  createdAt        DateTime           @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime           @default(now()) @db.Timestamp(6)
+  symbol           String             @unique(map: "UQ_45b83954906fc214e750ba53286") @db.VarChar(255)
+  name             String             @db.VarChar(255)
+  asset_type       String?            @db.VarChar(255)
+  sector           String?            @db.VarChar(255)
+  info             String?            @db.Char(1)
+  marketData       marketData[]
+  portfolio_entity portfolio_entity[]
+  transaction      transaction[]
+}
+
+model balance {
+  id           String   @id(map: "PK_079dddd31a81672e8143a649ca0") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  balance      Decimal  @default(0) @db.Decimal(10, 2)
+  last_updated DateTime @default(now()) @db.Timestamp(6)
+  cvu          String   @unique(map: "UQ_3eee3a8c6be7560d9423eab89ec") @db.VarChar(22)
+  userId       String?  @unique(map: "REL_9297a70b26dc787156fa49de26") @db.Uuid
+  users        users?   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9297a70b26dc787156fa49de26b")
+}
+
+model marketData {
+  id             String   @id(map: "PK_f22fb24043362de59c541b0413a") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  timestamp      DateTime @db.Timestamp(6)
+  market_data_id Int
+  asset_id       String?  @db.Uuid
+  price          Float
+  asset          asset?   @relation(fields: [asset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_027b2dd616aa3740d056502c74d")
+}
+
+model notifications {
+  id          String   @id(map: "PK_6a72c3c0f683f6462415e653c3a") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  message     String
+  read_status Boolean  @default(false)
+  timestamp   DateTime @default(now()) @db.Timestamp(6)
+  userId      String?  @db.Uuid
+  users       users?   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "FK_692a909ee0fa9383e7859f9b406")
+}
+
+model portfolio {
+  portfolio_id  Int     @id(map: "PK_4f86494dc1ed398076e2f9bdb77") @default(autoincrement())
+  userId        String  @db.Uuid
+  quantity      Decimal @db.Decimal(10, 2)
+  avg_buy_price Decimal @db.Decimal(10, 2)
+  objective_id  String? @db.Uuid
+  current_price Decimal @db.Decimal(10, 2)
+}
+
+model questions {
+  id       String    @id(map: "PK_08a6d4b0f49ff300bf3a0ca60ac") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  question String    @db.VarChar
+  order    String?   @unique(map: "UQ_2d4088f35ef930da78c56c34e25") @db.VarChar
+  answers  answers[]
+}
+
+model transaction {
+  id               String                            @id(map: "PK_89eadb93a89810556e1cbcd6ab9") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  quantity         Decimal                           @db.Decimal(10, 4)
+  price            Decimal                           @db.Decimal(15, 2)
+  transaction_type transaction_transaction_type_enum
+  timestamp        DateTime                          @default(now()) @db.Timestamp(6)
+  location         String                            @db.VarChar(255)
+  userId           String?                           @db.Uuid
+  assetId          String?                           @db.Uuid
+  asset            asset?                            @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_5a4563ae1b6c03c140e5ec17a6b")
+  users            users?                            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_605baeb040ff0fae995404cea37")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  email              String?         @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  id                 String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name               String?         @db.VarChar
+  passwordhash       String?         @db.VarChar
+  image              String?         @db.VarChar
+  dni                String?         @unique(map: "UQ_5fe9cfa518b76c96518a206b350") @db.VarChar
+  token_expires_at   String?         @db.VarChar
+  is_active          Boolean         @default(false)
+  is_validated_email Boolean         @default(false)
+  risk_percentage    Int?
+  role               users_role_enum @default(USER)
+  accounts           accounts[]
+  answers            answers[]
+  balance            balance?
+  notifications      notifications[]
+  transaction        transaction[]
+}
+
+model portfolio_entity {
+  portfolio_id  Int     @id(map: "PK_6555a6f1445a2f912bcaf3c1604") @default(autoincrement())
+  userId        String  @db.Uuid
+  quantity      Decimal @db.Decimal(10, 4)
+  avg_buy_price Decimal @db.Decimal(15, 2)
+  objective_id  String? @db.Uuid
+  current_price Int?
+  assetId       String? @db.Uuid
+  asset         asset?  @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a98905c78531ac9b1b75dbe02f0")
+}
+
+enum transaction_transaction_type_enum {
+  ACCOUNT_FUNDING
+  WITHDRAWAL
+  INVESTMENT
+  INVESTMENT_WITHDRAWAL
+}
+
+enum users_role_enum {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum assets_asset_type_enum {
+  STOCK
+  CRYPTOCURRENCY
+  BOND
+  COMMODITY
+}
+
+enum financial_profiles_financial_knowledge_enum {
+  NOVATO
+  INTERMEDIO
+}
+
+enum financial_profiles_risk_profile_enum {
+  CONSERVADOR
+  MODERADO
+  ARRIESGADO
+}
