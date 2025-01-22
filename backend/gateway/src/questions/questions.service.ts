@@ -4,6 +4,7 @@ import { QuestionEntity } from 'src/entities/question.entity';
 import { Repository } from 'typeorm';
 import { QuestionDto } from './dto/add-question.dto';
 import { GetQuestionsDto } from './dto/get-questions.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -55,6 +56,26 @@ export class QuestionsService {
                 hasNextPage: page < Math.ceil(total / limit),
                 hasPreviousPage: page > 1
             }
+        }
+    }
+
+    async updateQuestion(id: string, dto: UpdateQuestionDto) {
+        const { question, order, minRange, maxRange, minRangeLabel, maxRangeLabel } = dto;
+        if (!question && !order && !minRange && !maxRange && !minRangeLabel && !maxRangeLabel)
+            throw new BadRequestException('No hay parámetro para actualizar la pregunta');
+        const questionExist = await this.questionRepository.findOne({ where: { id }});
+        if (!questionExist) throw new BadRequestException('No se encontró ninguna pregunta con este Id');
+        questionExist.question = question ? question : questionExist.question;
+        questionExist.order = order ? order : questionExist.order;
+        questionExist.minRange = minRange ? minRange : questionExist.minRange;
+        questionExist.maxRange = maxRange ? maxRange : questionExist.maxRange;
+        questionExist.minRangeLabel = minRangeLabel ? minRangeLabel : questionExist.minRangeLabel;
+        questionExist.maxRangeLabel = maxRangeLabel ? maxRangeLabel : questionExist.maxRangeLabel;
+        await this.questionRepository.save(questionExist);
+        return {
+            status: true,
+            message: 'La pregunta se actualizó correctamente',
+            data: questionExist
         }
     }
 
