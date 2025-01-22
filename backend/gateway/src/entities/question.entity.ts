@@ -24,6 +24,9 @@ export class QuestionEntity {
     @Column({ type: 'varchar', nullable: false })
     maxRangeLabel: string;
 
+    @Column({ type: 'boolean', default: false})
+    isDeleted: boolean;
+
     @OneToMany(() => AnswerEntity, (answer) => answer.question)
     answers: AnswerEntity[];
 }
