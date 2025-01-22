@@ -6,7 +6,7 @@ export class MarketDataEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column('bigint', { nullable: true })
   market_data_id: number; // Nuevo campo para almacenar el ID del registro de datos de mercado
 
   @ManyToOne(() => AssetEntity, (asset) => asset.marketData)

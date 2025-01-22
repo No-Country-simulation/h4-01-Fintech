@@ -62,9 +62,9 @@ model balance {
 model marketData {
   id             String   @id(map: "PK_f22fb24043362de59c541b0413a") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   timestamp      DateTime @db.Timestamp(6)
-  market_data_id Int
   asset_id       String?  @db.Uuid
   price          Float
+  market_data_id BigInt?
   asset          asset?   @relation(fields: [asset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_027b2dd616aa3740d056502c74d")
 }
 
@@ -87,10 +87,15 @@ model portfolio {
 }
 
 model questions {
-  id       String    @id(map: "PK_08a6d4b0f49ff300bf3a0ca60ac") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  question String    @db.VarChar
-  order    String?   @unique(map: "UQ_2d4088f35ef930da78c56c34e25") @db.VarChar
-  answers  answers[]
+  id            String    @id(map: "PK_08a6d4b0f49ff300bf3a0ca60ac") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  question      String    @db.VarChar
+  order         String?   @unique(map: "UQ_2d4088f35ef930da78c56c34e25") @db.VarChar
+  minRange      Int       @default(1)
+  maxRange      Int       @default(10)
+  minRangeLabel String    @db.VarChar
+  maxRangeLabel String    @db.VarChar
+  isDeleted     Boolean   @default(false)
+  answers       answers[]
 }
 
 model transaction {
