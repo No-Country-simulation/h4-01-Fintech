@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       // Verificar si ya existe el registro en marketData
       const existingMarketData = await prisma.marketData.findFirst({
         where: {
-          assetId: asset.id,
+          asset_id: asset.id,
           timestamp: fecha,
         },
       })
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         await prisma.marketData.create({
           data: {
             market_data_id: Date.now(), // or any unique identifier
-            assetId: asset.id,
+            asset_id: asset.id,
             price: cierre,
             timestamp: fecha,
           },
