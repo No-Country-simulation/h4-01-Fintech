@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionEntity } from 'src/entities/question.entity';
 import { Repository } from 'typeorm';
@@ -22,6 +22,8 @@ export class QuestionsService {
             minRangeLabel,
             maxRangeLabel
         });
+        const questionExists = await this.questionRepository.find({ where: { order }});
+        if (questionExists) throw new BadRequestException('El orden de las preguntas debe ser único');
         await this.questionRepository.save(newQuestion);
         return {
             status: true,
@@ -37,6 +39,9 @@ export class QuestionsService {
             take: limit,
             order: {
                 order: 'ASC'
+            },
+            where: {
+                isDeleted: false
             }
         });
         return {
@@ -50,6 +55,18 @@ export class QuestionsService {
                 hasNextPage: page < Math.ceil(total / limit),
                 hasPreviousPage: page > 1
             }
+        }
+    }
+
+    async deleteQuestion(id: string, isDeleted: string) {
+        if (isDeleted !== 'true' && isDeleted !== 'false') throw new BadRequestException('Falta el parámetro isDeleted')
+        const question = await this.questionRepository.findOne({ where: { id }});
+        if (!question) throw new BadRequestException('No hay ninguna pregunta con este Id');
+        question.isDeleted = isDeleted === 'true';
+        await this.questionRepository.save(question);
+        return {
+            status: true,
+            message: `La pregunta ha sido ${isDeleted === 'true' ? 'eliminada' : 'restaurada'} con éxito`
         }
     }
 }

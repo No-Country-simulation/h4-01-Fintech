@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { QuestionDto } from './dto/add-question.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -24,5 +24,12 @@ export class QuestionsController {
   @Get()
   async getQuestions(@Query() paginationQuery: GetQuestionsDto) {
   return this.questionsService.getQuestions(paginationQuery);
-}
+  }
+
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.MODERATOR, Role.ADMIN)
+  @Delete('/:id')
+  async deleteQuestion(@Param('id') id: string, @Query('isDeleted') isDeleted: string) {
+    return this.questionsService.deleteQuestion(id, isDeleted);
+  }
 }
