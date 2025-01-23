@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
@@ -18,6 +18,17 @@ export class UserService {
   // Buscar usuario por email
   async findByEmail(email: string): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  // Buscar usuario por ID
+  async findOneById(id: string): Promise<UserEntity | undefined> {
+    const user = await this.userRepository.findOneBy({
+      id,
+    });
+
+    if (!user) throw new UnauthorizedException('User not found');
+
+    return user ;
   }
 
   // Crear usuario
@@ -177,5 +188,64 @@ export class UserService {
 
   async updateUser(user: UserEntity): Promise<UserEntity> {
     return this.userRepository.save(user);
-}
+  }
+
+  async getFullProfile(id: string) {
+    /*
+    *Trae todos los campos de cada tabla o entidad asociada
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.balance', 'balance')
+      .leftJoinAndSelect('user.questions', 'questions')
+      .leftJoinAndSelect('questions.answers', 'answers')
+      .leftJoinAndSelect('answers.user', 'answerUser')
+      .leftJoinAndSelect('user.transactions', 'transactions')
+      .where('user.id = :id', { id })
+      .addOrderBy('transactions.date', 'DESC')
+      .take(5) // Limitar a las últimas 5 transacciones
+      .getOne();
+    }*/
+      const query = this.userRepository
+      .createQueryBuilder('user')
+      // Datos especificos del usuario
+      .select([
+        'user.id', 
+        'user.name', 
+        'user.email'
+      ])
+      // Balance con campos necesarios
+      .leftJoinAndSelect('user.balance', 'balance')
+      .addSelect([
+        'balance.amount', 
+        'balance.lastUpdated'
+      ])
+      // Preguntas con las respuestas del usuario (puede cambiar)
+      .leftJoinAndSelect('questions', 'questions')
+      .leftJoinAndSelect(
+        'answers', 
+        'answers', 
+        'answers.userId = :userId AND answers.questionId = questions.id', 
+        { id }
+      )
+      .addSelect([
+        'questions.id', 
+        'questions.question',
+        'answers.id', 
+        'answers.answer'
+      ])
+      // Recogemos las ultimas 5 transacciones del usuario con su información
+      .leftJoinAndSelect('user.transactions', 'transactions')
+      .addSelect([
+        'transactions.quantity', 
+        'transactions.price', 
+        'transactions.transaction_type', 
+        'transactions.date'
+      ])
+      .where('user.id = :id', { id })
+      .orderBy('transactions.date', 'DESC')
+      .take(5)
+      .getOne();
+
+    return query;
+  }
 }
