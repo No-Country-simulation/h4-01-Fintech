@@ -18,7 +18,7 @@ export default function InvestmentProfileHandler() {
 
     // Si el perfil está incompleto, muestra el componente de perfil
     if (session.user.risk_percentage === null) {
-        return <div className='fixed justify-center justify-items-center'>
+        return <div >
             <InvestmentProfile />
         </div>;
     }
