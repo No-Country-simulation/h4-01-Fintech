@@ -52,7 +52,8 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        risk_percentage: user.risk_percentage
       },
     };
   }

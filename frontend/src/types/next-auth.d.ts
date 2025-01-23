@@ -6,21 +6,21 @@ declare module 'next-auth' {
     token?: string
     provider?: string
     providerAccountId?: string
-    access_token: string
   }
 
   interface Account {}
 
   interface Session {
     user: {
-      id?: string
-      token?: string
-      name?: string
-      email?: string
-      image?: string
-      provider?: string
-      access_token?: string
-      role?: string
+      id?: string;
+      token?: string;
+      name?: string;
+      email?: string;
+      image?: string;
+      provider?: string;
+      access_token?: string;
+      role: string;
+      risk_percentage: number
     } & DefaultSession['user']
   }
 

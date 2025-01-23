@@ -1,8 +1,19 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+// const nextConfig: NextConfig = {
+//   images: {
+//     domains: ['lh3.googleusercontent.com'],
+//   },
+// }
+
+const nextConfig = {
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
 }
 

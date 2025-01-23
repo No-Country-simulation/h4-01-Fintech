@@ -2,28 +2,43 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@radix-ui/themes';
 
-const verifyEmailPage = () => {
+const VerifyEmailPage = () => {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="w-full max-w-md p-8 sm:p-12 bg-white rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold text-center mb-4">Verifica tu Correo</h2>
-                <p className="text-lg text-gray-600 text-center mb-4">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+            <div className="w-full max-w-md bg-white p-6 sm:p-8 rounded-lg shadow-lg">
+                {/* Título principal */}
+                <h2 className="text-3xl sm:text-4xl font-bold text-center text-gray-800 mb-6">
+                    ¡Cuenta creada con éxito!
+                </h2>
+
+                {/* Descripción */}
+                <p className="text-base sm:text-lg text-gray-600 text-center mb-6">
                     Para completar tu registro, por favor verifica tu correo electrónico.
-                </p>
-                <p className="text-sm text-gray-500 text-center mb-6">
-                    Revisa tu bandeja de entrada para el enlace de verificación. Si no lo encuentras, revisa en la carpeta de spam o vuelve a intentar.
+                    Te hemos enviado un correo de confirmación a tu dirección de email.
+                    Revisa tu bandeja de entrada y sigue el enlace para activar tu cuenta.
+                    <br />
+                    Si no ves el correo, revisa tu carpeta de spam o correo no deseado.
                 </p>
 
+                {/* Botón */}
                 <div className="flex justify-center">
                     <Link href="/auth/resend-verification">
-                        <Button className="bg-[#0052CC] hover:bg-[#0052CC]/90 text-white">
-                            Enviar nuevamente el correo
+                        <Button className="w-full sm:w-auto bg-[#0052CC] hover:bg-[#0052CC]/90 text-white px-6 py-3 text-sm sm:text-base font-medium rounded-lg">
+                            Volver a la página principal
                         </Button>
                     </Link>
                 </div>
+
+                {/* Nota */}
+                <p className="text-xs text-gray-500 text-center mt-4">
+                    ¿No recibiste el correo? Verifica tu carpeta de spam o
+                    <Link href="/auth/resend-verification" className="text-[#0052CC] hover:underline ml-1">
+                        haz clic aquí para reenviar.
+                    </Link>
+                </p>
             </div>
         </div>
     );
 };
 
-export default verifyEmailPage;
+export default VerifyEmailPage;

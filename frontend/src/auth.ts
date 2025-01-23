@@ -5,21 +5,23 @@ import { MyEnv } from './utils/envs'
 
 // Extend the User type to include the role property
 interface User extends NextAuthUser {
-  role?: string;
+  role: string;
   access_token: string;
   token?: string;
+  risk_percentage: number;
 }
 
 // respuesta de backend
 interface DataRespuesta {
-  status: boolean,
-  message: string,
-  token: string,
+  status: boolean;
+  message: string;
+  token: string;
   data: {
     id: string;
-  name: string;
-  email: string;
-  role: string;
+    name: string;
+    email: string;
+    role: string;
+    risk_percentage: number;
   }
 }
 
@@ -40,7 +42,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: profile.name,
           email: profile.email,
           image: profile.picture,
-          access_token: profile.access_token, // Asumimos que el access_token se obtiene desde la respuesta de Google
+          access_token: profile.access_token, //
         }
       },
     }),
@@ -84,6 +86,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: user.data.role,
             access_token: user.token,
             token: user.token,
+            risk_percentage: user.data.risk_percentage,
           }
         } catch (error) {
           console.error('Error en la autenticación de credenciales:', error)
@@ -134,52 +137,63 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           )
           const userSocial: DataRespuesta = await respSocial.json()
-          console.log('esta es la respuesta con credenciales', userSocial)
-          return true
-        }
+          console.log('Respuesta con datos de Google:', userSocial)
 
-        return false
+      if (userSocial?.status && userSocial?.data) {
+        (user as User).id = userSocial.data.id;
+        (user as User).token = userSocial.token;
+        (user as User).email = userSocial.data.email;
+        (user as User).role = userSocial.data.role;
+        (user as User).role = userSocial.data.role;
+        (user as User).risk_percentage = userSocial.data.risk_percentage;
+        user.name = userSocial.data.name;
+      }
+      return true;
+    }
+    return false;
       } catch (error) {
-        console.error('Error al iniciar sesión con el backend:', error)
-        return false
+        console.error('Error al iniciar sesión con el backend:', error);
+        return false;
       }
     },
     async jwt({ token, account, user }) {
       // Si el account y el user están disponibles (en el caso de un login exitoso)
       if (account && user) {
-        // Guardamos los valores del usuario y el token en el JWT
-        token.token = user.token // Este es el token que viene del backend
-        token.name = user.name
-        token.email = user.email
-        token.image = user.image
-        token.role = (user as User).role // Si tienes rol, también puedes guardarlo
+        token.id = user.id;
+        token.token = user.token;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
+        token.role = (user as User).role;
+        token.risk_percentage = (user as User).risk_percentage;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
-      session.user.access_token = token.access_token as string
-      session.user.email = token.email as string
-      session.user.name = token.name as string | undefined
-      session.user.image = token.image as string | undefined
-      session.user.id = token.id as string
-      session.user.provider = token.provider as string | undefined
-      session.user.token = token.token as string
-      ;(session.user.role = token.role as string),
-        (session.user.token = token.token as string)
+      session.user.access_token = token.access_token as string;
+      session.user.email = token.email as string;
+      session.user.name = token.name as string | undefined;
+      session.user.image = token.image as string | undefined;
+      session.user.id = token.id as string;
+      session.user.provider = token.provider as string | undefined;
+      session.user.risk_percentage = token.risk_percentage as number;
+      session.user.token = token.token as string;
+      session.user.role = token.role as string;
+      session.user.token = token.token as string;
       console.log(
         'session del usuario',
         session,
         'y este es el Token',
         session.user.token
-      )
-      return session
+      );
+      return session;
     },
     async redirect({ url, baseUrl }) {
       // Redirige al home después de iniciar sesión
       if (url === '/auth/login' || url === baseUrl) {
-        return '/'
+        return '/';
       }
-      return url.startsWith(baseUrl) ? url : baseUrl
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
   secret: process.env.NEXTAUTH_SECRET!,
@@ -190,4 +204,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/auth/login',
     error: '/error',
   },
-})
+});

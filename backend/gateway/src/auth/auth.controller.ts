@@ -71,6 +71,7 @@ export class AuthController {
         name: user.name,
         email: user.email,
         role: user.role,
+        risk_percentage: user.risk_percentage,
       },
     };
     Logger.log('respuesta enviada',resp);

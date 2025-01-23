@@ -130,6 +130,7 @@ model users {
   answers            answers[]
   balance            balance?
   notifications      notifications[]
+  sessions           sessions[]
   transaction        transaction[]
 }
 
@@ -142,6 +143,14 @@ model portfolio_entity {
   current_price Int?
   assetId       String? @db.Uuid
   asset         asset?  @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_a98905c78531ac9b1b75dbe02f0")
+}
+
+model sessions {
+  id           String @id(map: "PK_3238ef96f18b355b671619111bc") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sessionToken String @unique(map: "UQ_8b5e2ec52e335c0fe16d7ec3584") @db.VarChar
+  userId       String @db.Uuid
+  expires      String @db.VarChar
+  users        users  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_57de40bc620f456c7311aa3a1e6")
 }
 
 enum transaction_transaction_type_enum {
