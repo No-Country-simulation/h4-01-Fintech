@@ -1,0 +1,6 @@
+/* Asegura que el contenido del diálogo sea centrado y responsivo */
+[data-radix-alert-dialog-content] {
+  max-width: 95%;
+  width: 100%;
+  margin: auto;
+}

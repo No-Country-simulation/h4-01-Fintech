@@ -6,7 +6,6 @@ import { Theme } from "@radix-ui/themes";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/layout/navbar";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,7 +33,8 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Theme grayColor="olive" panelBackground="solid" radius="large">
-            <Navbar/>
+            <Navbar />
+            
             {children}
           </Theme>
         </body>
@@ -42,3 +42,4 @@ export default function RootLayout({
     </html>
   );
 }
+
