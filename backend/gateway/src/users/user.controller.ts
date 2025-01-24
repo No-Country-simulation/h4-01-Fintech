@@ -1,6 +1,8 @@
 import {
+    Body,
     Controller,
     Get,
+    Patch,
     Request,
     UseGuards,
   } from '@nestjs/common';
@@ -10,6 +12,7 @@ import {
     ApiTags
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { UpdateUserDto } from 'src/auth/dto/register-user-password.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
@@ -21,5 +24,11 @@ export class UserController {
     @Get('profile')
     getProfile(@Request() req) {
         return this.usersService.getFullProfile(req.user.userId);
+    }
+
+    @UseGuards(AuthGuard)
+    @Patch('profile')
+    updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+        return this.usersService.updateUser(req.user.userId), updateUserDto;
     }
 }

@@ -5,6 +5,8 @@ import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 import { BalanceEntity } from './balance.entity';
 import { Role } from 'src/rbac/roles';
+import { OmitType } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 @Check(`risk_percentage BETWEEN 1 AND 10`)
@@ -58,4 +60,14 @@ export class UserEntity {
 
   @OneToOne(() => BalanceEntity, (balance) => balance.user)
   balance: BalanceEntity;
+}
+
+export class UpdateUser implements Pick<UserEntity, 'name'|'email'> {
+  name: string;
+  email: string;
+}
+
+export class UserWithoutPassword extends OmitType(UserEntity, ['passwordhash']) {
+  @Exclude()
+  password: string;
 }

@@ -1,9 +1,11 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { UserEntity } from '../entities/user.entity';
+import { UpdateUser, UserEntity, UserWithoutPassword } from '../entities/user.entity';
 import { AccountEntity } from '../entities/account.entity';
 import * as bcrypt from 'bcrypt';
+import { plainToClass } from 'class-transformer';
+import { UpdateUserDto } from 'src/auth/dto/register-user-password.dto';
 
 @Injectable()
 export class UserService {
@@ -186,8 +188,16 @@ export class UserService {
     return result;
   }
 
-  async updateUser(user: UserEntity): Promise<UserEntity> {
-    return this.userRepository.save(user);
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
+    const { name, email } = updateUserDto;
+    const userFound = await this.userRepository.findOneBy({id});
+    if(!userFound){
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    userFound.name = name ? name : userFound.name;
+    userFound.email = email ? email : userFound.email;
+    await this.userRepository.save(userFound);
+    return plainToClass(UserWithoutPassword, userFound);
   }
 
   async getFullProfile(id: string) {
@@ -211,7 +221,8 @@ export class UserService {
       .select([
         'user.id', 
         'user.name', 
-        'user.email'
+        'user.email',
+        'user.role'
       ])
       // Balance con campos necesarios
       .leftJoinAndSelect('user.balance', 'balance')
