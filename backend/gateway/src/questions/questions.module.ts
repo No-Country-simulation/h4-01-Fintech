@@ -11,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   controllers: [QuestionsController],
   providers: [QuestionsService, AuthGuard, RoleGuard, JwtService],
-  imports: [RbacModule, TypeOrmModule.forFeature([QuestionEntity])]
+  imports: [RbacModule, TypeOrmModule.forFeature([QuestionEntity])],
+  exports: [QuestionsService]
 })
 export class QuestionsModule {}

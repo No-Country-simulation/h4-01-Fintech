@@ -90,4 +90,8 @@ export class QuestionsService {
             message: `La pregunta ha sido ${isDeleted === 'true' ? 'eliminada' : 'restaurada'} con éxito`
         }
     }
+
+    async findQuestionById(id: string): Promise<QuestionEntity | undefined> {
+        return await this.questionRepository.findOne({ where: { id }});
+    }
 }

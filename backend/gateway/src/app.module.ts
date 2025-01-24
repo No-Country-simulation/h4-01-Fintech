@@ -15,6 +15,7 @@ import { EmailService } from './email/email.service';
 import { EmailModule } from './email/email.module';
 import { RbacModule } from './rbac/rbac.module';
 import { QuestionsModule } from './questions/questions.module';
+import { AnswersModule } from './answers/answers.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { QuestionsModule } from './questions/questions.module';
     EmailModule,
     RbacModule,
     QuestionsModule,
+    AnswersModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthService, EmailService],

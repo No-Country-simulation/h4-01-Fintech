@@ -17,7 +17,11 @@ export class UserService {
 
   // Buscar usuario por email
   async findByEmail(email: string): Promise<UserEntity | undefined> {
-    return this.userRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async findById(id: string): Promise<UserEntity | undefined> {
+    return await this.userRepository.findOne({ where: { id }});
   }
 
   // Crear usuario
