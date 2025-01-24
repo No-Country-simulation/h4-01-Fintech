@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Res } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, Param, Res, BadRequestException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
@@ -89,6 +89,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('register')
   async register(@Body() dto: RegisterUserWithEmailAndPasswordDto) {
+    
     return this.authService.registerUser(dto);
   }
 
@@ -99,15 +100,11 @@ export class AuthController {
       if (result.success) {
         return res.json(result);
       } else {
-        return res.redirect(
-          `${process.env.FRONTEND_URL}/email-validation-failed`,
-        );
+        throw new BadRequestException('Validación fallida');
       }
     } catch (error) {
       console.error('Error en validación:', error);
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/email-validation-failed`,
-      );
+      throw new BadRequestException('Error en la validación del email');
     }
   }
 

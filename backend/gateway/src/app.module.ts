@@ -25,8 +25,7 @@ import { QuestionsModule } from './questions/questions.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const jwtSecret =
-          configService.get<string>('JWT_SECRET') || ConfigEnvs.JWT_SECRET;
+        const jwtSecret = ConfigEnvs.JWT_SECRET || configService.get<string>('JWT_SECRET');
         if (!jwtSecret) {
           throw new Error('JWT_SECRET no definido');
         }
