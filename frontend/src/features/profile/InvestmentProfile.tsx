@@ -59,9 +59,20 @@ const questions = [
 export default function InvestmentProfile() {
     const [showWelcome, setShowWelcome] = useState(true);
     const [isFinished, setIsFinished] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(true); // Estado para controlar el diálogo
     const { answers, currentQuestion, setAnswers, setCurrentQuestion } = useInvestmentStore();
-
     // Cargar progreso al montar el componente
+    useEffect(() => {
+        if (isDialogOpen) {
+            document.body.style.overflow = 'hidden'; // Deshabilita el scroll
+        } else {
+            document.body.style.overflow = 'auto'; // Restaura el scroll
+        }
+        return () => {
+            document.body.style.overflow = 'auto'; // Restaura el scroll al desmontar
+        };
+    }, [isDialogOpen]);
+    //
     useEffect(() => {
         const savedProgress = getCookie(STORAGE_KEY);
         if (savedProgress) {
@@ -124,12 +135,16 @@ export default function InvestmentProfile() {
         }
     };
 
+    const closeDialog = () => {
+        setIsDialogOpen(false); // Cierra el diálogo
+    };
+
     const closeWindow = () => {
         window.close(); // Cierra la ventana actual
     };
 
     return (
-        <AlertDialog.Root defaultOpen>
+        <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialog.Trigger></AlertDialog.Trigger>
             <AlertDialog.Content
                 style={{
@@ -242,6 +257,23 @@ export default function InvestmentProfile() {
                         </div>
                     </>
                 </AlertDialog.Description>
+                {/* Botón para cerrar el diálogo */}
+                <AlertDialog.Action asChild>
+                    <Button
+                        style={{
+                            position: 'absolute',
+                            top: '1rem',
+                            right: '1rem',
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'white',
+                            cursor: 'pointer',
+                        }}
+                        onClick={closeDialog}
+                    >
+                        X
+                    </Button>
+                </AlertDialog.Action>
             </AlertDialog.Content>
         </AlertDialog.Root>
     );

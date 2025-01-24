@@ -2,11 +2,24 @@
 
 import { AlertDialog, Button, Flex, Text, Heading } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation"; // Para redireccionar al usuario
+import { useRouter } from "next/navigation"; 
+import { useEffect, useState } from "react";
 
 export default function DialogWelcome() {
     const { data: session, status } = useSession();
-    const router = useRouter(); // Hook para redireccionar
+    const router = useRouter();
+    const [isDialogOpen, setIsDialogOpen] = useState(true);
+
+    useEffect(() => {
+        if (isDialogOpen) {
+            document.body.style.overflow = 'hidden'; // Deshabilita el scroll
+        } else {
+            document.body.style.overflow = 'auto'; // Restaura el scroll
+        }
+        return () => {
+            document.body.style.overflow = 'auto'; // Restaura el scroll al desmontar
+        };
+    }, [isDialogOpen]);
 
     // Mostrar solo cuando la sesión esté cargada y no haya usuario
     if (status === "loading") return null;
@@ -17,13 +30,13 @@ export default function DialogWelcome() {
         router.push("/auth/register");
     };
 
-    // Función para cerrar la pestaña
-    const handleClose = () => {
-        window.close(); // Cierra la pestaña actual
+    // Función para cerrar el diálogo
+    const handleCloseDialog = () => {
+        setIsDialogOpen(false); // Cierra el diálogo
     };
 
     return (
-        <AlertDialog.Root defaultOpen>
+        <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <AlertDialog.Content
                 style={{
                     maxWidth: '400px',
@@ -76,12 +89,12 @@ export default function DialogWelcome() {
                         </Button>
                     </AlertDialog.Action>
 
-                    {/* Botón para cerrar la pestaña */}
+                    {/* Botón para cerrar el diálogo */}
                     <AlertDialog.Cancel>
                         <Button
                             variant="soft"
                             color="gray"
-                            onClick={handleClose} // Cierra la pestaña
+                            onClick={handleCloseDialog} // Cierra el diálogo
                         >
                             Cerrar
                         </Button>
