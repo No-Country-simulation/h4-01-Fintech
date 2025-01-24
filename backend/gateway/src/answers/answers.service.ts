@@ -15,8 +15,8 @@ export class AnswersService {
         private questionService: QuestionsService
     ) {}
 
-    async addAnswer(dto: AddAnswerDto) {
-        const { userId, questionId, answer } = dto;
+    async addAnswer(userId: string, dto: AddAnswerDto) {
+        const { questionId, answer } = dto;
         const user = await this.userService.findById(userId);
         if (!user) throw new BadRequestException('No existe usuario con este Id');
         const question = await this.questionService.findQuestionById(questionId);
@@ -30,7 +30,7 @@ export class AnswersService {
         if (questionAnswered) throw new BadRequestException('La pregunta ha sido respondida');
 
         const createAnswer = this.answerRepository.create({
-            userId,
+            userId: user.id,
             questionId,
             answer
         });
