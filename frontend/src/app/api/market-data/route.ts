@@ -5,6 +5,7 @@ import csvParser from 'csv-parser'
 
 const prisma = new PrismaClient()
 
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
@@ -28,24 +29,16 @@ export async function POST(req: NextRequest) {
       readable.push(text)
       readable.push(null)
 
-      interface CSVRow {
-        asset_id: string
-        fecha: string
-        cierre: string
-      }
-
-      const parseCSV = new Promise<void>((resolve, reject) => {
-        const readable = new stream.Readable()
-        readable._read = () => {}
-        readable.push(text)
-        readable.push(null)
-
-        readable
-          .pipe(csvParser({ headers: ['asset_id', 'fecha', 'cierre'] }))
-          .on('data', (row: CSVRow) => rows.push(row))
-          .on('end', resolve)
-          .on('error', reject)
-      })
+      readable
+        .pipe(csvParser({ headers: ['asset_id', 'fecha', 'cierre'] }))
+        .on(
+          'data',
+          (row: { asset_id: string; fecha: string; cierre: string }) => {
+            rows.push(row)
+          }
+        )
+        .on('end', resolve)
+        .on('error', reject)
     })
 
     await parseCSV
@@ -57,74 +50,65 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validar y procesar filas
-    const validRows = rows
-      .map((row) => ({
-        asset_id: row.asset_id,
-        fecha: new Date(row.fecha),
-        cierre: parseFloat(row.cierre),
-      }))
-      .filter((row) => !isNaN(row.fecha.getTime()) && !isNaN(row.cierre))
+    for (const [index, row] of rows.entries()) {
+      const delay = (ms: number) =>
+        new Promise((resolve) => setTimeout(resolve, ms))
 
-    if (!validRows.length) {
-      return NextResponse.json(
-        { message: 'No se encontraron filas válidas en el archivo CSV.' },
-        { status: 400 }
-      )
-    }
+      const assetId = row.asset_id
+      const fecha = new Date(row.fecha)
+      const cierre = parseFloat(row.cierre)
 
-    // Obtener activos existentes
-    const assetSymbols = [...new Set(validRows.map((row) => row.asset_id))]
-    const existingAssets = await prisma.asset.findMany({
-      where: { symbol: { in: assetSymbols } },
-    })
-    const existingSymbols = new Set(existingAssets.map((asset) => asset.symbol))
+      // Validar datos
+      if (isNaN(fecha.getTime()) || isNaN(cierre)) {
+        console.log(`Fila inválida: ${JSON.stringify(row)}`)
+        continue // Saltar filas inválidas
+      }
 
-    // Crear nuevos activos
-    const newAssets = assetSymbols
-      .filter((symbol) => !existingSymbols.has(symbol))
-      .map((symbol) => ({ symbol, name: 'Unknown' }))
+      // Buscar o crear el activo
+      let asset = await prisma.asset.findUnique({
+        where: { symbol: assetId },
+      })
 
-    if (newAssets.length) {
-      await prisma.asset.createMany({ data: newAssets })
-    }
+      if (!asset) {
+        asset = await prisma.asset.create({
+          data: {
+            symbol: assetId,
+            name: assetId,
+          },
+        })
+      }
 
-    // Re-cargar activos actualizados
-    const allAssets = await prisma.asset.findMany({
-      where: { symbol: { in: assetSymbols } },
-    })
-    const assetMap = new Map(allAssets.map((asset) => [asset.symbol, asset.id]))
+      // Verificar si ya existe el registro en marketData
+      const existingMarketData = await prisma.marketData.findFirst({
+        where: {
+          asset_id: asset.id,
+          timestamp: fecha,
+        },
+      })
 
-    // Preparar datos para marketData
-    const marketData = validRows.map((row) => ({
-      market_data_id: Date.now() + Math.random(), // Generar un ID único
-      asset_id: assetMap.get(row.asset_id),
-      price: row.cierre,
-      timestamp: row.fecha,
-    }))
+      if (!existingMarketData) {
+        // Crear nuevo registro
+        await prisma.marketData.create({
+          data: {
+            name: assetId,
+            asset_id: asset.id,
+            price: cierre,
+            timestamp: fecha,
+          },
+        })
+        console.log(
+          `Dato insertado: ${assetId} - ${fecha.toISOString()} - ${cierre}`
+        )
+      } else {
+        console.log(
+          `Dato duplicado: ${assetId} - ${fecha.toISOString()} - ${cierre}`
+        )
+      }
 
-    // Evitar duplicados en marketData
-    const existingMarketData = await prisma.marketData.findMany({
-      where: {
-        OR: marketData.map((data) => ({
-          asset_id: data.asset_id,
-          timestamp: data.timestamp,
-        })),
-      },
-    })
-    const existingDataSet = new Set(
-      existingMarketData.map(
-        (data) => `${data.asset_id}-${data.timestamp.toISOString()}`
-      )
-    )
-
-    const newMarketData = marketData.filter(
-      (data) =>
-        !existingDataSet.has(`${data.asset_id}-${data.timestamp.toISOString()}`)
-    )
-
-    if (newMarketData.length) {
-      await prisma.marketData.createMany({ data: newMarketData })
+      // Agregar un retraso entre inserciones para evitar baneos
+      // if (index < rows.length - 1) {
+      //   await delay(500) // Retraso de 500ms entre cada iteración
+      // }
     }
 
     return NextResponse.json({ message: 'Datos procesados correctamente.' })

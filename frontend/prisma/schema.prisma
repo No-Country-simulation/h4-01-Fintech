@@ -62,12 +62,12 @@ model balance {
 }
 
 model marketData {
-  id             String   @id(map: "PK_f22fb24043362de59c541b0413a") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  timestamp      DateTime @db.Timestamp(6)
-  asset_id       String?  @db.Uuid
-  price          Float
-  market_data_id BigInt?
-  asset          asset?   @relation(fields: [asset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_027b2dd616aa3740d056502c74d")
+  id        String   @id(map: "PK_f22fb24043362de59c541b0413a") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  timestamp DateTime @db.Timestamp(6)
+  asset_id  String?  @db.Uuid
+  price     Float
+  name      String?  @db.VarChar(255)
+  asset     asset?   @relation(fields: [asset_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_027b2dd616aa3740d056502c74d")
 }
 
 model notifications {
