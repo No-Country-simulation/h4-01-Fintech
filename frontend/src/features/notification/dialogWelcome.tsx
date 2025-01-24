@@ -1,9 +1,32 @@
 'use client';
 
 import { AlertDialog, Button, Flex, Text, Heading } from "@radix-ui/themes";
+import styled from '@emotion/styled';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
+
+// Definir el componente estilizado fuera del componente principal
+const StyledAlertDialogContent = styled(AlertDialog.Content)`
+    max-width: 400px;
+    width: 90%;
+    margin: 1rem;
+    background: #d9d9d9;
+    color: black;
+    border-radius: 20px;
+    border-color: #ff6f3c;
+    padding: 2rem;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    @media (max-width: 768px) {
+        padding: 1rem; // Padding reducido en móviles
+        margin: 0.5rem; // Margen reducido en móviles
+    }
+`;
 
 export default function DialogWelcome() {
     const { data: session, status } = useSession();
@@ -34,32 +57,18 @@ export default function DialogWelcome() {
     const handleCloseDialog = () => {
         setIsDialogOpen(false); // Cierra el diálogo
     };
-
+        
     return (
         <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <AlertDialog.Content
-                style={{
-                    maxWidth: '400px',
-                    background: '#d9d9d9',
-                    color: 'black',
-                    borderRadius: '20px',
-                    borderColor: '#ff6f3c',
-                    padding: '2rem',
-                    textAlign: 'center',
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                }}
-            >
+            <StyledAlertDialogContent>
                 <AlertDialog.Title>  </AlertDialog.Title>
                 <Heading size="5" mb="4" weight="bold">
                     <div className="w-[174px] h-[23px] text-center text-[#002a4d] text- font-extrabold capitalize">
-                        <Text size={'5'}>¡Bienvenido a IUPI! 🎉</Text><br />
+                        <Text size={{ initial: '4', sm: '5' }}>¡Bienvenido a IUPI! 🎉</Text><br />
                     </div>
                 </Heading>
 
-                <Text as="div" size="4" mb="4">
+                <Text as="div" size={{ initial: '3', sm: '4' }} mb="4">
                     <p className="mb-3 font-semibold">
                         Para que podamos ayudarte a alcanzar tus metas financieras de la mejor manera,
                         necesitamos conocerte un poco más.
@@ -78,11 +87,12 @@ export default function DialogWelcome() {
                     <br />
                 </Text>
 
-                <Flex justify="center" mt="4" gap="3">
+                <Flex justify="center" mt="4" gap="3" direction={{ initial: 'column', sm: 'row' }}>
                     {/* Botón para crear perfil */}
                     <AlertDialog.Action>
                         <Button
                             variant="classic"
+                            size={{ initial: '2', sm: '3' }}
                             onClick={handleCreateProfile} // Redirecciona al usuario
                         >
                             Crear mi perfil de inversionista
@@ -94,13 +104,14 @@ export default function DialogWelcome() {
                         <Button
                             variant="soft"
                             color="gray"
+                            size={{ initial: '2', sm: '3' }}
                             onClick={handleCloseDialog} // Cierra el diálogo
                         >
                             Cerrar
                         </Button>
                     </AlertDialog.Cancel>
                 </Flex>
-            </AlertDialog.Content>
+            </StyledAlertDialogContent>
         </AlertDialog.Root>
     );
 }

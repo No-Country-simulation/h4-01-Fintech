@@ -2,6 +2,7 @@ import NextAuth, { User as NextAuthUser } from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
 import { MyEnv } from './utils/envs'
+import {useQuestions} from '@/stores/useQuestions'
 
 // Extend the User type to include the role property
 interface User extends NextAuthUser {
@@ -24,8 +25,6 @@ interface DataRespuesta {
     risk_percentage: number;
   }
 }
-
-
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -180,18 +179,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.token = token.token as string;
       session.user.role = token.role as string;
       session.user.token = token.token as string;
+      //
+      if (session.user.risk_percentage !== null) {
+        const { setRiskPercentage } = useQuestions.getState()
+        setRiskPercentage(session.user.risk_percentage)
+      }
       console.log(
         'session del usuario',
         session,
         'y este es el Token',
         session.user.token
       );
+
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Redirige al home después de iniciar sesión
       if (url === '/auth/login' || url === baseUrl) {
-        return '/';
+        return '/dashboard';
       }
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
