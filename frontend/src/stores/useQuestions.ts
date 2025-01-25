@@ -1,7 +1,7 @@
 // stores/useQuestions.ts
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { setCookie, destroyCookie } from 'nookies'
+import Cookies from 'js-cookie'
 
 type QuestionsStore = {
   riskPercentage: number | null // Porcentaje de riesgo final
@@ -24,12 +24,12 @@ export const useQuestions = create<QuestionsStore>()(
 
         // Guarda el riskPercentage en las cookies
         if (value !== null) {
-          setCookie(null, 'riskPercentage', value.toString(), {
+          Cookies.set('riskPercentage', value.toString(), {
+            expires: 30,
             path: '/',
-            maxAge: 30 * 24 * 60 * 60, // 30 días de duración
           })
         } else {
-          destroyCookie(null, 'riskPercentage', { path: '/' })
+          Cookies.remove('riskPercentage', { path: '/' })
         }
       },
 
@@ -40,9 +40,9 @@ export const useQuestions = create<QuestionsStore>()(
         set({ answers: newAnswers })
 
         // Guarda las respuestas en las cookies
-        setCookie(null, 'answers', JSON.stringify(newAnswers), {
+        Cookies.set('answers', JSON.stringify(newAnswers), {
+          expires: 30,
           path: '/',
-          maxAge: 30 * 24 * 60 * 60, // 30 días de duración
         })
       },
 
@@ -54,17 +54,17 @@ export const useQuestions = create<QuestionsStore>()(
         set({ riskPercentage: averageRisk })
 
         // Guarda el porcentaje de riesgo en las cookies
-        setCookie(null, 'riskPercentage', averageRisk.toString(), {
+        Cookies.set('riskPercentage', averageRisk.toString(), {
+          expires: 30,
           path: '/',
-          maxAge: 30 * 24 * 60 * 60, // 30 días de duración
         })
       },
 
       // Resetea el estado
       reset: () => {
         set({ riskPercentage: null, answers: Array(7).fill(0) })
-        destroyCookie(null, 'riskPercentage', { path: '/' })
-        destroyCookie(null, 'answers', { path: '/' })
+        Cookies.remove('riskPercentage', { path: '/' })
+        Cookies.remove('answers', { path: '/' })
       },
     }),
     {

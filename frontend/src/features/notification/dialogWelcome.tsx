@@ -50,7 +50,7 @@ export default function DialogWelcome() {
 
     // Función para redireccionar al usuario
     const handleCreateProfile = () => {
-        router.push("/auth/register");
+        router.push("/dashboard/questions");
     };
 
     // Función para cerrar el diálogo
@@ -58,60 +58,63 @@ export default function DialogWelcome() {
         setIsDialogOpen(false); // Cierra el diálogo
     };
         
-    return (
-        <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <StyledAlertDialogContent>
-                <AlertDialog.Title>  </AlertDialog.Title>
-                <Heading size="5" mb="4" weight="bold">
-                    <div className="w-[174px] h-[23px] text-center text-[#002a4d] text- font-extrabold capitalize">
-                        <Text size={{ initial: '4', sm: '5' }}>¡Bienvenido a IUPI! 🎉</Text><br />
-                    </div>
-                </Heading>
+    if(session?.user.role =='USER'){
+        return (
+            <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <StyledAlertDialogContent>
+                    <AlertDialog.Title>  </AlertDialog.Title>
+                    <Heading size="5" mb="4" weight="bold">
+                        <div className="w-[174px] h-[23px] text-center text-[#002a4d] text- font-extrabold capitalize">
+                            <Text size={{ initial: '4', sm: '5' }}>¡Bienvenido a IUPI! 🎉</Text><br />
+                        </div>
+                    </Heading>
 
-                <Text as="div" size={{ initial: '3', sm: '4' }} mb="4">
-                    <p className="mb-3 font-semibold">
-                        Para que podamos ayudarte a alcanzar tus metas financieras de la mejor manera,
-                        necesitamos conocerte un poco más.
-                    </p>
-                    <br />
+                    <Text as="div" size={{ initial: '3', sm: '4' }} mb="4">
+                        <p className="mb-3 font-semibold">
+                            Para que podamos ayudarte a alcanzar tus metas financieras de la mejor manera,
+                            necesitamos conocerte un poco más.
+                        </p>
+                        <br />
 
-                    <p className="mb-3 font-semibold">
-                        Al completar tu perfil de inversionista, te ofreceremos recomendaciones y
-                        estrategias 100% personalizadas, adaptadas a tus necesidades y objetivos.
-                    </p>
-                    <br />
+                        <p className="mb-3 font-semibold">
+                            Al completar tu perfil de inversionista, te ofreceremos recomendaciones y
+                            estrategias 100% personalizadas, adaptadas a tus necesidades y objetivos.
+                        </p>
+                        <br />
 
-                    <p className="font-semibold">
-                        ¿Listo para empezar tu camino hacia el éxito financiero?
-                    </p>
-                    <br />
-                </Text>
+                        <p className="font-semibold">
+                            ¿Listo para empezar tu camino hacia el éxito financiero?
+                        </p>
+                        <br />
+                    </Text>
 
-                <Flex justify="center" mt="4" gap="3" direction={{ initial: 'column', sm: 'row' }}>
-                    {/* Botón para crear perfil */}
-                    <AlertDialog.Action>
-                        <Button
-                            variant="classic"
-                            size={{ initial: '2', sm: '3' }}
-                            onClick={handleCreateProfile} // Redirecciona al usuario
-                        >
-                            Crear mi perfil de inversionista
-                        </Button>
-                    </AlertDialog.Action>
+                    <Flex justify="center" mt="4" gap="3" direction={{ initial: 'column', sm: 'row' }}>
+                        {/* Botón para crear perfil */}
+                        <AlertDialog.Action>
+                            <Button
+                                variant="classic"
+                                size={{ initial: '2', sm: '3' }}
+                                onClick={handleCreateProfile} // Redirecciona al usuario
+                            >
+                                Crear mi perfil de inversionista
+                            </Button>
+                        </AlertDialog.Action>
 
-                    {/* Botón para cerrar el diálogo */}
-                    <AlertDialog.Cancel>
-                        <Button
-                            variant="soft"
-                            color="gray"
-                            size={{ initial: '2', sm: '3' }}
-                            onClick={handleCloseDialog} // Cierra el diálogo
-                        >
-                            Cerrar
-                        </Button>
-                    </AlertDialog.Cancel>
-                </Flex>
-            </StyledAlertDialogContent>
-        </AlertDialog.Root>
-    );
+                        {/* Botón para cerrar el diálogo */}
+                        <AlertDialog.Cancel>
+                            <Button
+                                variant="soft"
+                                color="gray"
+                                size={{ initial: '2', sm: '3' }}
+                                onClick={handleCloseDialog} // Cierra el diálogo
+                            >
+                                Cerrar
+                            </Button>
+                        </AlertDialog.Cancel>
+                    </Flex>
+                </StyledAlertDialogContent>
+            </AlertDialog.Root>
+        );
+    }
+    return null;
 }

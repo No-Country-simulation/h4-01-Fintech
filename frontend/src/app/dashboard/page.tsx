@@ -1,13 +1,7 @@
-// app/layout.tsx o components/Layout.tsx
-"use client";
-import InvestmentProfileHandler from "@/features/questios/investment";
+import React from 'react'
 
-
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function page() {
   return (
-    <>
-      <InvestmentProfileHandler />
-      {children}
-    </>
-  );
+    <div>Dashboard</div>
+  )
 }
