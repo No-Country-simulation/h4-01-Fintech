@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { AddAnswerDto } from './dto/add-answer.dto';
 import { UserService } from 'src/users/user.service';
 import { QuestionsService } from 'src/questions/questions.service';
+import { GetAnswersDto } from './dto/get-answer.dto';
 
 @Injectable()
 export class AnswersService {
@@ -38,6 +39,32 @@ export class AnswersService {
         return {
             status: true,
             message: "La respuesta ha sido guardada"
+        }
+    }
+
+    async getAnswers(userId: string, dto: GetAnswersDto) {
+        const { page = 1, limit = 10 } = dto || {};
+        const skip = (page - 1) * limit;
+        const user = await this.userService.findById(userId);
+        if (!user) throw new BadRequestException('No existe usuario con este Id');
+        const [items, total] = await this.answerRepository.findAndCount({
+            skip,
+            take: limit,
+            where: {
+                userId,
+            }
+        });
+        return {
+            status: true,
+            message: null,
+            data: {
+                answers: items,
+                total,
+                page,
+                limit,totalPages: Math.ceil(total / limit),
+                hasNextPage: page < Math.ceil(total / limit),
+                hasPreviousPage: page > 1
+            }
         }
     }
 }
