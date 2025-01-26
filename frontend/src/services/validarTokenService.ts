@@ -1,4 +1,4 @@
-import { MyEnv } from '@/utils/envs'
+import { MyEnv } from '@/lib/envs'
 
 export const emailVerificationService = async (token: string) => {
     try {

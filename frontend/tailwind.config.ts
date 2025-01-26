@@ -1,5 +1,8 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 const { violet, blackA, mauve, green, gray } = require('@radix-ui/colors')
+const {
+  default: flattenColorPalette,
+} = require('tailwindcss/lib/util/flattenColorPalette')
 
 export default {
   content: [
@@ -7,8 +10,12 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
+      textShadow: {
+        intense: '2px 2px 8px rgba(0, 0, 0, 0.9)',
+      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
@@ -23,6 +30,14 @@ export default {
           from: { opacity: '0' },
           to: { opacity: '1' },
         },
+        aurora: {
+          from: {
+            backgroundPosition: '50% 50%, 50% 50%',
+          },
+          to: {
+            backgroundPosition: '350% 50%, 350% 50%',
+          },
+        },
         contentShow: {
           from: {
             opacity: '0',
@@ -32,10 +47,22 @@ export default {
         },
       },
       animation: {
+        aurora: 'aurora 60s linear infinite',
         overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         contentShow: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },
-  plugins: [],
+  plugins: [addVariablesForColors],
 } satisfies Config
+
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme('colors'))
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  )
+
+  addBase({
+    ':root': newVars,
+  })
+}

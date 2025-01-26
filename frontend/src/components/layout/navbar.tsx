@@ -6,6 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@radix-ui/themes';
+
 export default function Navbar() {
     const { data: session } = useSession();
 

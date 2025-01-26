@@ -58,7 +58,7 @@ export default function DialogWelcome() {
         setIsDialogOpen(false); // Cierra el diálogo
     };
         
-    if(session?.user.role =='USER'){
+    if(session?.user.role === 'USER'){
         return (
             <AlertDialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <StyledAlertDialogContent>

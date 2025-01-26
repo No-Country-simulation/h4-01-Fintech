@@ -1,7 +1,7 @@
 import NextAuth, { User as NextAuthUser } from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
-import { MyEnv } from './utils/envs'
+import { MyEnv } from './lib/envs'
 import {useQuestions} from '@/stores/useQuestions'
 
 // Extend the User type to include the role property
