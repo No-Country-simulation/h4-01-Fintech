@@ -4,7 +4,7 @@ import { AuroraBackground } from '@/components/aceternity/aurora';
 import { Button, Flex, Text, Heading } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
 
-export default function Session1() {
+export default function Section1() {
     const { data: session } = useSession();
 
     // Condicional para mostrar el componente

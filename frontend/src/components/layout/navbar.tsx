@@ -6,6 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@radix-ui/themes';
+import Image from 'next/image';
 
 export default function Navbar() {
     const { data: session } = useSession();
@@ -37,7 +38,19 @@ export default function Navbar() {
                         <div className="flex items-center gap-3">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="cursor-pointer">
-                                    <span className="px-4 py-2 bg-gray-200 rounded-full">{session.user.name?.charAt(0)}</span>
+                                    {session.user.image ? (
+                                        <Image
+                                            src={session.user.image}
+                                            alt="User profile"
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full"
+                                        />
+                                    ) : (
+                                        <span className="px-4 py-2 bg-gray-200 rounded-full text-lg font-medium">
+                                            {session.user.name?.charAt(0).toUpperCase()}
+                                        </span>
+                                    )}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="bg-white shadow-md rounded-md">
                                     <DropdownMenuItem onClick={() => signOut()}>Cerrar sesión</DropdownMenuItem>
