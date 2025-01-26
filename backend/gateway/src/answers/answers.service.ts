@@ -6,6 +6,7 @@ import { AddAnswerDto } from './dto/add-answer.dto';
 import { UserService } from 'src/users/user.service';
 import { QuestionsService } from 'src/questions/questions.service';
 import { GetAnswersDto } from './dto/get-answer.dto';
+import { UpdateAnswerDto } from './dto/update-answer.dto';
 
 @Injectable()
 export class AnswersService {
@@ -65,6 +66,25 @@ export class AnswersService {
                 hasNextPage: page < Math.ceil(total / limit),
                 hasPreviousPage: page > 1
             }
+        }
+    }
+
+    async updateAnswer(userId: string, answerId: string, dto: UpdateAnswerDto) {
+        const { answer } = dto;
+        const user = await this.userService.findById(userId);
+        if (!user) throw new BadRequestException('No existe usuario con este Id');
+        const answerFound = await this.answerRepository.findOne({
+            where: {
+                id: answerId,
+                userId
+            }
+        });
+        if (!answerFound) throw new BadRequestException('No existe una respuesta para esta pregunta');
+        answerFound.answer = answer;
+        await this.answerRepository.save(answerFound);
+        return {
+            status: true,
+            message: 'La respuesta ha sido actualizada'
         }
     }
 }
