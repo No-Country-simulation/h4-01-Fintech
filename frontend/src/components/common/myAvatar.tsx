@@ -1,31 +1,26 @@
-'use client';
+'use client'
+import * as React from "react";
+import { Avatar } from "radix-ui";
+import { useSession } from "next-auth/react";
 
-import { Avatar, Flex } from '@radix-ui/themes';
-import { useSession } from 'next-auth/react';
+export const MyAvatar = () => {
+  const { data: session } = useSession()
 
-export default function MyAvatar() {
-  const { data: session } = useSession();
-
-  // Si no hay sesión o no hay usuario, renderiza un avatar genérico
-  if (!session || !session.user) {
-    return (
-      <div>
-        <Flex gap="2">
-          <Avatar fallback="?" />
-        </Flex>
-      </div>
-    );
-  }
-
-  // Renderiza el avatar con la imagen del usuario
   return (
-    <div>
-      <Flex gap="2">
-        <Avatar
-          src={session.user.image || undefined} // Verifica si la imagen existe
-          fallback={session.user.name ? session.user.name[0] : 'A'} // Muestra la primera letra del nombre como fallback
+    <div className="flex gap-5">
+      <Avatar.Root className="inline-flex size-[45px] select-none items-center justify-center overflow-hidden rounded-full ">
+        <Avatar.Image
+          className="size-full rounded-[inherit] object-cover"
+          src={session?.user.image}
+          alt="Colm Tuite"
         />
-      </Flex>
+        <Avatar.Fallback
+          className="leading-1 flex size-full items-center justify-center bg-white text-[15px] font-medium text-violet11"
+          delayMs={600}
+        >
+          {session?.user?.name ? session.user.name[0] : null}
+        </Avatar.Fallback>
+      </Avatar.Root>
     </div>
-  );
+  )
 }

@@ -7,7 +7,7 @@ import { BalanceEntity } from './balance.entity';
 import { Role } from 'src/rbac/roles';
 
 @Entity('users')
-@Check(`risk_percentage BETWEEN 1 AND 10`)
+@Check('"risk_percentage" >= 0 AND "risk_percentage" <= 100')
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

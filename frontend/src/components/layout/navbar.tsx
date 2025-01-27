@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@radix-ui/rea
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@radix-ui/themes';
 import Image from 'next/image';
+import MyMenu from '@/components/common/MyMenu';
 
 export default function Navbar() {
     const { data: session } = useSession();
@@ -38,19 +39,7 @@ export default function Navbar() {
                         <div className="flex items-center gap-3">
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="cursor-pointer">
-                                    {session.user.image ? (
-                                        <Image
-                                            src={session.user.image}
-                                            alt="User profile"
-                                            width={40}
-                                            height={40}
-                                            className="rounded-full"
-                                        />
-                                    ) : (
-                                        <span className="px-4 py-2 bg-gray-200 rounded-full text-lg font-medium">
-                                            {session.user.name?.charAt(0).toUpperCase()}
-                                        </span>
-                                    )}
+                                    <MyMenu />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="bg-white shadow-md rounded-md">
                                     <DropdownMenuItem onClick={() => signOut()}>Cerrar sesión</DropdownMenuItem>
@@ -74,7 +63,7 @@ export default function Navbar() {
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button variant='ghost'>
-                                <Menu className="h-6 w-6" />
+                                <MyMenu />
                                 <span className="sr-only">Abrir menú</span>
                             </Button>
                         </DialogTrigger>

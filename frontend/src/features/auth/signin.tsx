@@ -13,7 +13,7 @@ export default function SignIn() {
                 color="gray" variant="soft"
                 onClick={() => signIn("google", { callbackUrl: "/" })}
                 type="button"
-                className="w-full bg-[#dedddd] hover:bg-[#dedddd]/90 focus:ring-4 focus:outline-none focus:ring-[#dedddd]/50 text-white font-medium rounded-lg text-sm sm:text-base px-4 py-2 sm:py-3 flex items-center justify-center space-x-2"
+                className="w-full text-black hover:bg-[#dedddd]/90 focus:ring-4 focus:outline-none focus:ring-[#dedddd]/50 font-medium rounded-lg text-sm sm:text-base px-4 py-2 sm:py-3 flex items-center justify-center space-x-2"
             >
                 <FcGoogle className="text-lg sm:text-xl" />
                 <span>Iniciar sesión con Google</span>
@@ -24,7 +24,7 @@ export default function SignIn() {
                 color="gray" variant="soft"
                 onClick={() => signIn("apple", { callbackUrl: "/" })}
                 type="button"
-                className="w-full bg-black hover:bg-black/90 focus:ring-4 focus:outline-none focus:ring-gray-800 text-white font-medium rounded-lg text-sm sm:text-base px-4 py-2 sm:py-3 flex items-center justify-center space-x-2"
+                className="w-full text-black bg-black hover:bg-black/90 focus:ring-4 focus:outline-none focus:ring-gray-800 font-medium rounded-lg text-sm sm:text-base px-4 py-2 sm:py-3 flex items-center justify-center space-x-2"
             >
                 <FaApple className="text-lg sm:text-xl" />
                 <span>Iniciar sesión con Apple</span>
