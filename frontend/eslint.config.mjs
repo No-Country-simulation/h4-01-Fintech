@@ -29,6 +29,7 @@ export default [
       parserOptions: {
         sourceType: 'module',
         ecmaVersion: 'latest',
+        project: './tsconfig.json', // Asegúrate de que TypeScript use tu tsconfig.json
       },
     },
     settings: {
@@ -73,7 +74,6 @@ export default [
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
-      'no-unused-vars': 'error',
       'no-undef': 'error',
       'no-console': 'error',
       'no-debugger': 'error',
@@ -81,6 +81,7 @@ export default [
       // Reglas de importación
       'import/no-unresolved': 'error',
       'import/no-relative-parent-imports': 'error',
+      'import/no-unused-modules': 'error', // Detecta módulos no utilizados
 
       // Reglas de TypeScript
       '@typescript-eslint/no-unused-vars': ['error'],
