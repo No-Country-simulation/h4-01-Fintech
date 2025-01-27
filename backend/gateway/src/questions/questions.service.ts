@@ -15,6 +15,8 @@ export class QuestionsService {
 
     async addQuestion(dto: QuestionDto) {
         const { question, order, minRange, maxRange, minRangeLabel, maxRangeLabel } = dto;
+        const questionExists = await this.questionRepository.findOne({ where: { order }});
+        if (questionExists) throw new BadRequestException('El orden de las preguntas debe ser único');
         const newQuestion = this.questionRepository.create({
             question,
             order,
@@ -23,8 +25,6 @@ export class QuestionsService {
             minRangeLabel,
             maxRangeLabel
         });
-        const questionExists = await this.questionRepository.find({ where: { order }});
-        if (questionExists) throw new BadRequestException('El orden de las preguntas debe ser único');
         await this.questionRepository.save(newQuestion);
         return {
             status: true,
@@ -32,7 +32,7 @@ export class QuestionsService {
         }
     }
 
-    async getQuestions(dto: GetQuestionsDto) {
+    async getQuestions(dto?: GetQuestionsDto) {
         const { page = 1, limit = 10 } = dto || {};
         const skip = (page - 1) * limit;
         const [items, total] = await this.questionRepository.findAndCount({

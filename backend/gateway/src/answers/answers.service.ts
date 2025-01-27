@@ -43,7 +43,7 @@ export class AnswersService {
         }
     }
 
-    async getAnswers(userId: string, dto: GetAnswersDto) {
+    async getAnswers(userId: string, dto?: GetAnswersDto) {
         const { page = 1, limit = 10 } = dto || {};
         const skip = (page - 1) * limit;
         const user = await this.userService.findById(userId);
