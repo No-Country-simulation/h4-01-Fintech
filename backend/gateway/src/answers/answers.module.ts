@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   controllers: [AnswersController],
   providers: [AnswersService,AuthGuard, JwtService],
-  imports: [UsersModule, QuestionsModule, TypeOrmModule.forFeature([UserEntity, QuestionEntity, AnswerEntity]),]
+  imports: [UsersModule, QuestionsModule, TypeOrmModule.forFeature([UserEntity, QuestionEntity, AnswerEntity]),],
+  exports: [AnswersService]
 })
 export class AnswersModule {}
