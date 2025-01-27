@@ -4,10 +4,35 @@ import classNames from "classnames";
 import { Accordion } from "radix-ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
+import { getUSer, UserData } from "@/services/userService";
+import { useEffect } from "react";
 
 
 const AccordionProfile = () => {
     const { data: session } = useSession();
+    const userId  = session?.user.id
+    const [dni, setDni] = React.useState<string | null>(null);
+    //
+    useEffect(() => {
+        const fetchDataUser = async (userId: string) => {
+            try {
+                const resp: UserData = await getUSer(userId);
+                if (resp) {
+                    setRiskPercentage(resp.risk_percentage);
+                    setDni(resp.dni);
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+
+        if (userId) {
+            fetchDataUser(userId);
+        }
+    }, [userId]);
+
+    const [riskPercentage, setRiskPercentage] = React.useState<number | null>(null);
+
     return (
         <Accordion.Root
             className="w-[600px] rounded-md bg-mauve6 shadow-[0_2px_10px] shadow-black/5"
@@ -16,14 +41,18 @@ const AccordionProfile = () => {
             collapsible
         >
             <AccordionItem value="item-1">
-                <AccordionTrigger>Datos</AccordionTrigger>
+                <AccordionTrigger>
+                    <h3>Datos</h3>
+                </AccordionTrigger>
                 <AccordionContent>
                     <div>
                         Nombre: {session?.user.name}
                         <br />
+                        DNI: {dni || "No disponible"}
+                        <br />
                         Email: {session?.user.email}
                         <br />
-                        Porcentaje de Riesgo: {session?.user.risk_percentage}
+                        Porcentaje de Riesgo: {riskPercentage ?? "No calculado"}
                     </div>
                 </AccordionContent>
             </AccordionItem>
@@ -50,7 +79,7 @@ interface AccordionItemProps extends React.ComponentPropsWithoutRef<typeof Accor
         className?: string;
     }
 
-const AccordionItem = React.forwardRef<React.ElementRef<typeof Accordion.Item>, AccordionItemProps>(
+const AccordionItem = React.forwardRef<React.ComponentRef<typeof Accordion.Item>, AccordionItemProps>(
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Item
             className={classNames(
@@ -101,7 +130,7 @@ const AccordionContent = React.forwardRef<React.ComponentRef<typeof Accordion.Co
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Content
             className={classNames(
-                "overflow-hidden bg-gray-900 text-[15px] text-slate-300 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
+                "overflow-hidden bg-gray-300 text-[15px] text-slate-800 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
                 className,
             )}
             {...props}

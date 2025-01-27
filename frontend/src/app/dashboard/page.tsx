@@ -53,12 +53,15 @@ export default function Page() {
           </div>
 
           <div className="rounded-lg shadow-lg p-5">
-            <h2 className="text-2xl font-bold text-center mb-5">
+            <h2 className="text-2xl text-center mb-5">
               Este es tu perfil de {session.user.role.toLowerCase() === 'user' ? 'usuario' : ''}
             </h2>
             <p className="text-lg mb-5">
               {mensaje} {/* Aquí se muestra el mensaje según el perfil */}
             </p>
+          </div>
+          <div className='m-2'>
+            <Button variant='classic' onClick={() => router.push('/dashboard/questions')}  className='p2 m-2'>Actualizar Recomendaciones</Button>
           </div>
         </div>
       </Flex>
