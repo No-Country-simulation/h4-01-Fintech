@@ -12,6 +12,7 @@ import { SeedUserService } from './seed-user.service';
 import { BalanceEntity } from 'src/entities/balance.entity';
 // import { SeedMarketDataService } from './seed-market-data.service';
 import { AnswerEntity } from '../entities/answer.entity';
+import  { GoalEntity} from '../entities/goals.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AnswerEntity } from '../entities/answer.entity';
       AccountEntity,
       AssetEntity,
       TransactionEntity,
+      GoalEntity,
     ]),
   ],
   providers: [

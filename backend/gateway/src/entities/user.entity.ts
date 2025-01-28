@@ -5,6 +5,7 @@ import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 import { BalanceEntity } from './balance.entity';
 import { Role } from 'src/rbac/roles';
+import { GoalEntity } from './goals.entity';
 
 @Entity('users')
 @Check('"risk_percentage" >= 0 AND "risk_percentage" <= 100')
@@ -58,4 +59,7 @@ export class UserEntity {
 
   @OneToOne(() => BalanceEntity, (balance) => balance.user)
   balance: BalanceEntity;
+
+  @OneToMany(()=> GoalEntity, (goals) => goals.user)
+  goals?: GoalEntity[]
 }
