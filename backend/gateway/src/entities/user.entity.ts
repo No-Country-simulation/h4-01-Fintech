@@ -8,7 +8,7 @@ import { Role } from 'src/rbac/roles';
 import { GoalEntity } from './goals.entity';
 
 @Entity('users')
-@Check('"risk_percentage" >= 0 AND "risk_percentage" <= 100')
+@Check('"risk_percentage" >= 0 AND "risk_percentage" <= 10') // 70 /100 => 10 ...
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

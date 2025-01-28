@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
 import { AssetEntity } from '../entities/asset.entity';
 import { GoalEntity } from '../entities/goals.entity';
+import { BalanceEntity} from '../entities/balance.entity';
+import { PortfolioEntity} from '../entities/portfolio.entity'
 
 @Injectable()
 export class SeedUserService {
@@ -24,6 +26,10 @@ export class SeedUserService {
     private readonly assetRepository: Repository<AssetEntity>,
     @InjectRepository(GoalEntity)
     private readonly goalRepository: Repository<GoalEntity>,
+    @InjectRepository(PortfolioEntity)
+    private readonly portfolioRepository: Repository<PortfolioEntity>,
+    @InjectRepository(BalanceEntity)
+    private readonly balanceRepository: Repository<BalanceEntity>,
   ) {}
 
   async createCompleteUser() {
@@ -46,6 +52,10 @@ export class SeedUserService {
       user.image = faker.image.avatar();
       user.is_active = true;
       user.is_validated_email = true;
+      user.risk_percentage = faker.number.int({
+        min: 0,
+        max: 10,
+      });
       const savedUser = await this.userRepository.save(user);
       console.log(`👤 Usuario creado: ${savedUser.name}`);
 
@@ -66,7 +76,6 @@ export class SeedUserService {
       account.oauth_token = null; // No se usará en este caso
 
       await this.accountRepository.save(account);
-
 
       const goals = [
         { name: 'Vacaciones 2025', targetAmount: 2000 },
@@ -99,7 +108,57 @@ export class SeedUserService {
         transaction.location = faker.location.city();
         transaction.timestamp = faker.date.past();
 
+        // Validar el impacto en el saldo del usuario
+        if (
+          transaction.transaction_type === TypeTrans.WITHDRAWAL &&
+          transaction.quantity > savedUser.balance.balance
+        ) {
+          console.error(
+            `❌ Saldo insuficiente para retiro: Usuario ${savedUser.name}`,
+          );
+          continue;
+        }
+        if (
+          transaction.transaction_type === TypeTrans.INVESTMENT &&
+          transaction.quantity > savedUser.balance.balance
+        ) {
+          console.error(
+            `❌ Saldo insuficiente para inversión: Usuario ${savedUser.name}`,
+          );
+          continue;
+        }
+
+        // Ajustar saldo del usuario
+        if (transaction.transaction_type === TypeTrans.ACCOUNT_FUNDING) {
+          savedUser.balance.balance += transaction.quantity;
+        } else if (transaction.transaction_type === TypeTrans.WITHDRAWAL) {
+          savedUser.balance.balance -= transaction.quantity;
+        }
+
         await this.transactionsRepository.save(transaction);
+
+        // Actualizar portafolio si es inversión
+        if (transaction.transaction_type === TypeTrans.INVESTMENT) {
+          let portfolio = await this.portfolioRepository.findOne({
+            where: { userId: savedUser.id, asset: randomAsset },
+          });
+          if (!portfolio) {
+            portfolio = new PortfolioEntity();
+            portfolio.userId = savedUser.id;
+            portfolio.asset = randomAsset;
+            portfolio.quantity = 0;
+            portfolio.avg_buy_price = transaction.price;
+            portfolio.current_price = transaction.price;
+          }
+          portfolio.quantity += transaction.quantity;
+          portfolio.avg_buy_price =
+            (portfolio.avg_buy_price * portfolio.quantity +
+              transaction.price * transaction.quantity) /
+            (portfolio.quantity + transaction.quantity);
+          await this.portfolioRepository.save(portfolio);
+        }
+
+        await this.userRepository.save(savedUser); // Guardar saldo actualizado
         console.log(`💸 Transacción creada para el usuario: ${savedUser.name}`);
       }
     }
