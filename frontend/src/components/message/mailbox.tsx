@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import * as Accordion from "@radix-ui/react-accordion";
+import * as React from "react";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@radix-ui/react-accordion";
 import { CheckCircle, Circle, Trash2 } from "lucide-react";
 import { getAllNotifications, markNotificationAsRead, deleteNotification } from "@/services/notifications";
 import Loading from "@/app/loanding";
+import { useEffect, useState } from "react";
 
 interface Notification {
     id: string;
@@ -77,14 +78,14 @@ export const Mailbox = ({ userId }: { userId: string }) => {
         <div className="w-full max-w-2xl mx-auto p-4 sm:p-6 lg:max-w-4xl">
             <h2 className="text-2xl font-semibold mb-6 text-center">Tus Mensajes</h2>
             <div className="max-h-[500px] overflow-y-scroll space-y-3">
-                <Accordion.Root type="single" collapsible className="space-y-2">
+                <Accordion type="single" collapsible className="space-y-2">
                     {notifications.map((notif) => (
-                        <Accordion.Item
+                        <AccordionItem
                             key={notif.id}
                             value={notif.id}
                             className="border rounded-lg shadow-sm overflow-hidden"
                         >
-                            <Accordion.Trigger
+                            <AccordionTrigger
                                 onClick={() => {
                                     if (!notif.isRead) handleMarkAsRead(notif.id);
                                 }}
@@ -113,14 +114,14 @@ export const Mailbox = ({ userId }: { userId: string }) => {
                                         <Trash2 className="w-5 h-5" />
                                     </button>
                                 </div>
-                            </Accordion.Trigger>
-                            <Accordion.Content className="p-4 bg-gray-50">
+                            </AccordionTrigger>
+                            <AccordionContent className="p-4 bg-gray-50">
                                 <p className="text-gray-700">{notif.message}</p>
-                            </Accordion.Content>
-                        </Accordion.Item>
+                            </AccordionContent>
+                        </AccordionItem>
                     ))}
-                </Accordion.Root>
+                </Accordion>
             </div>
         </div>
     );
-};
+}
