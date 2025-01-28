@@ -1,8 +1,12 @@
+'use client'
 import React from 'react';
 import Image from 'next/image';
-import { Button, Link } from '@radix-ui/themes';
+import { Button } from '@radix-ui/themes';
+import { useRouter } from 'next/navigation';
+
 
 export default function Section4() {
+  const router = useRouter();
   return (
     <div id='educacion-financiera' className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-6">
       {/* Columna de imagen */}
@@ -18,7 +22,7 @@ export default function Section4() {
 
       {/* Columna de texto */}
       <div className='justify-center justify-items-center w-[500px]'>
-        <div className="text-[#002a4d] text-5xl font-bold font-['Inter'] capitalize">Educación Financiera</div>
+        <div className="text-[#002a4d] text-5xl font-bold  capitalize">Educación Financiera</div>
         <div>
           <br />
           <br />
@@ -41,7 +45,7 @@ export default function Section4() {
             <p className="text-[#002a4d] text-lg font-normal">Con nuestros recursos educativos, podrás desarrollar habilidades para gestionar tu dinero y alcanzar tus metas con confianza.
             </p>          
             <br/>
-            <Button >Aprender</Button>
+            <Button onClick={() => router.push('/auth/register')}  >Aprender</Button>
             </div>
         </div>
       </div>

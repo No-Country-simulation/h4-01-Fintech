@@ -21,6 +21,7 @@ import {
     ExitIcon,
     RocketIcon,
     ChatBubbleIcon,
+    HomeIcon
 } from '@radix-ui/react-icons';
 import { MyAvatar } from './myAvatar';
 import { DropdownMenu } from "radix-ui";
@@ -73,6 +74,13 @@ export default function MyMenu() {
                 {/* Contenido del menú */}
                 <DropdownMenuContent className="min-w-[220px] bg-white rounded-md shadow-lg z-50">
                     {/* Opciones del menú */}
+                    <DropdownMenuItem
+                        className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                        onClick={() => router.push('/')}
+                    >
+                        <HomeIcon />
+                        Inicio
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                         onClick={() => router.push('/dashboard')}

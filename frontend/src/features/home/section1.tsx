@@ -3,9 +3,11 @@
 import { AuroraBackground } from '@/components/aceternity/aurora';
 import { Button, Flex, Text, Heading } from '@radix-ui/themes';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Section1() {
     const { data: session } = useSession();
+    const router = useRouter();
 
     // Condicional para mostrar el componente
     if (session?.user.role === 'USER' || session?.user.risk_percentage === null || !session?.user) {
@@ -54,10 +56,10 @@ export default function Section1() {
                                 gap="3"
                                 className="mt-6"
                             >
-                                <Button size="3" variant="solid" className="w-full sm:w-auto">
+                                <Button onClick={() => router.push('/dashboard/invertir')}  size="3" variant="solid" className="w-full sm:w-auto">
                                     Comenzar a invertir
                                 </Button>
-                                <Button size="3" variant="outline" className="w-full sm:w-auto">
+                                <Button onClick={() => router.push('/auth/register')}  size="3" variant="outline" className="w-full sm:w-auto">
                                     Crear mi perfil de inversionista
                                 </Button>
                             </Flex>
