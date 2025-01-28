@@ -1,16 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { Menu } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@radix-ui/react-dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@radix-ui/themes';
-import Image from 'next/image';
 import MyMenu from '@/components/common/MyMenu';
 
 export default function Navbar() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+
+    if (status === "loading") {
+        return <p>Cargando...</p>;
+    }
 
     return (
         <nav className="w-full h-auto md:h-20 px-4 md:px-8 lg:px-12 py-4 md:py-[18px] bg-white flex-col justify-start items-start gap-2.5 inline-flex">

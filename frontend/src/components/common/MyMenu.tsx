@@ -76,48 +76,41 @@ export default function MyMenu() {
                     {/* Opciones del menú */}
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/')}
                     >
-                        <HomeIcon />
+                        <HomeIcon href='/' />
                         Inicio
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/dashboard')}
                     >
-                        <PersonIcon />
+                        <PersonIcon href='/dashboard' />
                         Ir a Perfil
                     </DropdownMenuItem>
-
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/ayuda')}
                     >
-                        <QuestionMarkCircledIcon />
+                        <QuestionMarkCircledIcon href='/ayuda'/>
                         Ayuda
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/soporte')}
                     >
-                        <GearIcon />
+                        <GearIcon href='/soporte' />
                         Soporte Técnico
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/planes')}
                     >
-                        <RocketIcon />
+                        <RocketIcon href='/planes'/>
                         Planes y Ahora
                     </DropdownMenuItem>
 
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/dashboard/mensajes')}
                     >
-                        <EnvelopeClosedIcon />
+                        <EnvelopeClosedIcon href='/dashboard/mensajes'/>
                         Mensajes
                         {unreadCount > 0 && (
                             <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">
@@ -128,9 +121,8 @@ export default function MyMenu() {
 
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                        onClick={() => router.push('/dashboard/blog')}
                     >
-                        <FileTextIcon />
+                        <FileTextIcon href='/dashboard/blog'/>
                         Educación Financiera
                     </DropdownMenuItem>
 
