@@ -59,7 +59,7 @@ export default function Section1() {
                                 <Button onClick={() => router.push('/dashboard/invertir')}  size="3" variant="solid" className="w-full sm:w-auto">
                                     Comenzar a invertir
                                 </Button>
-                                <Button onClick={() => router.push('/auth/register')}  size="3" variant="outline" className="w-full sm:w-auto">
+                                <Button onClick={() => router.push('/dashboard/questions')}  size="3" variant="outline" className="w-full sm:w-auto">
                                     Crear mi perfil de inversionista
                                 </Button>
                             </Flex>

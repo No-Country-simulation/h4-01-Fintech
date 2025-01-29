@@ -16,7 +16,7 @@ export const useQuestions = create<QuestionsStore>()(
   persist(
     (set, get) => ({
       riskPercentage: null,
-      answers: Array(7).fill(0), // Inicializa un array de 7 respuestas con valor 0
+      answers: Array(7).fill(10), // Inicializa un array de 7 respuestas con valor 0
 
       // Función para actualizar el riskPercentage
       setRiskPercentage: (value) => {

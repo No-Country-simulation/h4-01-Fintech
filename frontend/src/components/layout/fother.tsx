@@ -1,6 +1,7 @@
 import { Button, Flex, Link } from '@radix-ui/themes';
 import React from 'react';
 import Image from 'next/image';
+import DialogWelcome from '@/features/notification/dialogWelcome';
 
 const Footer = () => {
     return (
@@ -11,9 +12,7 @@ const Footer = () => {
                     <div className="text-xl font-semibold text-[#f5f5f6]">IUPI</div>
                     <div className="text-base font-normal text-[#f5f5f6]">La app que conecta tus metas con resultados y Facilitamos tu ahorro e inversión</div>
                 </Flex>
-                <Button variant='classic' size={"3"} className="px-6 py-3 bg-blue-500 text-white hover:bg-blue-600">
-                    Comenzar a invertir
-                </Button>
+                <Button>Ser inversionista</Button>
             </Flex>
 
             {/* Sección media */}
@@ -49,7 +48,6 @@ const Footer = () => {
             <Flex justify="between" align="center" className="pt-6">
                 <div className="text-base font-normal text-[#f5f5f6]">© 2025 iUpi - Todos los derechos reservados.</div>
                 <Flex gap="6">
-                    {/* Aquí puedes agregar tus íconos */}
                     <Image src="/icons/instegram.svg" alt="Instegra" width={16} height={16} />
                     <Image src="/icons/linkedin.svg" alt="Linkedin" width={16} height={16} />
                     <Image src="/icons/facebook.svg" alt="Facebbok" width={16} height={16} />

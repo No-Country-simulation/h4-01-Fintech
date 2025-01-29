@@ -1,8 +1,6 @@
 'use client';
 
 import { BackgroundGradient } from '@/components/aceternity/background-gradient';
-import AnimatedCounter from '@/components/motion/increments';
-import AnimatedNumber from '@/components/motion/increments';
 import { Grid, Text, Heading, Flex } from '@radix-ui/themes';
 
 export default function Section2() {
@@ -42,7 +40,7 @@ export default function Section2() {
                         <BackgroundGradient>
                             <div className="bg-blue-950 p-6 rounded-lg">
                                 <Heading size="8" className="text-slate-200 font-bold mb-2">
-                                    <AnimatedNumber counts={500000} duration={100} />
+                                    <p>500.000</p>
                                 </Heading>
                                 <Text size="4" className="text-slate-50">
                                     Usuarios activos en toda Argentina.

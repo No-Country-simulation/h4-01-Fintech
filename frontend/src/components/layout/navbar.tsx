@@ -13,19 +13,11 @@ export default function Navbar() {
     const { data: session, status } = useSession();
 
     if (status === "loading") {
-        return <AuroraBackground>
-            {/* Logo con efecto de parpadeo */}
-            <div className="animate-pulse z-10">
-                <Image
-                    src='/logo/logo.png'
-                    alt="Logo"
-                    width={150} // Ajusta el tamaño del logo
-                    height={150}
-                    priority // Prioriza la carga de la imagen
-                />
-            </div>
-            <Text>Cargando ...</Text>
-        </AuroraBackground>;
+        return <div>
+            <Skeleton  className='w-full h-10 animate-pulse'>
+
+            </Skeleton>
+        </div>;
     }
 
     return (

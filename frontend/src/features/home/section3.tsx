@@ -23,7 +23,7 @@ export default function Section3() {
                     <span className="text-[#002a4d] text-lg font-normal "><br /></span>
                     <span className="text-[#002a4d] text-lg font-normal ">- Histórico de rendimientos en pesos y dólares.<br /></span>
                     <span className="text-[#002a4d] text-lg font-normal "><br />- Visualiza tus logros y recibe recomendaciones personalizadas para optimizar tu portafolio.</span></div>
-                <Button onClick={() => router.push('/auth/register')}  mt={'6'} size={'4'} variant='soft'>Crear mi perfil de inversionista</Button>
+                <Button onClick={() => router.push('/dashboard/questions')}  mt={'6'} size={'4'} variant='soft'>Crear mi perfil de inversionista</Button>
             </div>
 
             {/* Columna de imagen */}
