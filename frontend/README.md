@@ -1,5 +1,34 @@
-# Frontend
+## 📘 Instrucciones para ejecutar el frontend localmente
 
+### 🚀 Requisitos previos
+
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
+
+- Node.js (versión recomendada: 20 o superior)
+
+- Npm
+
+### 📥 Clonar el repositorio
+```
+git clone https://github.com/No-Country-simulation/h4-01-Fintech.git
+cd frontend
+```
+### 📦 Instalación de dependencias
+```
+npm install
+```
+
+### ⚙️ Configuración del entorno
+Crea un archivo `.env` en la raíz de la carpeta frontend y agrega las variables de entorno necesarias (todas las variables necesarias, se encuentran en `.env.example`). 
+
+### ▶️ Ejecutar el servidor en modo desarrollo
+```
+npm run dev
+```
+La aplicación estará disponible en `http://localhost:3000`
+
+## La estructura del frontend
+```
 project-root/
 ├── public/                     # Archivos públicos (imágenes, fuentes, etc.)
 ├── src/                        # Código fuente principal
@@ -33,3 +62,6 @@ project-root/
 ├── next.config.js              # Configuración de Next.js
 ├── tsconfig.json               # Configuración de TypeScript
 └── package.json                # Dependencias y scripts
+
+```
+
