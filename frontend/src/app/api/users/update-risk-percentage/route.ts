@@ -18,15 +18,13 @@ export async function PUT(request: Request) {
       )
     }
 
-
     const riskPercentageInt = Math.round(riskPercentage)
     if (!Number.isInteger(riskPercentageInt)) {
-  return NextResponse.json(
-    { error: 'Risk percentage must be an integer' },
-    { status: 400 }
-  );
-  
-}
+      return NextResponse.json(
+        { error: 'Risk percentage must be an integer' },
+        { status: 400 }
+      )
+    }
 
     // Actualizar el porcentaje de riesgo en la base de datos
     const updatedUser = await prisma.users.update({

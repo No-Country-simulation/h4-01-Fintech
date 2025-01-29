@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import * as React from "react";
 import classNames from "classnames";
 import { Accordion } from "radix-ui";
@@ -6,13 +6,14 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
 import { getUSer, UserData } from "@/services/userService";
 import { useEffect } from "react";
-
+import { Mailbox } from "../message/mailbox";
 
 const AccordionProfile = () => {
     const { data: session } = useSession();
-    const userId  = session?.user.id
+    const userId = session?.user.id;
     const [dni, setDni] = React.useState<string | null>(null);
-    //
+    const [riskPercentage, setRiskPercentage] = React.useState<number | null>(null);
+
     useEffect(() => {
         const fetchDataUser = async (userId: string) => {
             try {
@@ -31,21 +32,19 @@ const AccordionProfile = () => {
         }
     }, [userId]);
 
-    const [riskPercentage, setRiskPercentage] = React.useState<number | null>(null);
-
     return (
         <Accordion.Root
-            className="w-[600px] rounded-md bg-mauve6 shadow-[0_2px_10px] shadow-black/5"
+            className="w-[600px] rounded-md bg-gray-700 shadow-lg border border-gray-700"
             type="single"
             defaultValue="item-1"
             collapsible
         >
             <AccordionItem value="item-1">
                 <AccordionTrigger>
-                    <h3>Datos</h3>
+                    <h3 className="text-blue-400">Datos</h3>
                 </AccordionTrigger>
                 <AccordionContent>
-                    <div>
+                    <div className="text-white">
                         Nombre: {session?.user.name}
                         <br />
                         DNI: {dni || "No disponible"}
@@ -58,16 +57,20 @@ const AccordionProfile = () => {
             </AccordionItem>
 
             <AccordionItem value="item-2">
-                <AccordionTrigger>Inversiones</AccordionTrigger>
+                <AccordionTrigger>
+                    <h3 className="text-blue-400">Inversiones</h3>
+                </AccordionTrigger>
                 <AccordionContent>
-                    Inversiones
+                    <p className="text-white">Inversiones</p>
                 </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-3">
-                <AccordionTrigger>Notificaciones</AccordionTrigger>
+                <AccordionTrigger>
+                    <h3 className="text-blue-400">Notificaciones</h3>
+                </AccordionTrigger>
                 <AccordionContent>
-                    Notificaciones
+                    {userId && <Mailbox userId={userId} />}
                 </AccordionContent>
             </AccordionItem>
         </Accordion.Root>
@@ -76,14 +79,14 @@ const AccordionProfile = () => {
 
 interface AccordionItemProps extends React.ComponentPropsWithoutRef<typeof Accordion.Item> {
     children: React.ReactNode;
-        className?: string;
-    }
+    className?: string;
+}
 
 const AccordionItem = React.forwardRef<React.ComponentRef<typeof Accordion.Item>, AccordionItemProps>(
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Item
             className={classNames(
-                "mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 focus-within:shadow-[0_0_0_2px] focus-within:shadow-mauve12",
+                "mt-px overflow-hidden first:mt-0 first:rounded-t last:rounded-b focus-within:relative focus-within:z-10 border-b border-gray-700",
                 className,
             )}
             {...props}
@@ -104,7 +107,7 @@ const AccordionTrigger = React.forwardRef<React.ComponentRef<typeof Accordion.Tr
         <Accordion.Header className="flex">
             <Accordion.Trigger
                 className={classNames(
-                    "group flex h-[45px] flex-1 cursor-default items-center justify-between bg-mauve1 px-5 text-[15px] leading-none text-violet11 shadow-[0_1px_0] shadow-mauve6 outline-none hover:bg-mauve2",
+                    "group flex h-[45px] flex-1 cursor-pointer items-center justify-between bg-gray-700 px-5 text-[15px] leading-none text-blue-400 hover:bg-gray-700",
                     className,
                 )}
                 {...props}
@@ -112,7 +115,7 @@ const AccordionTrigger = React.forwardRef<React.ComponentRef<typeof Accordion.Tr
             >
                 {children}
                 <ChevronDownIcon
-                    className="text-violet10 transition-transform duration-300 ease-[cubic-bezier(0.87,_0,_0.13,_1)] group-data-[state=open]:rotate-180"
+                    className="text-blue-400 transition-transform duration-300 ease-in-out group-data-[state=open]:rotate-180"
                     aria-hidden
                 />
             </Accordion.Trigger>
@@ -126,11 +129,10 @@ interface AccordionContentProps extends React.ComponentPropsWithoutRef<typeof Ac
 }
 
 const AccordionContent = React.forwardRef<React.ComponentRef<typeof Accordion.Content>, AccordionContentProps>(
-
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Content
             className={classNames(
-                "overflow-hidden bg-gray-300 text-[15px] text-slate-800 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
+                "overflow-hidden bg-gray-600 text-[15px] text-white data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
                 className,
             )}
             {...props}
