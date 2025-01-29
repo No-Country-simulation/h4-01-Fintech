@@ -29,6 +29,6 @@ export class UserController {
     @UseGuards(AuthGuard)
     @Patch('profile')
     updateUser(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-        return this.usersService.updateUser(req.user.userId), updateUserDto;
+        return this.usersService.updateUser(req.user.userId, updateUserDto);
     }
 }

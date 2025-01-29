@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { UpdateUser, UserEntity, UserWithoutPassword } from '../entities/user.entity';
+import { UserEntity, UserWithoutPassword } from '../entities/user.entity';
 import { AccountEntity } from '../entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
@@ -187,7 +187,7 @@ export class UserService {
     
     return result;
   }
-
+  //actualizar la data de un usuario(data general)
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
     const { name, email } = updateUserDto;
     const userFound = await this.userRepository.findOneBy({id});
@@ -200,6 +200,7 @@ export class UserService {
     return plainToClass(UserWithoutPassword, userFound);
   }
 
+  //Trae la información completa de 1 usuario incluyendo balance y un listado de las ultimas 5 transacciones
   async getFullProfile(id: string) {
     /*
     *Trae todos los campos de cada tabla o entidad asociada
