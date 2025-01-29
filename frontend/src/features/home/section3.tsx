@@ -1,9 +1,11 @@
-import GridComponentRightImage from '@/components/common/GridComponentRightImage'
+'use client'
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@radix-ui/themes';
+import { useRouter } from 'next/navigation';
 
 export default function Section3() {
+    const router = useRouter();
     return (
         <div id='planes-ahorro' className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center p-6">
             {/* Columna de texto */}
@@ -21,7 +23,7 @@ export default function Section3() {
                     <span className="text-[#002a4d] text-lg font-normal "><br /></span>
                     <span className="text-[#002a4d] text-lg font-normal ">- Histórico de rendimientos en pesos y dólares.<br /></span>
                     <span className="text-[#002a4d] text-lg font-normal "><br />- Visualiza tus logros y recibe recomendaciones personalizadas para optimizar tu portafolio.</span></div>
-                <Button mt={'6'} size={'4'} variant='soft'>Crear mi perfil de inversionista</Button>
+                <Button onClick={() => router.push('/auth/register')}  mt={'6'} size={'4'} variant='soft'>Crear mi perfil de inversionista</Button>
             </div>
 
             {/* Columna de imagen */}

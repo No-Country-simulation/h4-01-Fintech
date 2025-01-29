@@ -50,7 +50,7 @@ export const useQuestions = create<QuestionsStore>()(
       calculateRiskPercentage: () => {
         const { answers } = get()
         const total = answers.reduce((sum, value) => sum + value, 0) // Suma todas las respuestas
-        const averageRisk = (total / (7 * 10)) * 100 // Calcula el promedio (7 preguntas, 10 puntos cada una)
+        const averageRisk = total / answers.length// Calcula el promedio (7 preguntas, 10 puntos cada una)
         set({ riskPercentage: averageRisk })
 
         // Guarda el porcentaje de riesgo en las cookies

@@ -34,14 +34,16 @@ export default function InvestorProfileWizard() {
                 if (session?.user?.id) {
                     if (riskPercentage !== null) {
                         // Redondear el porcentaje de riesgo antes de enviarlo
-                        const roundedRiskPercentage = Math.round(riskPercentage); // Redondeo al entero más cercano
+                        const normalizedRiskPercentage = Math.min(10, Math.max(0, (riskPercentage / 100) * 10));
+                        const roundedRiskPercentage = Math.round(normalizedRiskPercentage);
                         await fetchRiskPercentage(session.user.id, roundedRiskPercentage);
                         console.log('Promedio redondeado:', roundedRiskPercentage);
                         // Crear una notificación
                         const notificationMessage = `Has actualizado tu perfil inversor con un promedio de riesgo del ${roundedRiskPercentage}%.`;
                         await createNotification(session.user.id, notificationMessage);
                     } else {
-                        console.error("Risk percentage is null");
+                        return null
+                        
                     }
                 }
                 router.push("/dashboard");

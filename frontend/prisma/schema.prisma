@@ -129,6 +129,7 @@ model users {
   accounts           accounts[]
   answers            answers[]
   balance            balance?
+  goals              goals[]
   notifications      notifications[]
   sessions           sessions[]
   transaction        transaction[]
@@ -151,6 +152,15 @@ model sessions {
   userId       String @db.Uuid
   expires      String @db.VarChar
   users        users  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_57de40bc620f456c7311aa3a1e6")
+}
+
+model goals {
+  id           String  @id(map: "PK_26e17b251afab35580dff769223") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name         String  @db.VarChar
+  targetAmount Decimal @db.Decimal(10, 2)
+  progress     Decimal @default(0) @db.Decimal(10, 2)
+  userId       String? @db.Uuid
+  users        users?  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_57dd8a3fc26eb760d076bf8840e")
 }
 
 enum transaction_transaction_type_enum {

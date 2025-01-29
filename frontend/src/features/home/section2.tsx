@@ -32,7 +32,7 @@ export default function Section2() {
                         <BackgroundGradient>
                             <div className="bg-blue-950 p-6 rounded-lg">
                                 <Heading size="8" className="text-slate-200 font-bold mb-2">
-                                    <AnimatedCounter counts={10} duration={2}/> Años
+                                    <p>10 Años</p>
                                 </Heading>
                                 <Text size="4" className="text-slate-50">
                                     Ayudando a optimizar el patrimonio de nuestros usuarios.
@@ -42,7 +42,7 @@ export default function Section2() {
                         <BackgroundGradient>
                             <div className="bg-blue-950 p-6 rounded-lg">
                                 <Heading size="8" className="text-slate-200 font-bold mb-2">
-                                    <AnimatedNumber counts={500000} duration={50} />
+                                    <AnimatedNumber counts={500000} duration={100} />
                                 </Heading>
                                 <Text size="4" className="text-slate-50">
                                     Usuarios activos en toda Argentina.
@@ -52,7 +52,7 @@ export default function Section2() {
                         <BackgroundGradient>
                             <div className="bg-blue-950 p-6 rounded-lg">
                                 <Heading size="8" className="text-slate-200 font-bold mb-2">
-                                    +<AnimatedNumber counts={300} duration={50}  />
+                                    +<p>300</p>
                                 </Heading>
                                 <Text size="4" className="text-slate-50">
                                     Millones invertidos en proyectos.

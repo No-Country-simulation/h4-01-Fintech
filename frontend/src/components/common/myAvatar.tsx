@@ -8,7 +8,7 @@ export const MyAvatar = () => {
 
   return (
     <div className="flex gap-5">
-      <Avatar.Root className="inline-flex size-[45px] select-none items-center justify-center overflow-hidden rounded-full ">
+      <Avatar.Root className="inline-flex size-[35px] select-none items-center justify-center overflow-hidden rounded-full ">
         <Avatar.Image
           className="size-full rounded-[inherit] object-cover"
           src={session?.user.image}

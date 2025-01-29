@@ -11,6 +11,7 @@ import { TransactionEntity } from '../entities/transactions.entity';
 import { BalanceEntity} from '../entities/balance.entity';
 import { AnswerEntity } from '../entities/answer.entity';
 import { QuestionEntity } from '../entities/question.entity';
+import {GoalEntity} from '../entities/goals.entity'
 
 const isProduction = ConfigEnvs.NODE_ENV === 'production';
 
@@ -33,6 +34,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     NotificationEntity,
     BalanceEntity,
     AnswerEntity,
+    GoalEntity,
   ],
   migrations: [join(__dirname, '/../migrations/*.{ts,js}')],
   logging: isProduction, // Solo mostrar logs en desarrollo
