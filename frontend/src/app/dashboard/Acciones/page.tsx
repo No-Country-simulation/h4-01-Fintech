@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { MyEnv } from "@/lib/envs"
 
 interface StockEntry {
   symbol: string
+  date: string
   open: number
   high: number
   low: number
@@ -11,9 +13,9 @@ interface StockEntry {
   volume: number
 }
 
-
+// Símbolos de las acciones a consultar
 const symbols = "AAPL,MSFT,AMZN,GOOGL,TSLA,META,NVDA,NFLX,ADBE,INTC"
-const Key = process.env.ACCESS_KEY
+const API_KEY = MyEnv.ACCESS_KEY as string
 
 export default function ModernStockComponent() {
   const [stockData, setStockData] = useState<StockEntry[]>([])
@@ -21,17 +23,36 @@ export default function ModernStockComponent() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch(`http://api.marketstack.com/v1/eod?access_key=${Key}&symbols=${symbols}`)
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchStockData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.marketstack.com/v1/eod?access_key=${API_KEY}&symbols=${symbols}`
+        )
+
+        if (!response.ok) {
+          throw new Error("Error en la respuesta del servidor")
+        }
+
+        const data: { data: StockEntry[] } = await response.json()
+
         if (data.data && data.data.length > 0) {
-          setStockData(data.data)
+          // Filtrar duplicados combinando `symbol` y `date`
+          const uniqueStocks = Array.from(
+            new Map(data.data.map((stock: StockEntry) => [`${stock.symbol}-${stock.date}`, stock])).values()
+          )
+
+          setStockData(uniqueStocks as StockEntry[])
         } else {
           setError("No hay datos disponibles.")
         }
-      })
-      .catch(() => setError("Error al obtener los datos."))
-      .finally(() => setLoading(false))
+      } catch (error) {
+        setError("Error al obtener los datos.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchStockData()
   }, [])
 
   return (
@@ -53,7 +74,7 @@ export default function ModernStockComponent() {
 
             return (
               <div
-                key={stock.symbol}
+                key={`${stock.symbol}-${stock.date}`} // Clave única garantizada
                 className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105"
               >
                 <div className="p-6">
@@ -87,4 +108,3 @@ export default function ModernStockComponent() {
     </div>
   )
 }
-
