@@ -93,14 +93,16 @@ export async function POST(req: NextRequest) {
 
       // Buscar o crear el activo
       let asset = await prisma.asset.findUnique({
-        where: { symbol: assetId },
+        where: { 
+          symbol: assetId,
+        },
       })
 
       if (!asset) {
         asset = await prisma.asset.create({
           data: {
             symbol: assetId,
-            name: name || 'Unknown',
+            name: assetId || 'Unknown',
             asset_type: assetType || null,
             sector: sector || null,
             info: info || null,

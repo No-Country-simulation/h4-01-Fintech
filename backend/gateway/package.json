@@ -6,11 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "convert-csv-to-json": "node convert-csv-to-json.js",
-    "build": "nest build && npm run create-dist-dir && npm run copy-csv",
-    "create-dist-dir": "mkdir -p ./dist/seed",
-    "copy-csv": "cp ./src/seed/data.csv ./dist/seed/data.csv",
-    "seed": "npm run build && node ./dist/seed/seed-market-data.js",
+    "build": "nest build",
+    "seed": "npm run build ",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",

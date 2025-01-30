@@ -7,9 +7,10 @@ import { BalanceEntity } from './balance.entity';
 import { Role } from 'src/rbac/roles';
 import { OmitType } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
+import { GoalEntity } from './goals.entity';
 
 @Entity('users')
-@Check(`risk_percentage BETWEEN 1 AND 10`)
+@Check('"risk_percentage" >= 0 AND "risk_percentage" <= 10') // 70 /100 => 10 ...
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
@@ -60,6 +61,9 @@ export class UserEntity {
 
   @OneToOne(() => BalanceEntity, (balance) => balance.user)
   balance: BalanceEntity;
+
+  @OneToMany(()=> GoalEntity, (goals) => goals.user)
+  goals?: GoalEntity[]
 }
 
 export class UpdateUser implements Pick<UserEntity, 'name'|'email'> {

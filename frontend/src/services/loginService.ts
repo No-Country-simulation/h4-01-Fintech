@@ -1,4 +1,4 @@
-import { MyEnv } from "@/utils/envs"
+import { MyEnv } from "@/lib/envs"
 
 // No tocar el nombre de las propiedades
 interface PropsBody {

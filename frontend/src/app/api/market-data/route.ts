@@ -5,22 +5,6 @@ import csvParser from 'csv-parser'
 
 const prisma = new PrismaClient()
 
-export interface CsvRow {
-  symbol: string
-  name: string
-  asset_type?: string
-  market_price: number
-  sector?: string
-  info?: string
-  riskProfile?: number
-  marketData?: MarketData[]
-}
-
-export interface MarketData {
-  market_data_id: number
-  price: number
-  timestamp: string
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -87,7 +71,10 @@ export async function POST(req: NextRequest) {
 
       if (!asset) {
         asset = await prisma.asset.create({
-          data: { symbol: assetId, name: 'Unknown' },
+          data: {
+            symbol: assetId,
+            name: assetId,
+          },
         })
       }
 
@@ -103,7 +90,7 @@ export async function POST(req: NextRequest) {
         // Crear nuevo registro
         await prisma.marketData.create({
           data: {
-            market_data_id: Date.now(), // or any unique identifier
+            name: assetId,
             asset_id: asset.id,
             price: cierre,
             timestamp: fecha,
@@ -119,9 +106,9 @@ export async function POST(req: NextRequest) {
       }
 
       // Agregar un retraso entre inserciones para evitar baneos
-      if (index < rows.length - 1) {
-        await delay(500) // Retraso de 500ms entre cada iteración
-      }
+      // if (index < rows.length - 1) {
+      //   await delay(500) // Retraso de 500ms entre cada iteración
+      // }
     }
 
     return NextResponse.json({ message: 'Datos procesados correctamente.' })

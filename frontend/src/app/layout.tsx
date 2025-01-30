@@ -5,6 +5,7 @@ import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
 import { SessionProvider } from "next-auth/react";
 import Navbar from "@/components/layout/navbar";
+import Footer from "@/components/layout/fother";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="es">
       <SessionProvider>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -36,6 +37,7 @@ export default function RootLayout({
             <Navbar />
             
             {children}
+            <Footer />
           </Theme>
         </body>
       </SessionProvider>
