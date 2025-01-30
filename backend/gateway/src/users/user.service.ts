@@ -6,6 +6,7 @@ import { AccountEntity } from '../entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
 import { UpdateUserDto } from 'src/auth/dto/register-user-password.dto';
+import { BalanceEntity } from 'src/entities/balance.entity';
 
 @Injectable()
 export class UserService {
@@ -106,6 +107,12 @@ export class UserService {
         provider: 'credentials',
         providerAccountId: newUser.id,
       });
+
+      await queryRunner.manager.save(BalanceEntity, {
+        user: newUser,
+        balance: 0,
+        last_updated: new Date(),
+      });  
 
       await queryRunner.commitTransaction();
 
