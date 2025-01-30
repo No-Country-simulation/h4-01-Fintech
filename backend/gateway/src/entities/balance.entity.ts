@@ -31,6 +31,8 @@ export class BalanceEntity {
   @BeforeInsert()
   generateCVU() {
     // Generar un CVU único al crear el balance (ejemplo de formato: "0000000000000000000000")
-    this.cvu = `CVU${uuidv4().slice(0, 22).toUpperCase()}`; // Usamos el UUID para generar el CVU
+    this.cvu = Array.from({ length: 22 }, () =>
+      Math.floor(Math.random() * 10),
+    ).join('');
   }
 }
