@@ -1,4 +1,3 @@
-'use server'
 export const fetchRiskPercentage = async (
   userId: string,
   riskPercentage: number
