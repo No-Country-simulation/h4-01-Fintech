@@ -111,7 +111,7 @@ export class SeedUserService {
         // Validar el impacto en el saldo del usuario
         if (
           transaction.transaction_type === TypeTrans.WITHDRAWAL &&
-          transaction.quantity > savedUser.balance.balance
+          transaction.quantity > savedUser.balance.amount
         ) {
           console.error(
             `❌ Saldo insuficiente para retiro: Usuario ${savedUser.name}`,
@@ -120,7 +120,7 @@ export class SeedUserService {
         }
         if (
           transaction.transaction_type === TypeTrans.INVESTMENT &&
-          transaction.quantity > savedUser.balance.balance
+          transaction.quantity > savedUser.balance.amount
         ) {
           console.error(
             `❌ Saldo insuficiente para inversión: Usuario ${savedUser.name}`,
@@ -130,9 +130,9 @@ export class SeedUserService {
 
         // Ajustar saldo del usuario
         if (transaction.transaction_type === TypeTrans.ACCOUNT_FUNDING) {
-          savedUser.balance.balance += transaction.quantity;
+          savedUser.balance.amount += transaction.quantity;
         } else if (transaction.transaction_type === TypeTrans.WITHDRAWAL) {
-          savedUser.balance.balance -= transaction.quantity;
+          savedUser.balance.amount -= transaction.quantity;
         }
 
         await this.transactionsRepository.save(transaction);

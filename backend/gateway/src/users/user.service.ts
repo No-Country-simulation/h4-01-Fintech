@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable, InternalServerError
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { UserEntity, UserWithoutPassword } from '../entities/user.entity';
+import { BalanceEntity } from '../entities/balance.entity';
 import { AccountEntity } from '../entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { plainToClass } from 'class-transformer';
@@ -15,6 +16,8 @@ export class UserService {
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
     private readonly dataSource: DataSource,
+    @InjectRepository(BalanceEntity)
+    private readonly balanceRepository: Repository<BalanceEntity>,
   ) {}
 
   // Buscar usuario por email
@@ -23,7 +26,7 @@ export class UserService {
   }
 
   async findById(id: string): Promise<UserEntity | undefined> {
-    return await this.userRepository.findOne({ where: { id }});
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   // Buscar usuario por ID
@@ -34,10 +37,9 @@ export class UserService {
 
     if (!user) throw new UnauthorizedException('User not found');
 
-    return user ;
+    return user;
   }
 
-  // Crear usuario
   async createUser({
     email,
     name,
@@ -47,8 +49,31 @@ export class UserService {
     name: string | null;
     image: string | null;
   }): Promise<UserEntity> {
-    const user = this.userRepository.create({ email, name, image });
-    return this.userRepository.save(user);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const user = this.userRepository.create({ email, name, image });
+      const savedUser = await queryRunner.manager.save(user); // Guardamos el usuario
+
+      // Crear el balance asociado al usuario
+      const balance = this.balanceRepository.create({
+        user: savedUser, // Pasamos la instancia del usuario
+        amount: 0, // Puedes definir un monto inicial si es necesario
+      });
+      await queryRunner.manager.save(balance);
+
+      await queryRunner.commitTransaction();
+      return savedUser;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException(
+        'Error al crear el usuario y su balance',
+      );
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   // Crear usuario con correo y contraseña
@@ -63,7 +88,6 @@ export class UserService {
     dni: string;
     password: string;
   }): Promise<UserEntity> {
-
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -177,25 +201,26 @@ export class UserService {
   }
 
   // Activar un usuario
-  async activateUser(
-    email: string,
-  ): Promise<UserEntity | string>{
+  async activateUser(email: string): Promise<UserEntity | string> {
     const user = await this.findByEmail(email);
     if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('Usuario no encontrado');
     }
     user.is_active = true;
     user.is_validated_email = true;
     user.token_expires_at = null;
     const result = await this.userRepository.save(user);
-    
+
     return result;
   }
   //actualizar la data de un usuario(data general)
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserWithoutPassword> {
+  async updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserWithoutPassword> {
     const { name, email } = updateUserDto;
-    const userFound = await this.userRepository.findOneBy({id});
-    if(!userFound){
+    const userFound = await this.userRepository.findOneBy({ id });
+    if (!userFound) {
       throw new NotFoundException('Usuario no encontrado');
     }
     userFound.name = name ? name : userFound.name;
@@ -220,42 +245,34 @@ export class UserService {
       .take(5) // Limitar a las últimas 5 transacciones
       .getOne();
     }*/
-      const query = this.userRepository
+    const query = this.userRepository
       .createQueryBuilder('user')
       // Datos especificos del usuario
-      .select([
-        'user.id', 
-        'user.name', 
-        'user.email',
-        'user.role'
-      ])
+      .select(['user.id', 'user.name', 'user.email', 'user.role'])
       // Balance con campos necesarios
       .leftJoinAndSelect('user.balance', 'balance')
-      .addSelect([
-        'balance.amount', 
-        'balance.lastUpdated'
-      ])
+      .addSelect(['balance.amount', 'balance.lastUpdated'])
       // Preguntas con las respuestas del usuario (puede cambiar)
       .leftJoinAndSelect('questions', 'questions')
       .leftJoinAndSelect(
-        'answers', 
-        'answers', 
-        'answers.userId = :userId AND answers.questionId = questions.id', 
-        { id }
+        'answers',
+        'answers',
+        'answers.userId = :userId AND answers.questionId = questions.id',
+        { id },
       )
       .addSelect([
-        'questions.id', 
+        'questions.id',
         'questions.question',
-        'answers.id', 
-        'answers.answer'
+        'answers.id',
+        'answers.answer',
       ])
       // Recogemos las ultimas 5 transacciones del usuario con su información
       .leftJoinAndSelect('user.transactions', 'transactions')
       .addSelect([
-        'transactions.quantity', 
-        'transactions.price', 
-        'transactions.transaction_type', 
-        'transactions.date'
+        'transactions.quantity',
+        'transactions.price',
+        'transactions.transaction_type',
+        'transactions.date',
       ])
       .where('user.id = :id', { id })
       .orderBy('transactions.date', 'DESC')
@@ -264,7 +281,7 @@ export class UserService {
 
     return query;
   }
-  
+
   async riskProfile(user: UserEntity, average: number): Promise<boolean> {
     user.risk_percentage = average;
     await this.userRepository.save(user);

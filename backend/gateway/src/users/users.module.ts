@@ -3,9 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './user.service';
 import { UserEntity } from '../entities/user.entity';
 import { AccountEntity } from '../entities/account.entity';
+import { BalanceEntity} from '../entities/balance.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity])], // ✅ Repos registrados aquí
+  imports: [TypeOrmModule.forFeature([UserEntity, AccountEntity, BalanceEntity])], // ✅ Repos registrados aquí
   providers: [UserService],
   exports: [UserService],
 })

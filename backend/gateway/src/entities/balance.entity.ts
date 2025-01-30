@@ -5,6 +5,8 @@ import {
   OneToOne,
   JoinColumn,
   BeforeInsert,
+  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,23 +16,23 @@ export class BalanceEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string; // ID del balance, UUID único
 
-  @OneToOne(() => UserEntity, (user) => user.balance)
-  @JoinColumn()
+  @ManyToOne(() => UserEntity, (user) => user.balance, { eager: true })
+  @JoinColumn({ name: 'userId' })
   user: UserEntity; // Relación con el usuario
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
-  balance: number; // Monto disponible en la cuenta del usuario
-
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @UpdateDateColumn() // autualizacion automatica
   last_updated: Date; // Fecha y hora de la última actualización del balance
 
   @Column({ type: 'varchar', length: 22, unique: true })
   cvu: string; // El CVU asociado al balance
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  amount: number;
+
   // Generar el CVU automáticamente antes de insertar el balance
   @BeforeInsert()
   generateCVU() {
     // Generar un CVU único al crear el balance (ejemplo de formato: "0000000000000000000000")
-    this.cvu = `CVU${uuidv4().slice(0, 22).toUpperCase()}`; // Usamos el UUID para generar el CVU
+    this.cvu = `CVU${Math.random().toString().slice(2, 12)}`; // Usamos el UUID para generar el CVU
   }
 }
