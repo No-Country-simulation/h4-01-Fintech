@@ -48,11 +48,9 @@ const AccordionProfile = () => {
                     <div className="text-white">
                         Nombre: {session?.user.name}
                         <br />
-                        DNI: {dni || "No disponible"}
+                        DNI: {dni || "Ingresaste con Google Debes Actualizar tus datos"}
                         <br />
                         Email: {session?.user.email}
-                        <br />
-                        Porcentaje de Riesgo: {riskPercentage ?? "No calculado"}
                     </div>
                 </AccordionContent>
             </AccordionItem>
