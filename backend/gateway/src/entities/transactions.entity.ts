@@ -4,12 +4,14 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
+  Index,
 } from 'typeorm';
 import { AssetEntity } from './asset.entity';
 import { TypeTrans } from './enum/typeTransaction';
 import { UserEntity } from './user.entity';
 
 @Entity('transaction')
+@Index(['timestamp']) 
 export class TransactionEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
