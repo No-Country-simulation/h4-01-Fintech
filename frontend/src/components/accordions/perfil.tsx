@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { getUSer, UserData } from "@/services/userService";
 import { useEffect } from "react";
 import { Mailbox } from "../message/mailbox";
+import { useQuestions } from '@/stores/useQuestions';
 
 const AccordionProfile = () => {
     const { data: session } = useSession();
@@ -34,7 +35,7 @@ const AccordionProfile = () => {
 
     return (
         <Accordion.Root
-            className="w-[600px] rounded-md bg-gray-700 shadow-lg border border-gray-700"
+            className="w-[600px] rounded-md bg-gray-200 shadow-lg border border-gray-700"
             type="single"
             defaultValue="item-1"
             collapsible
