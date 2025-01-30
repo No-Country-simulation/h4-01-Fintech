@@ -32,7 +32,7 @@ const data = [
         title: "Apertura tu Balance",
         content: "Conoce tu balance inicial y establece tus objetivos de ahorro.",
         icon: <CreditCardIcon className="text-green-500 w-5 h-5" />,
-        link: "/dashboard/questions",
+        link: "/dashboard/",
     },
     {
         title: "Conoce nuestros Planes",
@@ -44,19 +44,19 @@ const data = [
         title: "¿Necesitas ayuda?",
         content: "Accede a nuestro centro de soporte o consulta nuestras preguntas frecuentes.",
         icon: <QuestionMarkCircledIcon className="text-red-500 w-5 h-5" />,
-        link: "/help",
+        link: "/qa",
     },
     {
         title: "Visualiza tus recomendaciones",
         content: "Basado en tu perfil, te mostraremos las mejores estrategias para optimizar tus inversiones.",
         icon: <StarIcon className="text-yellow-500 w-5 h-5" />,
-        link: "/recommendations",
+        link: "/dashboard/Acciones",
     },
     {
         title: "Realiza tu primera transferencia",
         content: "Fondea tu cuenta y comienza a invertir de manera segura.",
         icon: <BanknoteIcon className="text-green-600 w-5 h-5" />,
-        link: "/transactions/deposit",
+        link: "/dashboard/deposit",
     },
     {
         title: "Realiza tu plazo fijo",

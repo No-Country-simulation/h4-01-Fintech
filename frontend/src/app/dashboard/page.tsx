@@ -11,6 +11,8 @@ import Loading from '../loanding';
 import { determinarPerfil, obtenerMensaje } from '@/lib/perfiles';
 import { useQuestions } from '@/stores/useQuestions';
 import { createNotification } from '@/services/notificationService';
+import TableObjetive from '@/features/objetivos/tableOBjetive';
+
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -101,9 +103,8 @@ export default function Page() {
         </Card>
 
         <Card className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
-          <p>Objetivos Proximanete</p>
+          {userId && <TableObjetive userId={userId} />}
         </Card>
-        
       </div>
     </Flex>
   );
