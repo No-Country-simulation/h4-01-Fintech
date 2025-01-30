@@ -50,7 +50,13 @@ export default function MyMenu() {
             }
         };
 
+        // Llamar inmediatamente al montar el componente
         fetchCount();
+
+        // Establecer un intervalo para actualizar cada 5 segundos
+        const interval = setInterval(fetchCount, 10000);
+
+        return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
     }, [userId]);
 
     // Si el usuario NO está autenticado
