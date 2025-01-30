@@ -5,6 +5,8 @@ import { TransactionEntity } from './transactions.entity';
 import { NotificationEntity } from './notifications.entity';
 import { BalanceEntity } from './balance.entity';
 import { Role } from 'src/rbac/roles';
+import { OmitType } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { GoalEntity } from './goals.entity';
 
 @Entity('users')
@@ -62,4 +64,14 @@ export class UserEntity {
 
   @OneToMany(()=> GoalEntity, (goals) => goals.user)
   goals?: GoalEntity[]
+}
+
+export class UpdateUser implements Pick<UserEntity, 'name'|'email'> {
+  name: string;
+  email: string;
+}
+
+export class UserWithoutPassword extends OmitType(UserEntity, ['passwordhash']) {
+  @Exclude()
+  password: string;
 }

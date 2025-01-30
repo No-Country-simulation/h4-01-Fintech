@@ -90,7 +90,6 @@ export class AuthService {
     if (!secret) {
       throw new Error('JWT_SECRET no definido');
     }
-    
     const token = this.jwtService.sign({ email: email }, { secret });
     const isSent: boolean = await this.emailService.sendVerificationEmail(
       email,

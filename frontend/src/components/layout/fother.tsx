@@ -12,7 +12,6 @@ const Footer = () => {
                     <div className="text-xl font-semibold text-[#f5f5f6]">IUPI</div>
                     <div className="text-base font-normal text-[#f5f5f6]">La app que conecta tus metas con resultados y Facilitamos tu ahorro e inversión</div>
                 </Flex>
-                <Button>Ser inversionista</Button>
             </Flex>
 
             {/* Sección media */}

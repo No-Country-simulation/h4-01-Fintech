@@ -54,10 +54,10 @@ model asset {
 
 model balance {
   id           String   @id(map: "PK_079dddd31a81672e8143a649ca0") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  balance      Decimal  @default(0) @db.Decimal(10, 2)
   last_updated DateTime @default(now()) @db.Timestamp(6)
   cvu          String   @unique(map: "UQ_3eee3a8c6be7560d9423eab89ec") @db.VarChar(22)
-  userId       String?  @unique(map: "REL_9297a70b26dc787156fa49de26") @db.Uuid
+  userId       String?  @db.Uuid
+  amount       Decimal  @default(0) @db.Decimal(10, 2)
   users        users?   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_9297a70b26dc787156fa49de26b")
 }
 
@@ -111,6 +111,8 @@ model transaction {
   assetId          String?                           @db.Uuid
   asset            asset?                            @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_5a4563ae1b6c03c140e5ec17a6b")
   users            users?                            @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_605baeb040ff0fae995404cea37")
+
+  @@index([timestamp], map: "IDX_87f2932d4a558d44a2915f849a")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -128,7 +130,7 @@ model users {
   role               users_role_enum @default(USER)
   accounts           accounts[]
   answers            answers[]
-  balance            balance?
+  balance            balance[]
   goals              goals[]
   notifications      notifications[]
   sessions           sessions[]

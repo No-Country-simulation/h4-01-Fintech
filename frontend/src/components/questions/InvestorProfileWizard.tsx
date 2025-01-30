@@ -10,6 +10,7 @@ import Loading from "@/app/loanding";
 import { fetchRiskPercentage } from "@/services/riskPercentageService";
 import { createNotification } from "@/services/notificationService";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Accordion } from 'radix-ui';
 
 export default function InvestorProfileWizard() {
     const { data: session, status } = useSession();
@@ -33,18 +34,19 @@ export default function InvestorProfileWizard() {
 
                 if (session?.user?.id && riskPercentage !== null) {
                     const roundedRiskPercentage = Math.round(riskPercentage);
-                    await fetchRiskPercentage(session.user.id, roundedRiskPercentage);
-                    await createNotification(session.user.id, `Has actualizado tu perfil inversor con un promedio de riesgo del ${roundedRiskPercentage}%.`);
+                    const save = await fetchRiskPercentage(session.user.id, roundedRiskPercentage);
+                    if(save){
+                        await createNotification(session.user.id, `Has actualizado tu perfil inversor con un promedio de riesgo del ${roundedRiskPercentage}%.`);
+                        // Mostrar confeti antes de redirigir
+                        setShowConfetti(true);
+
+                        // Esperar 3 segundos antes de redirigir
+                        setTimeout(() => {
+                            setShowConfetti(false); // Ocultar confeti antes de la redirección
+                            router.push("/dashboard");
+                        }, 9000);
+                    }
                 }
-
-                // Mostrar confeti antes de redirigir
-                setShowConfetti(true);
-
-                // Esperar 3 segundos antes de redirigir
-                setTimeout(() => {
-                    setShowConfetti(false); // Ocultar confeti antes de la redirección
-                    router.push("/dashboard");
-                }, 9000);
             } catch (error) {
                 console.error("Error al actualizar el porcentaje de riesgo:", error);
             } finally {

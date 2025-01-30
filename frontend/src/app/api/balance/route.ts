@@ -1,58 +1,44 @@
-// src/app/api/balance/route.ts
-import { NextResponse } from 'next/server'
-import Decimal from 'decimal.js'
 import { prisma } from '@/db/ConnectPrisma'
-import { generateUniqueCVU } from '@/lib/generate'
+import { Prisma } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server'
 
-/**
- * POST: Crear un balance si no existe
- */
-export async function POST(req: Request) {
+
+export async function POST(req: NextRequest) {
   try {
-    const { userId } = await req.json()
+    const body = await req.json()
+    const userId = body?.userId
 
-    if (!userId || typeof userId !== 'string') {
-      return NextResponse.json({ error: 'userId inválido' }, { status: 400 })
+    if (!userId) {
+      return NextResponse.json({ error: 'userId requerido' }, { status: 400 })
     }
 
-    // Verificar si el usuario existe
-    const user = await prisma.users.findUnique({ where: { id: userId } })
-    if (!user) {
+
+    const balances = await prisma.balance.findMany({
+      where: { userId: userId },
+    })
+
+    // Si no hay balances encontrados, devolver error
+    if (balances.length === 0) {
       return NextResponse.json(
-        { error: 'El usuario no existe' },
+        { error: 'Balance no encontrado para este usuario' },
         { status: 404 }
       )
     }
 
-    // Verificar si ya tiene balance
-    const existingBalance = await prisma.balance.findUnique({
-      where: { userId },
+    // Devolver el primer balance encontrado
+    const balance = balances[0]
+
+    return NextResponse.json({
+      id: balance.id,
+      balance: balance.amount.toNumber(),
+      last_updated: balance.last_updated,
+      cvu: balance.cvu,
+      userId: balance.userId,
     })
-    if (existingBalance) {
-      return NextResponse.json({
-        message: 'Balance ya existe',
-        balance: {
-          id: existingBalance.id,
-          balance: existingBalance.balance.toNumber(),
-          last_updated: existingBalance.last_updated,
-          cvu: existingBalance.cvu,
-          userId: existingBalance.userId,
-        },
-      })
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      return NextResponse.json({ error: e.message }, { status: 500 })
     }
-
-    // Crear balance nuevo
-    const cvu = await generateUniqueCVU() // Usar la función importada
-    const newBalance = await prisma.balance.create({
-      data: {
-        balance: new Decimal(0),
-        cvu,
-        userId,
-      },
-    })
-
-    return NextResponse.json({ message: 'Balance creado', balance: newBalance })
-  } catch (error) {
-    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
