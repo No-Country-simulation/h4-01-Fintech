@@ -263,10 +263,8 @@ export class UserService {
       .getOne();
 
     return query;
-
-  async updateUser(user: UserEntity): Promise<UserEntity> {
-    return this.userRepository.save(user);
-}
+  }
+  
   async riskProfile(user: UserEntity, average: number): Promise<boolean> {
     user.risk_percentage = average;
     await this.userRepository.save(user);
