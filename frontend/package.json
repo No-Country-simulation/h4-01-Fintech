@@ -5,9 +5,9 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm exec prisma generate && next build",
-    "start": "pnpm exec prisma migrate deploy && next start",
-    "prisma:generate": "pnpm exec prisma generate",
+    "build": "prisma generate && next build",
+    "start": "prisma migrate deploy && next start",
+    "prisma:generate": "prisma generate",
     "lint": "next lint",
     "check-types": "tsc --noEmit",
     "prisma:deploy": "prisma migrate deploy"
