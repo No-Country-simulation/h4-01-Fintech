@@ -8,15 +8,6 @@ import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/fother";
 import HelpButton from "@/components/common/helpButton";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "IUpi",
@@ -32,7 +23,7 @@ export default function RootLayout({
     <html lang="es">
       <SessionProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className=" antialiased"
         >
           <Theme grayColor="olive" panelBackground="solid" radius="large">
             <Navbar />

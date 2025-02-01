@@ -1,29 +1,64 @@
 "use client";
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { loginSchema  } from '@/validations/schemas';
 import Link from "next/link";
-import { Button } from "@/components/common/button";
 import { LeftSection } from "@/components/layout/leftSection";
 import { Input } from "@/components/common/input";
-import { signIn } from "next-auth/react"; // Importación correcta de NextAuth
-import { FormEvent, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import SignIn from "@/features/auth/signin";
 import Image from 'next/image';
+import { Button } from "@radix-ui/themes";
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
+
+type LoginValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { showToast, ToastComponent } = useToast();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const credentialsAction = async (e: FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors},
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema)
+  })
+
+  const onSubmit = async (data: LoginValues) => {
     try {
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         redirect: false,
       });
-      console.log("Inicio de sesión exitoso:", result);
+      if(result){
+        router.push('/dashboard')
+        showToast({
+        title: 'Bienvenido!',
+        description:'Login Exitoso',
+        duration: 5000,
+      });
+      }
+      if (result?.error) {
+        showToast({
+        title: 'Error al iniciar sesión',
+        description:'Ocurrió un error. Inténtalo de nuevo.',
+        duration: 5000,
+      });
+      }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
+      showToast({
+        title: 'Error al iniciar sesión',
+        description:'Ocurrió un error. Inténtalo de nuevo.',
+        duration: 5000,
+      });
     }
   };
 
@@ -60,7 +95,7 @@ export default function Login() {
           </div>
 
           {/* Formulario */}
-          <form onSubmit={credentialsAction} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm text-gray-600">
                 Mail
@@ -69,9 +104,9 @@ export default function Login() {
                 id="email"
                 type="email"
                 placeholder="Mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email")}
               />
+              <p className="text-red-500 text-sm">{errors.email?.message}</p>
             </div>
 
             <div className="space-y-2">
@@ -82,16 +117,16 @@ export default function Login() {
                 id="password"
                 type="password"
                 placeholder="Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password")}
               />
+              <p className="text-red-500 text-sm">{errors.password?.message}</p>
             </div>
-
             <Button
               type="submit"
               className="w-full bg-[#005bbb] hover:bg-[#005bbb]/90 text-white rounded-lg"
+              disabled={isLoading}
             >
-              Iniciar sesión
+              {isLoading ? "Cargando..." : "Iniciar sesión"}
             </Button>
 
             <div className="text-sm text-center mt-4">

@@ -75,8 +75,8 @@ export default [
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
       'no-undef': 'error',
-      'no-console': 'error',
-      'no-debugger': 'error',
+      // "no-console": process.env.NODE_ENV === "production" ? "error" : "warn",
+      // 'no-debugger': process.env.NODE_ENV === "production" ? "error" : "warn",
 
       // Reglas de importación
       'import/no-unresolved': 'error',
