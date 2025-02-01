@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { registrationSchema } from "@/validations/schemas";
+import { registrationSchema } from "@/app/validations/schemas";
 import { z } from "zod";
 import { Input } from "@/components/common/input";
 import { Button } from "@radix-ui/themes";

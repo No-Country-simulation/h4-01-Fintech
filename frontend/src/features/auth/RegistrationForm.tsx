@@ -3,7 +3,7 @@
 import * as Form from "@radix-ui/react-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { registrationSchema } from "@/validations/schemas";
+import { registrationSchema } from "@/app/validations/schemas";
 import { z } from "zod";
 import { registerService } from '@/services/authService';
 import Link from 'next/link';

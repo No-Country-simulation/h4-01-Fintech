@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { loginSchema  } from '@/validations/schemas';
 import Link from "next/link";
 import { LeftSection } from "@/components/layout/leftSection";
 import { Input } from "@/components/common/input";
@@ -14,6 +13,7 @@ import Image from 'next/image';
 import { Button } from "@radix-ui/themes";
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { loginSchema } from '@/app/validations/schemas';
 
 type LoginValues = z.infer<typeof loginSchema>;
 
