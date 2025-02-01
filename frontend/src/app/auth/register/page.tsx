@@ -6,12 +6,11 @@ import { registrationSchema } from '@/app/validations/schemas';
 import { z } from 'zod';
 import { registerService } from '@/services/authService';
 import Link from 'next/link';
-import { LeftSection } from '@/components/layout/leftSection';
 import { Button } from '@radix-ui/themes';
 import SignIn from '@/features/auth/signin';
-import { Input } from '@/components/common/input';
 import { useToast } from '@/hooks/usetoast';
 import Image from 'next/image';
+import LeftSection from '@/components/layout/leftSection';
 
 type RegisterValues = z.infer<typeof registrationSchema>;
 
@@ -103,7 +102,7 @@ export default function Register() {
             {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm text-gray-600">Email</label>
-              <Input
+              <input
                 id="email"
                 type="email"
                 placeholder="Tu email"
@@ -115,7 +114,7 @@ export default function Register() {
             {/* Full Name */}
             <div className="space-y-2">
               <label htmlFor="fullName" className="text-sm text-gray-600">Nombre Completo</label>
-              <Input
+              <input
                 id="fullName"
                 type="text"
                 placeholder="Tu nombre completo"
@@ -127,7 +126,7 @@ export default function Register() {
             {/* DNI */}
             <div className="space-y-2">
               <label htmlFor="dni" className="text-sm text-gray-600">DNI o Cédula</label>
-              <Input
+              <input
                 id="dni"
                 type="text"
                 placeholder="00.000.000"
@@ -139,7 +138,7 @@ export default function Register() {
             {/* Password */}
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm text-gray-600">Contraseña</label>
-              <Input
+              <input
                 id="password"
                 type="password"
                 placeholder="Tu contraseña"
@@ -151,7 +150,7 @@ export default function Register() {
             {/* Confirm Password */}
             <div className="space-y-2">
               <label htmlFor="confirmPassword" className="text-sm text-gray-600">Repetir Contraseña</label>
-              <Input
+              <input
                 id="confirmPassword"
                 type="password"
                 placeholder="Repite tu contraseña"
