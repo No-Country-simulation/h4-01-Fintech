@@ -43,7 +43,7 @@ export default function InvestorProfileWizard() {
                         setTimeout(() => {
                             setShowConfetti(false); // Ocultar confeti antes de la redirección
                             router.push("/dashboard");
-                        }, 9000);
+                        }, 2000);
                     }
                 }
             } catch (error) {

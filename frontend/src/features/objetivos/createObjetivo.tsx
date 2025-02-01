@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { Button } from "@radix-ui/themes";
 import { createNotification } from "@/services/notificationService";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/usetoast";
 
 interface Data {
     name: string;

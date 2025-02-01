@@ -7,11 +7,10 @@ import { registrationSchema } from "@/app/validations/schemas";
 import { z } from "zod";
 import { registerService } from '@/services/authService';
 import Link from 'next/link';
-import { Input } from "@/components/common/input";
-import { LeftSection } from "@/components/layout/leftSection";
+import LeftSection  from "@/components/layout/leftSection";
 import { Button } from "@radix-ui/themes";
 import SignIn from "./signin";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/usetoast";
 
 
 type RegistrationFormValues = z.infer<typeof registrationSchema>;
@@ -92,7 +91,7 @@ export default function RegistrationForm() {
                         <Form.Field name="email">
                             <Form.Label className="text-sm text-gray-600">Mail</Form.Label>
                             <Form.Control asChild>
-                                <Input
+                                <input
                                     id="email"
                                     type="email"
                                     placeholder="Mail"
@@ -105,7 +104,7 @@ export default function RegistrationForm() {
                         <Form.Field name="fullName">
                             <Form.Label className="text-sm text-gray-600">Nombre completo</Form.Label>
                             <Form.Control asChild>
-                                <Input
+                                <input
                                     id="fullName"
                                     type="text"
                                     placeholder="Nombre completo"
@@ -118,7 +117,7 @@ export default function RegistrationForm() {
                         <Form.Field name="dni">
                             <Form.Label className="text-sm text-gray-600">DNI o Cedula</Form.Label>
                             <Form.Control asChild>
-                                <Input
+                                <input
                                     id="dni"
                                     type="text"
                                     placeholder="00.000.000"
@@ -131,7 +130,7 @@ export default function RegistrationForm() {
                         <Form.Field name="password">
                             <Form.Label className="text-sm text-gray-600">Contraseña</Form.Label>
                             <Form.Control asChild>
-                                <Input
+                                <input
                                     id="password"
                                     type="password"
                                     placeholder="Contraseña"
@@ -144,7 +143,7 @@ export default function RegistrationForm() {
                         <Form.Field name="confirmPassword">
                             <Form.Label className="text-sm text-gray-600">Repetir contraseña</Form.Label>
                             <Form.Control asChild>
-                                <Input
+                                <input
                                     id="confirmPassword"
                                     type="password"
                                     placeholder="Repetir contraseña"

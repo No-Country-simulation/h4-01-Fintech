@@ -1,17 +1,17 @@
 'use client';
 
-import { Box, Button, Card, Flex, Heading, Text } from '@radix-ui/themes';
+import { Button, Flex, Heading, Text } from '@radix-ui/themes';
 import React, { useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import AccordionProfile from '@/components/accordions/perfil';
-import BalanceCard from '@/components/common/BalanceCard';
 import Loading from '../loanding';
 import { determinarPerfil, obtenerMensaje } from '@/lib/perfiles';
 import { useQuestions } from '@/stores/useQuestions';
 import { createNotification } from '@/services/notificationService';
 import TableObjetive from '@/features/objetivos/tableOBjetive';
+import BalanceCard from '@/components/common/BalanceCard';
 
 
 export default function Page() {
@@ -58,22 +58,22 @@ export default function Page() {
         </Heading>
 
 
-        <Card className="mb-8 p-6 bg-slate-200 rounded-lg shadow-sm mx-auto w-full">
+        <div className="mb-8 p-6 bg-slate-200 rounded-lg  mx-auto w-full">
           <Flex justify="between" align="center" className="mb-6">
             <Button variant="solid">Editar</Button>
           </Flex>
 
           <Flex direction={{ initial: 'column', md: 'row' }} align="center" gap="4" className='justify-items-center items-center'>
             <Image
-              src={session.user.image || '/logo/logo.png'}
+              src={session.user.image || '/images/perfil.png'}
               alt="Profile"
-              width={160}
-              height={160}
-              className="w-32 h-32 md:w-48 md:h-48 rounded-lg border-2 border-gray-600 object-cover aspect-square"
+              width={140}
+              height={140}
+              className="w-32 h-32 md:w-48 md:h-48 rounded-lg object-cover aspect-square"
             />
           </Flex>
-        </Card>
-        <Card className="mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
+        </div>
+        <div className="mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
           <Heading as="h2" size="5" className="mb-5 text-gray-600">
             Este es tu perfil de {session.user.role?.toLowerCase() ?? 'usuario'}
           </Heading>
@@ -89,22 +89,22 @@ export default function Page() {
               ¿Qué es el CVU?
             </Button>
           </Flex>
-        </Card>
-        <Card className='justify-center items-center justify-items-center'>
+        </div>
+        <div className='justify-center items-center justify-items-center'>
           <AccordionProfile />
-        </Card>
+        </div>
 
-        <Card className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
+        <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
           <BalanceCard />
-        </Card>
+        </div>
 
-        <Card className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
+        <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
           <p>Activos Recomendados Proximanete</p>
-        </Card>
+        </div>
 
-        <Card className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
+        <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
           {userId && <TableObjetive userId={userId} />}
-        </Card>
+        </div>
       </div>
     </Flex>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { Timeline2 } from "@/components/aceternity/timeline2";
+import { motion } from "framer-motion";
 import { Flex } from "@radix-ui/themes";
 import React, { useState } from "react";
 import Link from "next/link";
@@ -83,12 +84,14 @@ export default function HelpButton() {
     return (
         <Flex direction={"column"} className="relative">
             {/* Botón de ayuda flotante */}
-            <button
-                onClick={toggleHelp}
-                className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition"
-            >
-                <HelpCircleIcon width={24} height={24} />
-            </button>
+            <motion.button
+            onClick={toggleHelp}
+            className="fixed bottom-10 right-10 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition"
+            animate={{ opacity: [1, 0.5, 1], scale: [1, 1.1, 1] }}
+            transition={{ duration: 1, repeat: Infinity }}
+        >
+            <HelpCircleIcon width={24} height={24} />
+        </motion.button>
 
             {/* Modal con scroll y responsive */}
             {isHelpOpen && (
@@ -105,13 +108,13 @@ export default function HelpButton() {
                         {/* Contenido scrollable */}
                         <div className="overflow-y-auto max-h-[70vh] p-2">
                             {data.map((step, index) => (
-                                <div key={index} className="flex items-center space-x-4 p-3 border-b border-gray-300">
+                                <div key={index} className="flex items-center space-x-6 p-3 border-b border-gray-300">
                                     {step.icon}
                                     <div className="flex-1">
                                         <h3 className="text-lg font-semibold">{step.title}</h3>
                                         <p className="text-gray-600">{step.content}</p>
                                         <Link href={step.link} className="text-blue-500 hover:underline">
-                                            Ir al paso
+                                            {step.title}
                                         </Link>
                                     </div>
                                 </div>

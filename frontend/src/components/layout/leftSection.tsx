@@ -1,7 +1,7 @@
 import { Flex } from "@radix-ui/themes";
 
 
-export const LeftSection = () => {
+const LeftSection = () => {
     return (
         <Flex
             direction="column"
@@ -31,3 +31,5 @@ export const LeftSection = () => {
         </Flex>
     );
 };
+
+export default LeftSection;

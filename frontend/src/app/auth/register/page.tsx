@@ -10,7 +10,7 @@ import { LeftSection } from '@/components/layout/leftSection';
 import { Button } from '@radix-ui/themes';
 import SignIn from '@/features/auth/signin';
 import { Input } from '@/components/common/input';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/usetoast';
 import Image from 'next/image';
 
 type RegisterValues = z.infer<typeof registrationSchema>;

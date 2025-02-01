@@ -4,16 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from "next/link";
-import { LeftSection } from "@/components/layout/leftSection";
-import { Input } from "@/components/common/input";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import SignIn from "@/features/auth/signin";
 import Image from 'next/image';
 import { Button } from "@radix-ui/themes";
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/usetoast';
 import { useRouter } from 'next/navigation';
 import { loginSchema } from '@/app/validations/schemas';
+import LeftSection from '@/components/layout/leftSection';
 
 type LoginValues = z.infer<typeof loginSchema>;
 
@@ -100,7 +99,7 @@ export default function Login() {
               <label htmlFor="email" className="text-sm text-gray-600">
                 Mail
               </label>
-              <Input
+              <input
                 id="email"
                 type="email"
                 placeholder="Mail"
@@ -113,7 +112,7 @@ export default function Login() {
               <label htmlFor="password" className="text-sm text-gray-600">
                 Contraseña
               </label>
-              <Input
+              <input
                 id="password"
                 type="password"
                 placeholder="Contraseña"
