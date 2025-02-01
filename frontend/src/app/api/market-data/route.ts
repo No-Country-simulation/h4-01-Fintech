@@ -1,4 +1,3 @@
-// pages/api/upload-assets.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import csvParser from 'csv-parser'
@@ -18,7 +17,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Leer y procesar el archivo CSV
     const text = await file.text()
     const rows: Array<{ asset_id: string; fecha: string; cierre: string }> = []
 
@@ -105,10 +103,6 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      // Agregar un retraso entre inserciones para evitar baneos
-      // if (index < rows.length - 1) {
-      //   await delay(500) // Retraso de 500ms entre cada iteración
-      // }
     }
 
     return NextResponse.json({ message: 'Datos procesados correctamente.' })

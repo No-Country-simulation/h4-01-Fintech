@@ -1,9 +1,9 @@
 'use client';
 import * as React from "react";
-import classNames from "classnames";
-import { Accordion } from "radix-ui";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
+import * as Accordion from "@radix-ui/react-accordion";
 import { useSession } from "next-auth/react";
+import classNames from 'classnames';
 import { getUSer, UserData } from "@/services/userService";
 import { useEffect } from "react";
 import { Mailbox } from "../message/mailbox";
@@ -40,11 +40,11 @@ const AccordionProfile = () => {
             defaultValue="item-1"
             collapsible
         >
-            <AccordionItem value="item-1">
-                <AccordionTrigger>
+            <Accordion.Item value="item-1">
+                <Accordion.Trigger>
                     <h3 className="text-blue-400">Datos</h3>
-                </AccordionTrigger>
-                <AccordionContent>
+                </Accordion.Trigger>
+                <Accordion.Content>
                     <div className="text-white">
                         Nombre: {session?.user.name}
                         <br />
@@ -52,26 +52,26 @@ const AccordionProfile = () => {
                         <br />
                         Email: {session?.user.email}
                     </div>
-                </AccordionContent>
-            </AccordionItem>
+                </Accordion.Content>
+            </Accordion.Item>
 
-            <AccordionItem value="item-2">
-                <AccordionTrigger>
+            <Accordion.Item value="item-2">
+                <Accordion.Trigger>
                     <h3 className="text-blue-400">Inversiones</h3>
-                </AccordionTrigger>
-                <AccordionContent>
+                </Accordion.Trigger>
+                <Accordion.Content>
                     <p className="text-white">Inversiones</p>
-                </AccordionContent>
-            </AccordionItem>
+                </Accordion.Content>
+            </Accordion.Item>
 
-            <AccordionItem value="item-3">
-                <AccordionTrigger>
+            <Accordion.Item value="item-3">
+                <Accordion.Trigger>
                     <h3 className="text-blue-400">Notificaciones</h3>
-                </AccordionTrigger>
-                <AccordionContent>
+                </Accordion.Trigger>
+                <Accordion.Content>
                     {userId && <Mailbox userId={userId} />}
-                </AccordionContent>
-            </AccordionItem>
+                </Accordion.Content>
+            </Accordion.Item>
         </Accordion.Root>
     );
 };

@@ -3,14 +3,13 @@ import { Box, Button, Card, Flex, Text, Slider, IconButton, Heading } from "@rad
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Confetti from "react-confetti"; // Importar react-confetti
+import Confetti from "react-confetti";
 import { questions } from "../dialogs/questions";
 import { useQuestions } from "@/stores/useQuestions";
 import Loading from "@/app/loanding";
 import { fetchRiskPercentage } from "@/services/riskPercentageService";
 import { createNotification } from "@/services/notificationService";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { Accordion } from 'radix-ui';
 
 export default function InvestorProfileWizard() {
     const { data: session, status } = useSession();

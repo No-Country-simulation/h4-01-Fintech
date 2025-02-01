@@ -3,19 +3,15 @@
 import { useState, useEffect } from 'react';
 import { ScrollArea } from '@radix-ui/themes'; 
 import { GoalCard } from './objetivo';
-// Interfaz para el tipo de dato "Goal"
 interface Goal {
     id: string;
     name: string;
     targetAmount: number;
     progress: number;
 }
-
-
 export function GoalList({ userId }: { userId?: string }) {
     const [goals, setGoals] = useState<Goal[]>([]);
 
-    // Función para obtener los objetivos desde la API
     const fetchGoals = async () => {
         try {
             const response = await fetch('/api/goals');
@@ -28,19 +24,16 @@ export function GoalList({ userId }: { userId?: string }) {
         }
     };
 
-    // Actualizar la lista de objetivos cuando el componente se monta
     useEffect(() => {
         fetchGoals();
     }, []);
 
-    // Función para manejar la edición de un objetivo
     const onEdit = (goal: Goal) => {
         console.log('Editar objetivo:', goal);
-        // Aquí puedes abrir un modal o redirigir a una página de edición
     };
 
     return (
-        <ScrollArea type="auto" className="h-[400px] w-full"> {/* ScrollArea de Radix */}
+        <ScrollArea type="auto" className="h-[400px] w-full"> 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                 {goals.length > 0 ? (
                     goals.map((goal) => (

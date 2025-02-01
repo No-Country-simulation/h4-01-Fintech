@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import {
+    DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
@@ -28,7 +29,7 @@ import {
 
 } from '@radix-ui/react-icons';
 import { MyAvatar } from './myAvatar';
-import { DropdownMenu } from "radix-ui";
+// Removed incorrect import
 import { getUnreadCount } from '@/services/notifications';
 import Login from '../../app/auth/login/page';
 
@@ -62,7 +63,7 @@ export default function MyMenu() {
     // Si el usuario NO está autenticado
     if (!session?.user) {
         return (
-            <DropdownMenu.Root>
+            <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <div className="cursor-pointer">
                         <HamburgerMenuIcon className="w-6 h-6" />
@@ -106,13 +107,13 @@ export default function MyMenu() {
                         Ayuda
                     </DropdownMenuItem>
                 </DropdownMenuContent>
-            </DropdownMenu.Root>
+            </DropdownMenu>
         );
     }
 
     // Si el usuario ESTÁ autenticado
     return (
-        <DropdownMenu.Root>
+        <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="cursor-pointer relative">
                     {session?.user?.image ? (
@@ -198,6 +199,6 @@ export default function MyMenu() {
                     Cerrar sesión
                 </DropdownMenuItem>
             </DropdownMenuContent>
-        </DropdownMenu.Root>
+        </DropdownMenu>
     );
 }

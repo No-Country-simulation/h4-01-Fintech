@@ -18,11 +18,10 @@ export const fetchRiskPercentage = async (
       console.log(JSON.stringify(response))
     }
 
-    // Asegúrate de manejar la respuesta correctamente
     const data = await response.json()
-    return data // Retorna la respuesta parseada
+    return data 
   } catch (error) {
     console.error('Error en la solicitud:', error)
-    throw error // Lanza el error para manejarlo en el frontend
+    throw error 
   }
 }
