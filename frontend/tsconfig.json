@@ -34,7 +34,7 @@
     "next-env.d.ts",
     "src/components/aceternity",
     ".next/types/**/*.ts"
-  ],
+, "src/components/paymet/widgetBelvo.tsx"  ],
   "exclude": [
     "node_modules"
   ]

@@ -74,8 +74,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             console.error('Usuario no válido devuelto por el backend')
             return null
           }
-          console.log('esta es la respues con credenciales', user)
-
           // Asociar la respuesta del backend con la estructura de usuario
 
           return {
@@ -98,7 +96,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account }) {
       try {
         if (account?.provider === 'credentials' && user) {
-          console.log('Inicio de sesión con credenciales exitoso')
           // Realizar un POST al backend para registrar o actualizar el usuario con las credenciales
           const resp = await fetch(`${MyEnv.API_URL}/api/auth/login`, {
             method: 'POST',
@@ -113,7 +110,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }),
           })
           const userSocial: DataRespuesta = await resp.json()
-          console.log('esta es la respuesta con credenciales', userSocial)
           return true
         }
 
@@ -136,7 +132,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
           )
           const userSocial: DataRespuesta = await respSocial.json()
-          console.log('Respuesta con datos de Google:', userSocial)
 
       if (userSocial?.status && userSocial?.data) {
         (user as User).id = userSocial.data.id;
@@ -184,12 +179,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const { setRiskPercentage } = useQuestions.getState()
         setRiskPercentage(session.user.risk_percentage)
       }
-      console.log(
-        'session del usuario',
-        session,
-        'y este es el Token',
-        session.user.token
-      );
 
       return session;
     },

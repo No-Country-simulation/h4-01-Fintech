@@ -6,3 +6,6 @@ data/app/core/__pycache__/
 env
 front/h4-01-Fintech.code-workspace
 data/venv
+frontend/.turbo/*
+.turbo/daemon/*
+frontend/.turbo/cookies/

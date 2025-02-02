@@ -96,27 +96,29 @@ export default function Login() {
           {/* Formulario */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
-              <label htmlFor="email" className="text-sm text-gray-600">
+              {/* <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Mail
-              </label>
+              </label> */}
               <input
                 id="email"
                 type="email"
                 placeholder="Mail"
                 {...register("email")}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <p className="text-red-500 text-sm">{errors.email?.message}</p>
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="password" className="text-sm text-gray-600">
+              {/* <label htmlFor="password" className="text-sm text-gray-600">
                 Contraseña
-              </label>
+              </label> */}
               <input
                 id="password"
                 type="password"
                 placeholder="Contraseña"
                 {...register("password")}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <p className="text-red-500 text-sm">{errors.password?.message}</p>
             </div>
