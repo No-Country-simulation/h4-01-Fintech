@@ -12,22 +12,17 @@ export default function ProfilePage() {
     const router = useRouter()
 
     useEffect(() => {
-        if (status === 'unauthenticated') {
-            router.push('/auth/login');
-        }
     }, [status, router]);
 
     if (status === 'loading'){
-        return (<>
-          <Loading/>
-        </>)
+        return <Loading/>
     }
 
     if (session?.user) {
-        return (<InvestorProfileWizard />);
+        return <InvestorProfileWizard />;
     }
 
-    if (!session?.user) {
+    return(
         <div className="w-full min-h-screen flex flex-col justify-center items-center p-8 m-8">
             <div className="text-center text-2xl font-bold mb-5">
                 No has iniciado sesión
@@ -46,8 +41,6 @@ export default function ProfilePage() {
                     Ir al inicio
                 </Button>
             </div>
-        </div>;
+        </div>
+        );
     }
-
-    
-}

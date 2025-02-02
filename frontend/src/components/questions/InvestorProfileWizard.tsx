@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, Card, Flex, Text, Slider, IconButton, Heading } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { questions } from "../dialogs/questions";
@@ -21,44 +21,46 @@ export default function InvestorProfileWizard() {
     const [showConfetti, setShowConfetti] = useState(false); // Estado para controlar el confeti
 
     const handleAnswer = async () => {
-        setAnswer(currentQuestion, sliderValue);
+    setAnswer(currentQuestion, sliderValue);
 
-        if (currentQuestion < questions.length - 1) {
-            setCurrentQuestion(currentQuestion + 1);
-            setSliderValue(1);
-        } else {
-            calculateRiskPercentage();
-            try {
-                setLoading(true);
+    if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSliderValue(1);
+    } else {
+        calculateRiskPercentage();
+        await new Promise((resolve) => setTimeout(resolve, 100)); // Pequeña espera para asegurar actualización
 
-                if (session?.user?.id && riskPercentage !== null) {
-                    const roundedRiskPercentage = Math.round(riskPercentage);
-                    const save = await fetchRiskPercentage(session.user.id, roundedRiskPercentage);
-                    if(save){
-                        await createNotification(session.user.id, `Has actualizado tu perfil inversor con un promedio de riesgo del ${roundedRiskPercentage}%.`);
-                        // Mostrar confeti antes de redirigir
-                        setShowConfetti(true);
+        try {
+            setLoading(true);
+            const riskPercentage = useQuestions.getState().riskPercentage;
+            const updatedRisk = riskPercentage !== null ? Math.round(riskPercentage) : 0;
 
-                        // Esperar 3 segundos antes de redirigir
-                        setTimeout(() => {
-                            setShowConfetti(false); // Ocultar confeti antes de la redirección
-                            router.push("/dashboard");
-                        }, 2000);
-                    }
+            if (session?.user?.id && riskPercentage !== null) {
+                const save = await fetchRiskPercentage(session.user.id, updatedRisk);
+                if (save) {
+                    await createNotification(session.user.id, `Has actualizado tu perfil inversor con un promedio de riesgo del ${updatedRisk}%.`);
+
+                    setShowConfetti(true);
+                    setTimeout(() => {
+                        setShowConfetti(false);
+                        router.push("/dashboard");
+                    }, 2000);
                 }
-            } catch (error) {
-                console.error("Error al actualizar el porcentaje de riesgo:", error);
-            } finally {
-                setLoading(false);
             }
+        } catch (error) {
+            console.error("Error al actualizar el porcentaje de riesgo:", error);
+        } finally {
+            setLoading(false);
         }
-    };
+    }
+};
+
 
     if (status === "loading") {
         return <Loading />;
     }
 
-    if (!session) {
+    if (!session?.user) {
         return (
             <Box width="100vw" height="100vh" p="4">
                 <Card>

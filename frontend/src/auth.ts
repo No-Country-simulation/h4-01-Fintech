@@ -2,7 +2,8 @@ import NextAuth, { User as NextAuthUser } from 'next-auth'
 import Google from 'next-auth/providers/google'
 import Credentials from 'next-auth/providers/credentials'
 import { MyEnv } from './lib/envs'
-import {useQuestions} from '@/stores/useQuestions'
+import { useUserStore } from './stores/useUSer';
+
 
 // Extend the User type to include the role property
 interface User extends NextAuthUser {
@@ -164,23 +165,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.access_token = token.access_token as string;
-      session.user.email = token.email as string;
-      session.user.name = token.name as string | undefined;
-      session.user.image = token.image as string | undefined;
-      session.user.id = token.id as string;
-      session.user.provider = token.provider as string | undefined;
-      session.user.risk_percentage = token.risk_percentage as number;
-      session.user.token = token.token as string;
-      session.user.role = token.role as string;
-      session.user.token = token.token as string;
-      //
-      if (session.user.risk_percentage !== null) {
-        const { setRiskPercentage } = useQuestions.getState()
-        setRiskPercentage(session.user.risk_percentage)
-      }
-      console.log('data',session)
-      return session;
+      session.user.access_token = token.access_token as string
+      session.user.email = token.email as string
+      session.user.name = token.name as string | undefined
+      session.user.image = token.image as string | undefined
+      session.user.id = token.id as string
+      session.user.provider = token.provider as string | undefined
+      session.user.risk_percentage = token.risk_percentage as number
+      session.user.token = token.token as string
+      session.user.role = token.role as string
+      session.user.token = token.token as string
+
+      // Guardar en Zustand
+      const { setUser } = useUserStore.getState()
+      setUser({
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image,
+        risk_percentage: session.user.risk_percentage,
+      })
+
+      console.log('Sesión actualizada:', session)
+      return session
     },
     async redirect({ url, baseUrl }) {
       if (url === '/auth/login' || url === baseUrl) {

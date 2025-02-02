@@ -32,6 +32,7 @@ import { MyAvatar } from './myAvatar';
 // Removed incorrect import
 import { getUnreadCount } from '@/services/notifications';
 import Login from '../../app/auth/login/page';
+import { useUserStore } from '@/stores/useUSer';
 
 export default function MyMenu() {
     const { data: session } = useSession();
@@ -39,6 +40,12 @@ export default function MyMenu() {
     const [unreadCount, setUnreadCount] = useState<number>(0);
     const userId = session?.user?.id as string;
 
+
+    const handleLogout = async () => {
+        const { clearUser } = useUserStore.getState()
+        clearUser() // Limpiar Zustand antes de cerrar sesión
+        await signOut()
+    }
     useEffect(() => {
         if (!userId) return;
 
@@ -193,7 +200,7 @@ export default function MyMenu() {
 
                 <DropdownMenuItem
                     className="p-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2"
-                    onClick={() => signOut()}
+                    onClick={handleLogout} 
                 >
                     <ExitIcon />
                     Cerrar sesión
