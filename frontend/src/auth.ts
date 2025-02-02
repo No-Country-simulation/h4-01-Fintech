@@ -179,7 +179,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const { setRiskPercentage } = useQuestions.getState()
         setRiskPercentage(session.user.risk_percentage)
       }
-
+      console.log('data',session)
       return session;
     },
     async redirect({ url, baseUrl }) {

@@ -11,6 +11,7 @@ import pluginTailwindCSS from 'eslint-plugin-tailwindcss'
 import parser from '@typescript-eslint/parser'
 import * as pluginImport from 'eslint-plugin-import'
 import globals from 'globals'
+import pluginUnusedImports from 'eslint-plugin-unused-imports';
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -59,9 +60,22 @@ const config = [
       },
     },
     files: ['src/**/*.{ts,tsx}'],
+    plugins: {
+      'unused-imports': pluginUnusedImports,
+    },
     rules: {
       ...pluginTailwindCSS.configs.recommended.rules,
       ...pluginImport.flatConfigs?.recommended?.rules,
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -82,7 +96,7 @@ const config = [
         },
       ],
       'import/order': [
-        1,
+        'warn',
         {
           groups: [
             'external',
@@ -92,6 +106,11 @@ const config = [
             'parent',
             'index',
           ],
+          'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
           pathGroups: [
             ...getDirectoriesToSort().map((singleDir) => ({
               pattern: `${singleDir}/**`,

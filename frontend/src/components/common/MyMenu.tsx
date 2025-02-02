@@ -116,7 +116,7 @@ export default function MyMenu() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="cursor-pointer relative">
-                    {session?.user?.image ? (
+                    {session?.user.image ? (
                         <>
                             <MyAvatar />
                             {unreadCount > 0 && (
