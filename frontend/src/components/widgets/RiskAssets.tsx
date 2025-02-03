@@ -129,9 +129,6 @@ const RiskAssets = () => {
                     <Text size="3" className="text-gray-500">
                       Categoría: {asset.category}
                     </Text>
-                    <Text size="3" className="text-green-500">
-                      Precio: ${asset.price}
-                    </Text>
                 </Link>
               </Card>
             ))}
