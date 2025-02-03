@@ -122,12 +122,9 @@ const RiskAssets = () => {
                 key={asset.id}
                 className="p-4 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-200"
               >
-                <Link href={`/dashboard/activos/${asset.id}/page`} passHref>
+                <Link href={`/dashboard/activos/${asset.id}`} passHref>
                     <Text size="4" weight="bold" className="text-indigo-600">
                       {asset.name}
-                    </Text>
-                    <Text size="3" className="text-gray-500">
-                      Categoría: {asset.category}
                     </Text>
                 </Link>
               </Card>
