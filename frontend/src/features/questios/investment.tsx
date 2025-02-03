@@ -9,7 +9,7 @@ export default function InvestmentProfileHandler() {
 
     useEffect(() => {
         // Verifica si el usuario está autenticado y si su risk_percentage es null
-        if (riskPercentage === null || answers.length === 0) {
+        if (riskPercentage === null || Object.keys(answers).length === 0) {
             // Redirige al usuario a la página de preguntas y respuestas
             router.push("/dashboard/questions"); // Cambia "/dashboard/questions" por la ruta de tu página de preguntas
         }
