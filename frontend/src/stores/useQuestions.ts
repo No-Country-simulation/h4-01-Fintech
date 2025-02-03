@@ -1,52 +1,30 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import Cookies from 'js-cookie'
+import { persist } from 'zustand/middleware'
 
-type QuestionsStore = {
+interface QuestionsState {
+  answers: Record<number, number>
   riskPercentage: number | null
-  answers: number[]
-  setRiskPercentage: (value: number | null) => void
-  setAnswer: (questionIndex: number, value: number) => void
+  setAnswer: (questionIndex: number, answer: number) => void
   calculateRiskPercentage: () => void
-  reset: () => void
 }
 
-export const useQuestions = create<QuestionsStore>()(
+export const useQuestions = create<QuestionsState>()(
   persist(
     (set, get) => ({
+      answers: {},
       riskPercentage: null,
-      answers: Array(7).fill(10),
-
-      setRiskPercentage: (value) => {
-        set({ riskPercentage: value })
-      },
-
-      setAnswer: (questionIndex, value) => {
-        const newAnswers = [...get().answers]
-        newAnswers[questionIndex] = value
-        set({ answers: newAnswers })
-      },
-
+      setAnswer: (questionIndex, answer) =>
+        set((state) => ({
+          answers: { ...state.answers, [questionIndex]: answer },
+        })),
       calculateRiskPercentage: () => {
-        const { answers } = get()
-        const total = answers.reduce((sum, value) => sum + value, 0)
-        const averageRisk = total / answers.length
-        set({ riskPercentage: averageRisk })
-      },
-
-      reset: () => {
-        set({ riskPercentage: null, answers: Array(7).fill(0) })
+        const values = Object.values(get().answers)
+        const risk = values.length
+          ? values.reduce((a, b) => a + b, 0) / values.length
+          : 0
+        set({ riskPercentage: risk })
       },
     }),
-    {
-      name: 'questions-storage',
-      storage: createJSONStorage(() => ({
-        getItem: (key) =>
-          Cookies.get(key) ? JSON.parse(Cookies.get(key) as string) : null,
-        setItem: (key, value) =>
-          Cookies.set(key, JSON.stringify(value), { expires: 30, path: '/' }),
-        removeItem: (key) => Cookies.remove(key, { path: '/' }),
-      })),
-    }
+    { name: 'user-storage' } // Este nombre debe coincidir con el error que tienes
   )
 )

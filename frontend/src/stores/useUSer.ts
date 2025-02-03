@@ -1,7 +1,6 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, StorageValue } from 'zustand/middleware'
 
-// Definir la estructura del usuario
 interface UserState {
   name: string | null
   email: string | null
@@ -11,8 +10,8 @@ interface UserState {
   clearUser: () => void
 }
 
-export const useUserStore = create(
-  persist<UserState>(
+export const useUserStore = create<UserState>()(
+  persist(
     (set) => ({
       name: null,
       email: null,
@@ -28,7 +27,19 @@ export const useUserStore = create(
         }),
     }),
     {
-      name: 'user-storage', // Nombre para persistencia en localStorage
+      name: 'user-storage',
+      storage: typeof window !== 'undefined' ? {
+        getItem: (name: string) => {
+          const item = localStorage.getItem(name);
+          return item ? JSON.parse(item) : null;
+        },
+        setItem: (name: string, value: StorageValue<UserState>) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name: string) => {
+          localStorage.removeItem(name);
+        }
+      } : undefined, // Evita usar localStorage en el servidor
     }
   )
 )

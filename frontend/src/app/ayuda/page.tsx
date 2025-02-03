@@ -71,7 +71,7 @@ const data = [
 
 export default function page() {
   return (
-    <Flex direction={"column"}>
+    <Flex direction={"column"} className='m-2 p-2'>
       <Timeline data={data} />
     </Flex>
   )

@@ -3,14 +3,21 @@
 import { useState } from 'react'
 import { depositMoney } from '@/services/transactionService'
 import { useSession } from 'next-auth/react'
+import { useDepositStore } from '@/stores/depositStore'
+import { createNotification } from '@/services/notificationService'
 
-export default function DepositForm() {
+interface DepositFormProps {
+  onSuccess: () => void; // Función para actualizar el estado de recarga
+}
+
+export default function DepositForm({ onSuccess }: DepositFormProps) {
     const {data:session} = useSession()
     const userId = session?.user.id as string
-  const [amount, setAmount] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+    const [amount, setAmount] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState(false)
+    const setDepositSuccess = useDepositStore((state) => state.setDepositSuccess);
 
   const handleDeposit = async () => {
     setLoading(true)
@@ -18,8 +25,11 @@ export default function DepositForm() {
     setSuccess(false)
 
     try {
-      await depositMoney(amount, userId)
+      await depositMoney(amount, userId, 'ACCOUNT_FUNDING') 
       setSuccess(true)
+      onSuccess();
+      setDepositSuccess(true);
+      await createNotification(userId, ` fecha ${new Date()} ,Se a registrado un trasferencia a favor a tu Careta Virtual de un total ${amount}.`);
     } catch (err) {
       setError('Hubo un problema con la transacción')
     } finally {
@@ -28,7 +38,7 @@ export default function DepositForm() {
   }
 
   return (
-    <div className="p-4 border rounded-lg shadow-md bg-white">
+    <div className="m-12 p-4 border rounded-lg shadow-md bg-white">
       <h2 className="text-xl font-semibold mb-4">Depositar Dinero</h2>
 
       <input

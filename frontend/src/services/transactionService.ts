@@ -1,7 +1,8 @@
-
-
-
-export async function depositMoney(amount: number, userId: string) {
+export async function depositMoney(
+  amount: number,
+  userId: string,
+  transactionType: string
+) {
   try {
     const response = await fetch('/api/transactions', {
       method: 'POST',
@@ -9,22 +10,20 @@ export async function depositMoney(amount: number, userId: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        price: amount,
-        transaction_type: 'deposit',
-        timestamp: new Date().toISOString(),
-        userId,
-        quantity: 1,
-        location: 'Online',
+      price: amount,
+      transaction_type: transactionType,
+      userId,
+      timestamp: new Date().toISOString(),
       }),
     })
 
     if (!response.ok) {
-      throw new Error('Error en la transacción')
+      console.log('Error en la transacción')
     }
 
     return await response.json()
   } catch (error) {
-    console.error('Error:', error)
+    console.log('Error:', error)
     throw error
   }
 }

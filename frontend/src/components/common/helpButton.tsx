@@ -1,6 +1,5 @@
 "use client";
 
-import { Timeline2 } from "@/components/aceternity/timeline2";
 import { motion } from "framer-motion";
 import { Flex } from "@radix-ui/themes";
 import React, { useState } from "react";
@@ -14,7 +13,7 @@ import {
     StarIcon,
     RocketIcon,
 } from "@radix-ui/react-icons";
-import { HelpCircleIcon, BanknoteIcon, ShoppingCartIcon, CreditCardIcon } from "lucide-react";
+import { HelpCircleIcon, BanknoteIcon, ShoppingCartIcon } from "lucide-react";
 
 const data = [
     {
@@ -28,12 +27,6 @@ const data = [
         content: "Completa un breve cuestionario para que podamos recomendarte las mejores opciones de inversión.",
         icon: <QuestionMarkCircledIcon className="text-purple-500 w-5 h-5" />,
         link: "/dashboard/questions",
-    },
-    {
-        title: "Apertura tu Balance",
-        content: "Conoce tu balance inicial y establece tus objetivos de ahorro.",
-        icon: <CreditCardIcon className="text-green-500 w-5 h-5" />,
-        link: "/dashboard/",
     },
     {
         title: "Conoce nuestros Planes",
@@ -71,6 +64,7 @@ const data = [
         icon: <ShoppingCartIcon className="text-teal-500 w-5 h-5" />,
         link: "/market",
     },
+    
 ];
 
 export default function HelpButton() {

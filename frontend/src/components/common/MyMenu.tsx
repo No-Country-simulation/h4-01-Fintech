@@ -8,9 +8,6 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuSeparator,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import {
@@ -21,7 +18,6 @@ import {
     FileTextIcon,
     ExitIcon,
     RocketIcon,
-    ChatBubbleIcon,
     HomeIcon,
     HamburgerMenuIcon,
     LockClosedIcon,
@@ -29,9 +25,7 @@ import {
 
 } from '@radix-ui/react-icons';
 import { MyAvatar } from './myAvatar';
-// Removed incorrect import
 import { getUnreadCount } from '@/services/notifications';
-import Login from '../../app/auth/login/page';
 import { useUserStore } from '@/stores/useUSer';
 
 export default function MyMenu() {
@@ -48,7 +42,6 @@ export default function MyMenu() {
     }
     useEffect(() => {
         if (!userId) return;
-
         const fetchCount = async () => {
             try {
                 const count = await getUnreadCount(userId);
@@ -57,17 +50,11 @@ export default function MyMenu() {
                 console.error('Error fetching unread count:', error);
             }
         };
-
-        // Llamar inmediatamente al montar el componente
         fetchCount();
-
-        // Establecer un intervalo para actualizar cada 5 segundos
         const interval = setInterval(fetchCount, 10000);
-
-        return () => clearInterval(interval); // Limpiar el intervalo cuando el componente se desmonta
+        return () => clearInterval(interval);
     }, [userId]);
 
-    // Si el usuario NO está autenticado
     if (!session?.user) {
         return (
             <DropdownMenu>
@@ -76,7 +63,6 @@ export default function MyMenu() {
                         <HamburgerMenuIcon className="w-6 h-6" />
                     </div>
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent className="min-w-[220px] bg-white rounded-md shadow-lg z-50">
                     <DropdownMenuItem
                         className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
@@ -117,8 +103,7 @@ export default function MyMenu() {
             </DropdownMenu>
         );
     }
-
-    // Si el usuario ESTÁ autenticado
+    // 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

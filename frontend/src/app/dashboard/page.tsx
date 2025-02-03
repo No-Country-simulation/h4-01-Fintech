@@ -12,9 +12,11 @@ import { useQuestions } from '@/stores/useQuestions';
 import { createNotification } from '@/services/notificationService';
 import TableObjetive from '@/features/objetivos/tableOBjetive';
 import BalanceCard from '@/components/common/BalanceCard';
+import RiskAssets from '@/components/widgets/RiskAssets';
 
 
 export default function Page() {
+  const [refreshBalance, setRefreshBalance] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
@@ -95,11 +97,11 @@ export default function Page() {
         </div>
 
         <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
-          <BalanceCard />
+          <BalanceCard refresh={refreshBalance}/>
         </div>
 
         <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">
-          <p>Activos Recomendados Proximanete</p>
+          <RiskAssets/>
         </div>
 
         <div className="justify-center justify-items-center items-center mb-8 p-6 bg-white rounded-lg text-center mx-auto w-full">

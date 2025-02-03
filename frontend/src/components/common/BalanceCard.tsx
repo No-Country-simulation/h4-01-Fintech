@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import Link from 'next/link';
 import { useSession } from "next-auth/react";
 import { CardBody, CardContainer, CardItem } from "../aceternity/3d-card";
-import { Button, Skeleton } from "@radix-ui/themes";
-
+import { Skeleton } from "@radix-ui/themes";
+import { useDepositStore } from "@/stores/depositStore";
 
 interface BalanceData {
     id: string;
@@ -16,46 +15,50 @@ interface BalanceData {
     cvu: string;
 }
 
-export default function BalanceCard() {
+interface BalanceCardProps {
+    refresh: boolean;
+}
+
+export default function BalanceCard({ refresh }: BalanceCardProps) {
     const { data: session, status } = useSession();
     const userId = session?.user.id;
-
     const [balance, setBalance] = useState<BalanceData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [message, setMessage] = useState<string | null>(null); // Para mostrar mensaje después de la petición
+
+    const depositSuccess = useDepositStore((state) => state.depositSuccess);
 
     useEffect(() => {
-        if (!userId || status !== "authenticated") return;
+    if (!userId || status !== "authenticated") return;
 
-        const fetchBalance = async () => {
-            try {
-                const response = await fetch(`/api/balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId }),
-                });
+    const fetchBalance = async () => {
+        setLoading(true);
+      try {
+        const response = await fetch('/api/balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId }),
+        });
 
-                if (!response.ok) throw new Error("No se encontró el balance");
+        if (!response.ok) throw new Error("No se encontró el balance");
 
-                const data = await response.json();
+        const data = await response.json();
+        setBalance({
+          id: data.id,
+          userId: data.userId,
+          amount: Number(data.balance),
+          last_updated: new Date(data.last_updated).toISOString(),
+          cvu: data.cvu,
+        });
+      } catch (err) {
+        setError("Error al obtener el balance");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-                setBalance({
-                    id: data.id,
-                    userId: data.userId,
-                    amount: Number(data.balance),
-                    last_updated: new Date(data.last_updated).toISOString(),
-                    cvu: data.cvu,
-                });
-            } catch (err) {
-                setError("Error al obtener el balance");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBalance();
-    }, [userId, status]);
+    fetchBalance();
+  }, [userId, status, refresh]);
 
     if (loading) return (
         <div className="flex items-center space-x-4">
@@ -71,18 +74,17 @@ export default function BalanceCard() {
     if (!balance) return <p>No se encontró balance para este usuario.</p>;
 
     return (
-        <CardContainer containerClassName="w-full max-w-md ga-2">
-            <CardBody className="relative bg-gray-800 text-white p-6 rounded-xl shadow-xl overflow-hidden">
+        <CardContainer containerClassName="max-w-md ga-2">
+            <CardBody className="relative bg-gray-900 text-white p-6 rounded-xl shadow-xl overflow-hidden">
                 {/* Logo de IUpi */}
-                <CardItem translateZ={-50} className="absolute inset-0 opacity-20 flex justify-center items-center">
-                    <Image
-                        src="/logo/logo-transparente.png"
-                        alt="IUpi Logo"
-                        width={150}
-                        height={150}
-                        className="opacity-30"
-                    />
-                </CardItem>
+                <CardItem className="absolute bottom-0 left-1/2 -translate-x-1/2 opacity-30 pointer-events-none">
+    <Image
+        src="/logo/logo-transparente.png"
+        alt="IUpi Logo"
+        width={200}
+        height={200}
+    />
+</CardItem>
 
                 {/* Imagen de perfil */}
                 <CardItem translateZ={30} className="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
@@ -109,7 +111,7 @@ export default function BalanceCard() {
 
                 {/* CVU */}
                 <CardItem translateZ={10} className="mt-2 text-sm opacity-80">
-                    <p><strong>CVU en IUpi:</strong> {balance.cvu}</p>
+                    <p><strong>CVU :</strong> {balance.cvu}</p>
                 </CardItem>
 
                 {/* Última actualización */}

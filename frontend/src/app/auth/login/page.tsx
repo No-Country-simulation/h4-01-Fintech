@@ -41,14 +41,14 @@ export default function Login() {
         showToast({
         title: 'Bienvenido!',
         description:'Login Exitoso',
-        duration: 5000,
+        duration: 3000,
       });
       }
       if (result?.error) {
         showToast({
         title: 'Error al iniciar sesión',
         description:'Ocurrió un error. Inténtalo de nuevo.',
-        duration: 5000,
+        duration: 3000,
       });
       }
     } catch (error) {
@@ -56,7 +56,7 @@ export default function Login() {
       showToast({
         title: 'Error al iniciar sesión',
         description:'Ocurrió un error. Inténtalo de nuevo.',
-        duration: 5000,
+        duration: 3000,
       });
     }
   };

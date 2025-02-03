@@ -11,6 +11,7 @@ import { fetchRiskPercentage } from "@/services/riskPercentageService";
 import { createNotification } from "@/services/notificationService";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
+
 export default function InvestorProfileWizard() {
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function InvestorProfileWizard() {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [sliderValue, setSliderValue] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [showConfetti, setShowConfetti] = useState(false); // Estado para controlar el confeti
+    const [showConfetti, setShowConfetti] = useState(false);
 
     const handleAnswer = async () => {
     setAnswer(currentQuestion, sliderValue);
@@ -28,17 +29,22 @@ export default function InvestorProfileWizard() {
         setSliderValue(1);
     } else {
         calculateRiskPercentage();
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Pequeña espera para asegurar actualización
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         try {
             setLoading(true);
+            console.time("fetchRiskPercentage");
             const riskPercentage = useQuestions.getState().riskPercentage;
             const updatedRisk = riskPercentage !== null ? Math.round(riskPercentage) : 0;
 
             if (session?.user?.id && riskPercentage !== null) {
                 const save = await fetchRiskPercentage(session.user.id, updatedRisk);
+                console.timeEnd("fetchRiskPercentage");
+
+                console.time("createNotification");
                 if (save) {
                     await createNotification(session.user.id, `Has actualizado tu perfil inversor con un promedio de riesgo del ${updatedRisk}%.`);
+                    console.timeEnd("createNotification");
 
                     setShowConfetti(true);
                     setTimeout(() => {
@@ -105,7 +111,6 @@ export default function InvestorProfileWizard() {
                         max={10}
                         step={1}
                     />
-
                     <Flex justify="between" align="center">
                         {Array.from({ length: 10 }, (_, i) => (
                             <Text key={i + 1} size="2" color="gray">
@@ -113,12 +118,12 @@ export default function InvestorProfileWizard() {
                             </Text>
                         ))}
                     </Flex>
-
                     <Text size="2" align="center" color="blue">
                         Valor seleccionado: {sliderValue}
                     </Text>
-
-                    <Button onClick={handleAnswer}>Siguiente</Button>
+                    <Button onClick={handleAnswer} disabled={loading}>
+    {loading ? "Guardando..." : "Siguiente"}
+</Button>
                 </Flex>
             </Card>
         </Box>

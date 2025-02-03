@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { CheckCircle, Circle, Trash2 } from "lucide-react";
 import {
@@ -10,7 +9,6 @@ import {
 import Loading from "@/app/loanding";
 import { Button, ScrollArea } from "@radix-ui/themes";
 import * as Dialog from "@radix-ui/react-dialog";
-
 
 interface Notification {
     id: string;
@@ -127,10 +125,10 @@ export const Mailbox = ({ userId }: { userId: string }) => {
                             {selectedNotification?.title}
                         </Dialog.Title>
                         <Dialog.Description className="mt-2 text-gray-700">
-                            {selectedNotification?.message}
+                            
                         </Dialog.Description>
                         <div className="mt-4 text-right">
-                            <Button onClick={() => setSelectedNotification(null)}>Cerrar</Button>
+                            <Button variant="classic" onClick={() => setSelectedNotification(null)}>Cerrar</Button>
                         </div>
                     </Dialog.Content>
                 </Dialog.Portal>
